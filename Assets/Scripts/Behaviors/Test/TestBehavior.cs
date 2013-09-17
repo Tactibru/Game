@@ -6,11 +6,13 @@ using System.Collections;
 /// 
 /// Author: Ken 'Minalien' Murray
 /// </summary>
-public class TestBehavior : MonoBehaviour {
+public class TestBehavior : MonoBehaviour
+{
 	/// <summary>
 	/// Outputs a "Working." line to the debug log.
 	/// </summary>
-	void Start () {
+	void Start ()
+	{
 		Debug.Log("Working.");
 	}
 }
