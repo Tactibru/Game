@@ -7,11 +7,13 @@ using NodeSkeletonSystem;
 namespace Editor.NodeSkeletonSystem
 {
 	/// <summary>
-	/// Unity editor window that allows for the creation and modification of Node Skeleton Structure (NSS) files.
+	/// Unity editor that allows for the modification of Node Skeleton Structure (NSS) files.
 	/// 
 	/// Author: Ken Murray
 	/// </summary>
-	public class NSSEditor : EditorWindow
+	/// 
+	[CustomEditor(typeof(NodeSkeletonStructure))]
+	public class NSSEditor : EditorBase<NodeSkeletonStructure>
 	{
 		/** MENU ITEMS **/
 		/// <summary>
@@ -22,23 +24,13 @@ namespace Editor.NodeSkeletonSystem
 		{
 			CustomAssetUtility.CreateAsset<NodeSkeletonStructure>();
 		}
-		
-		/// <summary>
-		/// Menu item (Tactibru -> Node Skeleton System -> NSS Editor) that the NSS Editor window.
-		/// </summary>
-		[MenuItem("Tactibru/Node Skeleton System/NSS Editor", false, 20)]
-		public static void ShowWindow()
-		{
-			EditorWindow.GetWindow (typeof(NSSEditor));
-		}
 		/** END MENU ITEMS **/
 		
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Editor.NodeSkeletonSystem.NSSEditor"/> class.
+		/// Implements the custom editor's Inspector window GUI.
 		/// </summary>
-		public NSSEditor()
+		public override void OnInspectorGUI()
 		{
-			title = "NSS Editor";
 		}
 	}
 }
