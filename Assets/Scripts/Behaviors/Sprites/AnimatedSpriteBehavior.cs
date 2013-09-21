@@ -25,6 +25,11 @@ public class AnimatedSpriteBehavior : MonoBehaviour
 	public int FrameCount;
 
 	/// <summary>
+	/// Whether or not the image should be flipped.
+	/// </summary>
+	public bool IsFlipped;
+
+	/// <summary>
 	/// Stores a list of offsets for each frame.
 	/// </summary>
 	private Vector2[] frameOffsets;
@@ -45,6 +50,16 @@ public class AnimatedSpriteBehavior : MonoBehaviour
 	private Vector2 frameSize;
 
 	/// <summary>
+	/// Size of each frame, flipped along the horizontal axis.
+	/// </summary>
+	private Vector2 flippedFrameSize;
+
+	/// <summary>
+	/// Tracks the last "IsFlipped" state.
+	/// </summary>
+	private bool lastFlipState;
+
+	/// <summary>
 	/// Calculates the total number of frames in the image, based on the width and height of the texture and frames.
 	/// </summary>
 	public void Start()
@@ -63,8 +78,9 @@ public class AnimatedSpriteBehavior : MonoBehaviour
 			frameOffsets[_i] = new Vector2(_i * frameWidth, 0.0f);
 
 		frameSize = new Vector2(1.0f / FrameCount, 1.0f);
+		flippedFrameSize = new Vector2(-(1.0f / FrameCount), 1.0f);
 
-		gameObject.renderer.sharedMaterial.SetTextureScale("_MainTex", frameSize);
+		gameObject.renderer.sharedMaterial.SetTextureScale("_MainTex", (IsFlipped ? flippedFrameSize : frameSize));
 	}
 
 	/// <summary>
@@ -83,6 +99,11 @@ public class AnimatedSpriteBehavior : MonoBehaviour
 				currentFrame = 0;
 
 			gameObject.renderer.sharedMaterial.SetTextureOffset("_MainTex", frameOffsets[currentFrame]);
+		}
+
+		if (lastFlipState != IsFlipped) {
+			gameObject.renderer.sharedMaterial.SetTextureScale("_MainTex", (IsFlipped ? flippedFrameSize : frameSize));
+			lastFlipState = IsFlipped;
 		}
 	}
 }
