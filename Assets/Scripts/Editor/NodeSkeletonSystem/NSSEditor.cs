@@ -20,7 +20,20 @@ namespace Editor.NodeSkeletonSystem
 		/// </summary>
 		private Texture2D previewBaseTexture;
 
+		/// <summary>
+		/// Texture used as a "blank" texture if the preview texture is not set.
+		/// </summary>
 		private Texture2D blankTexture = new Texture2D(200, 200);
+
+		/// <summary>
+		/// Marker texture, used to draw the "points".
+		/// </summary>
+		private static Texture markerTexture;
+
+		/// <summary>
+		/// Offset of the label from the point it is labeling.
+		/// </summary>
+		private const int LABEL_OFFSET = 8;
 
 		/** MENU ITEMS **/
 		/// <summary>
@@ -32,6 +45,16 @@ namespace Editor.NodeSkeletonSystem
 			CustomAssetUtility.CreateAsset<NodeSkeletonStructure>();
 		}
 		/** END MENU ITEMS **/
+
+		/// <summary>
+		/// Loads the marker texture when the editor is enabled.
+		/// </summary>
+		public void OnEnable()
+		{
+			// Load the Marker rect.
+			if (markerTexture == null)
+				markerTexture = (Texture)Resources.Load("Editor/Marker");
+		}
 		
 		/// <summary>
 		/// Implements the GUI displayed in the inspector, so that items can be entered by value.
@@ -55,6 +78,11 @@ namespace Editor.NodeSkeletonSystem
 						EditorGUI.DrawPreviewTexture(previewRect, blankTexture);
 
 					// Draw the origin.
+					drawMarkerWithLabel(previewRect, Vector2.zero, "Origin", Color.red);
+
+					// Draw the remaining nodes.
+					foreach(NSSNode node in Target.Nodes)
+						drawMarkerWithLabel(previewRect, node.Offset, node.Name, Color.black);
 				}
 				EditorGUILayout.EndVertical();
 
@@ -71,9 +99,43 @@ namespace Editor.NodeSkeletonSystem
 
 			EditorGUILayout.Separator();
 
+			base.OnInspectorGUI();
+
 			// Set the target as dirty if the GUI values have changed.
 			if (GUI.changed)
 				EditorUtility.SetDirty(Target);
+		}
+
+		/// <summary>
+		/// Draws a marker at the specified point within baseRect, with a label for it.
+		/// </summary>
+		/// <param name="baseRect">Rect in which the label was drawn.</param>
+		/// <param name="point">Point within the rect to draw the marker.</param>
+		/// <param name="label">Label to apply to the marker.</param>
+		/// <param name="color">Color to use for the marker.</param>
+		private void drawMarkerWithLabel(Rect baseRect, Vector2 point, string label, Color color)
+		{
+			// Store the current GUI color.
+			Color guiColor = GUI.color;
+			GUI.color = color;
+
+			// Draw the marker.
+			Rect markerRect = new Rect(baseRect.x + ((baseRect.width - markerTexture.width) / 2) + (point.x * baseRect.width),
+				baseRect.y + ((baseRect.height - markerTexture.height) / 2) - (point.y * baseRect.height),
+				markerTexture.width,
+				markerTexture.height);
+			EditorGUI.DrawTextureTransparent(markerRect, markerTexture);
+
+			// Draw the label.
+			Vector2 labelSize = GUI.skin.label.CalcSize(new GUIContent(label));
+			Rect labelRect = new Rect(baseRect.x + ((baseRect.width - labelSize.x) / 2) + (point.x * baseRect.width),
+				baseRect.y + ((baseRect.height - labelSize.y) / 2) + (labelSize.y - LABEL_OFFSET) - (point.y * baseRect.height),
+				labelSize.x,
+				labelSize.y);
+			GUI.Label(labelRect, label);
+
+			// Restore the GUI color
+			GUI.color = guiColor;
 		}
 	}
 }
