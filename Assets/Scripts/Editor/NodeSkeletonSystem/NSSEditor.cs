@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System.Collections.Generic;
 using Editor.Util;
 using NodeSkeletonSystem;
 
@@ -28,12 +29,17 @@ namespace Editor.NodeSkeletonSystem
 		/// <summary>
 		/// Marker texture, used to draw the "points".
 		/// </summary>
-		private static Texture markerTexture;
+		private Texture markerTexture;
 
 		/// <summary>
 		/// Offset of the label from the point it is labeling.
 		/// </summary>
 		private const int LABEL_OFFSET = 8;
+
+		/// <summary>
+		/// List of states for each individual node.
+		/// </summary>
+		private List<bool> nodesShown;
 
 		/** MENU ITEMS **/
 		/// <summary>
@@ -52,8 +58,16 @@ namespace Editor.NodeSkeletonSystem
 		public void OnEnable()
 		{
 			// Load the Marker rect.
-			if (markerTexture == null)
-				markerTexture = (Texture)Resources.Load("Editor/Marker");
+			markerTexture = (Texture)Resources.Load("Editor/Marker");
+		}
+
+		/// <summary>
+		/// Deletes the blank texture whenever the editor is disabled.
+		/// </summary>
+		public void OnDisable()
+		{
+			if (blankTexture != null)
+				blankTexture = null;
 		}
 		
 		/// <summary>
@@ -61,8 +75,15 @@ namespace Editor.NodeSkeletonSystem
 		/// </summary>
 		public override void OnInspectorGUI()
 		{
+			if (nodesShown == null)
+				nodesShown = new List<bool>();
+
+			while (nodesShown.Count < Target.Nodes.Count)
+				nodesShown.Add(true);
+
 			// Draw the preview area.
-			EditorGUILayout.BeginHorizontal();
+			GUILayout.Space(10);
+			EditorGUILayout.BeginHorizontal(GUILayout.Height(215));
 			{
 				GUILayout.FlexibleSpace();
 
@@ -81,7 +102,7 @@ namespace Editor.NodeSkeletonSystem
 					drawMarkerWithLabel(previewRect, Vector2.zero, "Origin", Color.red);
 
 					// Draw the remaining nodes.
-					foreach(NSSNode node in Target.Nodes)
+					foreach (NSSNode node in Target.Nodes)
 						drawMarkerWithLabel(previewRect, node.Offset, node.Name, Color.black);
 				}
 				EditorGUILayout.EndVertical();
@@ -97,13 +118,67 @@ namespace Editor.NodeSkeletonSystem
 			}
 			EditorGUILayout.EndHorizontal();
 
-			EditorGUILayout.Separator();
+			GUILayout.Space(20);
 
-			base.OnInspectorGUI();
+			EditorGUILayout.BeginHorizontal();
+			{
+				GUILayout.FlexibleSpace();
+				EditorGUILayout.LabelField("Node Count:", Target.Nodes.Count.ToString());
+			}
+			EditorGUILayout.EndHorizontal();
+
+			// Begin editing the nodes.
+			for (int _i = 0; _i < Target.Nodes.Count; _i++)
+				insertNodeEditor(_i);
+
+			GUILayout.Space(20);
+
+			// Add a new node.
+			if (GUILayout.Button("Add Node"))
+			{
+				Target.Nodes.Add(new NSSNode("Node " + Target.Nodes.Count));
+			}
 
 			// Set the target as dirty if the GUI values have changed.
 			if (GUI.changed)
 				EditorUtility.SetDirty(Target);
+		}
+
+		/// <summary>
+		/// Inserts an editor for a node with the specified index.
+		/// </summary>
+		/// <param name="nodeIndex"></param>
+		private void insertNodeEditor(int nodeIndex)
+		{
+			bool markedForRemoval = false;
+
+			EditorGUILayout.BeginHorizontal();
+			{
+				nodesShown[nodeIndex] = EditorGUILayout.Foldout(nodesShown[nodeIndex], Target.Nodes[nodeIndex].Name);
+				GUILayout.FlexibleSpace();
+
+				// Delete the node if the X button is pressed.
+				if (GUILayout.Button("X"))
+				{
+					markedForRemoval = true;
+				}
+			}
+			EditorGUILayout.EndHorizontal();
+
+			if (nodesShown[nodeIndex])
+			{
+				EditorGUILayout.BeginHorizontal();
+				{
+					GUILayout.Label("Name");
+					Target.Nodes[nodeIndex].Name = GUILayout.TextField(Target.Nodes[nodeIndex].Name);
+				}
+				EditorGUILayout.EndHorizontal();
+
+				Target.Nodes[nodeIndex].Offset = EditorGUILayout.Vector3Field("Offset", Target.Nodes[nodeIndex].Offset);
+			}
+
+			if(markedForRemoval)
+				Target.Nodes.RemoveAt(nodeIndex);
 		}
 
 		/// <summary>
