@@ -15,6 +15,13 @@ namespace Editor.NodeSkeletonSystem
 	[CustomEditor(typeof(NodeSkeletonStructure))]
 	public class NSSEditor : EditorBase<NodeSkeletonStructure>
 	{
+		/// <summary>
+		/// Texture used for the preview window.
+		/// </summary>
+		private Texture2D previewBaseTexture;
+
+		private Texture2D blankTexture = new Texture2D(200, 200);
+
 		/** MENU ITEMS **/
 		/// <summary>
 		/// Creates a new NSS file.
@@ -31,26 +38,42 @@ namespace Editor.NodeSkeletonSystem
 		/// </summary>
 		public override void OnInspectorGUI()
 		{
-			base.OnInspectorGUI();
-			
+			// Draw the preview area.
+			EditorGUILayout.BeginHorizontal();
+			{
+				GUILayout.FlexibleSpace();
+
+				// Render the selected preview texture (or a blank texture if it's null).
+				Rect previewRect = EditorGUILayout.BeginVertical(GUILayout.Height(200), GUILayout.Width(200));
+				{
+					GUILayout.FlexibleSpace();
+
+					// Draw the actual texture.
+					if (previewBaseTexture != null)
+						EditorGUI.DrawTextureTransparent(previewRect, previewBaseTexture);
+					else
+						EditorGUI.DrawPreviewTexture(previewRect, blankTexture);
+
+					// Draw the origin.
+				}
+				EditorGUILayout.EndVertical();
+
+				GUILayout.FlexibleSpace();
+			}
+			EditorGUILayout.EndHorizontal();
+
+			EditorGUILayout.BeginHorizontal();
+			{
+				GUILayout.Label("Preview Texture:");
+				previewBaseTexture = (Texture2D)EditorGUILayout.ObjectField(previewBaseTexture, typeof(Texture2D), false);
+			}
+			EditorGUILayout.EndHorizontal();
+
+			EditorGUILayout.Separator();
+
 			// Set the target as dirty if the GUI values have changed.
-			if(GUI.changed)
+			if (GUI.changed)
 				EditorUtility.SetDirty(Target);
-		}
-		
-		/// <summary>
-		/// Mark this editor has having a preview GUI.
-		/// </summary>
-		public override bool HasPreviewGUI()
-		{
-			return true;
-		}
-		
-		/// <summary>
-		/// Renders a quad, potentially with a preview texture, with the individual points and names representing the nodes.
-		/// </summary>
-		public void OnPreviewGUI()
-		{
 		}
 	}
 }
