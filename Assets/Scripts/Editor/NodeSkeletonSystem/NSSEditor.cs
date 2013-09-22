@@ -41,6 +41,11 @@ namespace Editor.NodeSkeletonSystem
 		/// </summary>
 		private List<bool> nodesShown;
 
+		/// <summary>
+		/// List of custom colors for each individual node.
+		/// </summary>
+		private List<Color> nodeColors;
+
 		/** MENU ITEMS **/
 		/// <summary>
 		/// Creates a new NSS file.
@@ -59,6 +64,10 @@ namespace Editor.NodeSkeletonSystem
 		{
 			// Load the Marker rect.
 			markerTexture = (Texture)Resources.Load("Editor/Marker");
+
+			// Node Lists
+			nodesShown = new List<bool>();
+			nodeColors = new List<Color>();
 		}
 
 		/// <summary>
@@ -66,8 +75,17 @@ namespace Editor.NodeSkeletonSystem
 		/// </summary>
 		public void OnDisable()
 		{
+			if (markerTexture != null)
+			{
+				Destroy(markerTexture);
+				markerTexture = null;
+			}
+
 			if (blankTexture != null)
+			{
+				Destroy(blankTexture);
 				blankTexture = null;
+			}
 		}
 		
 		/// <summary>
@@ -75,11 +93,11 @@ namespace Editor.NodeSkeletonSystem
 		/// </summary>
 		public override void OnInspectorGUI()
 		{
-			if (nodesShown == null)
-				nodesShown = new List<bool>();
-
 			while (nodesShown.Count < Target.Nodes.Count)
 				nodesShown.Add(true);
+
+			while (nodeColors.Count < Target.Nodes.Count)
+				nodeColors.Add(Color.black);
 
 			// Draw the preview area.
 			GUILayout.Space(10);
@@ -102,8 +120,8 @@ namespace Editor.NodeSkeletonSystem
 					drawMarkerWithLabel(previewRect, Vector2.zero, "Origin", Color.red);
 
 					// Draw the remaining nodes.
-					foreach (NSSNode node in Target.Nodes)
-						drawMarkerWithLabel(previewRect, node.Offset, node.Name, Color.black);
+					for(int _i = 0; _i < Target.Nodes.Count; _i++)
+						drawMarkerWithLabel(previewRect, Target.Nodes[_i].Offset, Target.Nodes[_i].Name, nodeColors[_i]);
 				}
 				EditorGUILayout.EndVertical();
 
@@ -171,6 +189,13 @@ namespace Editor.NodeSkeletonSystem
 				{
 					GUILayout.Label("Name");
 					Target.Nodes[nodeIndex].Name = GUILayout.TextField(Target.Nodes[nodeIndex].Name);
+				}
+				EditorGUILayout.EndHorizontal();
+
+				EditorGUILayout.BeginHorizontal();
+				{
+					GUILayout.Label("Preview Color");
+					nodeColors[nodeIndex] = EditorGUILayout.ColorField(nodeColors[nodeIndex]);
 				}
 				EditorGUILayout.EndHorizontal();
 
