@@ -17,6 +17,24 @@ namespace NodeSkeletonSystem
 		/// Offset of the node based on the Skeleton's origin.
 		/// </summary>
 		public Vector3 Offset;
+
+		/// <summary>
+		/// Default constructor, blank.
+		/// </summary>
+		public NSSNode()
+			: base()
+		{
+		}
+
+		/// <summary>
+		/// Parameterized constructor.
+		/// </summary>
+		/// <param name="name">Name of the node.</param>
+		public NSSNode(string name)
+			: base()
+		{
+			Name = name;
+		}
 	}
 }
 
