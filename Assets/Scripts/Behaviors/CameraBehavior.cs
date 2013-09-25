@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CameraClass : MonoBehaviour 
+public class CameraBehavior : MonoBehaviour 
 {
 	
 	public  float moveRate = 2.0f; 
