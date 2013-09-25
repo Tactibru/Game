@@ -30,9 +30,11 @@ public class ButtonBehavior : MonoBehaviour
     public void LeftButtonDown()
     {
         Debug.Log("Left Mouse button is down on cube");
+        renderer.material.color = Color.red;
     }
     public void LeftButtonUp()
     {
         Debug.Log("Left Mouse button has been released");
+        renderer.material.color = Color.green;
     }
 }
