@@ -2,14 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AIScript : MonoBehaviour 
+public class AIBehavior : MonoBehaviour 
 {
 	GameObject targetObject = null; 
 	//public for debug
 	public float visionConeAngle = 5.0f; 
 	Vector3 target; 
 	//public for debug
-	public List<NavigationNode> pathToTarget = new List<NavigationNode>(); 
+	public List<NavigationNodeBehavior> pathToTarget = new List<NavigationNodeBehavior>(); 
 	public float speed =0.00001f; 
 	// Use this for initialization
 	void Start () 
@@ -19,7 +19,7 @@ public class AIScript : MonoBehaviour
 	//line of sight check to see if we can see our target. 
 	bool CanSeeTarget()
 	{
-		return CollisionManager.CanSeeObject(gameObject, targetObject, visionConeAngle); 
+		return CollisionManagerBehavior.CanSeeObject(gameObject, targetObject, visionConeAngle); 
 	}
 	/// <summary>
 	/// Gets the target point.
@@ -38,12 +38,12 @@ public class AIScript : MonoBehaviour
 		else
 		{
 	
-			pathToTarget = NavigationNode.RunDijsktras(gameObject, targetObject); 
+			pathToTarget = NavigationNodeBehavior.RunDijsktras(gameObject, targetObject); 
 			print(string.Format("found {0} nodes in path", pathToTarget.Count)); 
-			foreach(NavigationNode itemInPath in pathToTarget)
+			foreach(NavigationNodeBehavior itemInPath in pathToTarget)
 			{
-				
-				if(CollisionManager.CanSeeObject(gameObject, itemInPath.gameObject))
+
+				if (CollisionManagerBehavior.CanSeeObject(gameObject, itemInPath.gameObject))
 				{
 					return itemInPath.transform.position;
 				}
@@ -68,7 +68,7 @@ public class AIScript : MonoBehaviour
 		Vector3 endPos = transform.position + transform.forward * speed * Time.deltaTime; 
 		Vector3 velocity = transform.forward * speed; 
 		//NO COLLISION!
-		if(CollisionManager.CheckCollision(gameObject, 0.5f, transform.position, ref endPos, ref velocity, targetObject))
+		if (CollisionManagerBehavior.CheckCollision(gameObject, 0.5f, transform.position, ref endPos, ref velocity, targetObject))
 		{
 			velocity.y = 0.0f; 
 			transform.rotation = Quaternion.LookRotation(velocity); 

@@ -1,31 +1,31 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic; 
-public class NavigationNode : MonoBehaviour 
+public class NavigationNodeBehavior : MonoBehaviour 
 {
 	
-	static List<NavigationNode> openList = new List<NavigationNode>(); 
-	static List<NavigationNode> closedList = new List<NavigationNode>(); 
-	static List<NavigationNode> allNodeList = new List<NavigationNode>(); 
+	static List<NavigationNodeBehavior> openList = new List<NavigationNodeBehavior>(); 
+	static List<NavigationNodeBehavior> closedList = new List<NavigationNodeBehavior>(); 
+	static List<NavigationNodeBehavior> allNodeList = new List<NavigationNodeBehavior>(); 
 	
-	public List<NavigationNode> neighborList = new List<NavigationNode>(); 
-	static List<NavigationNode> pathToTarget = new List<NavigationNode>(); 
+	public List<NavigationNodeBehavior> neighborList = new List<NavigationNodeBehavior>(); 
+	static List<NavigationNodeBehavior> pathToTarget = new List<NavigationNodeBehavior>(); 
 	
 	public float costSoFar = 0.0f; 
-	public NavigationNode previousPathNode = null; 
+	public NavigationNodeBehavior previousPathNode = null; 
 	public GameObject lastedVisitedBy = null; 
 	public int lastVisitedFrame = 0; 
 	
 	public Material baseColor; 
 	public Material selectedColor; 
 	
-	public Grid theGrid; 
+	public GridBehavior theGrid; 
 	
 
 	// Use this for initialization
 	void Start () 
 	{
-		theGrid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>(); 
+		theGrid = GameObject.FindGameObjectWithTag("Grid").GetComponent<GridBehavior>(); 
 		GameObject[] navNodeObjects = GameObject.FindGameObjectsWithTag("Waypoint"); 
 		
 		bool needToFillAllNodeList = false; 
@@ -39,7 +39,7 @@ public class NavigationNode : MonoBehaviour
 		{
 			foreach(GameObject navNode in navNodeObjects)
 			{
-				NavigationNode navNodeComponent = navNode.GetComponent<NavigationNode>(); 
+				NavigationNodeBehavior navNodeComponent = navNode.GetComponent<NavigationNodeBehavior>(); 
 				if(needToFillAllNodeList && navNodeComponent != null)
 				{
 					allNodeList.Add(navNodeComponent); 
@@ -67,7 +67,7 @@ public class NavigationNode : MonoBehaviour
 		{
 			theLineRenderer.SetVertexCount(neighborList.Count * 2);
 			int vertexIndex = 0;
-			foreach (NavigationNode neighbor in neighborList)
+			foreach (NavigationNodeBehavior neighbor in neighborList)
 			{
 				theLineRenderer.SetPosition(vertexIndex, transform.position);
 				theLineRenderer.SetPosition(vertexIndex+1, neighbor.transform.position);
@@ -79,7 +79,7 @@ public class NavigationNode : MonoBehaviour
 		
 	bool HaveLineOfSightOnHero(GameObject heroObject)
 	{
-		return CollisionManager.CanSeeObject(gameObject, heroObject);
+		return CollisionManagerBehavior.CanSeeObject(gameObject, heroObject);
 	}
 	
 	public bool HasBeenQueried(GameObject whosAsking)
@@ -92,16 +92,16 @@ public class NavigationNode : MonoBehaviour
 		return false;
 	}
 	
-	public static NavigationNode AssignNeighborsToAIPathNode(GameObject aiObject)
+	public static NavigationNodeBehavior AssignNeighborsToAIPathNode(GameObject aiObject)
 	{
-		NavigationNode aiNavNode = aiObject.GetComponent<NavigationNode>();
+		NavigationNodeBehavior aiNavNode = aiObject.GetComponent<NavigationNodeBehavior>();
 		
 		if (aiNavNode != null)
 		{
 			aiNavNode.neighborList.Clear();
-			foreach (NavigationNode navNode in allNodeList)
+			foreach (NavigationNodeBehavior navNode in allNodeList)
 			{
-				if (CollisionManager.CanSeeObject(aiObject, navNode.gameObject))
+				if (CollisionManagerBehavior.CanSeeObject(aiObject, navNode.gameObject))
 				{
 					aiNavNode.neighborList.Add(navNode);
 				}
@@ -111,19 +111,19 @@ public class NavigationNode : MonoBehaviour
 		return aiNavNode;
 	}
 	
-	public static NavigationNode FindClosestNavNodeToGameObject(GameObject theObject)
+	public static NavigationNodeBehavior FindClosestNavNodeToGameObject(GameObject theObject)
 	{
-		NavigationNode closestNode = null;
+		NavigationNodeBehavior closestNode = null;
 		float closestDistance = float.MaxValue;
 		
-		foreach (NavigationNode navNode in allNodeList)
+		foreach (NavigationNodeBehavior navNode in allNodeList)
 		{
 			float distanceToNode = Vector3.Distance(theObject.transform.position, navNode.transform.position);
 			
 			if (distanceToNode < closestDistance)
 			{
 				//The cheap check passed, now do the expensive Line of Sight check
-				if (CollisionManager.CanSeeObject(theObject, navNode.gameObject))
+				if (CollisionManagerBehavior.CanSeeObject(theObject, navNode.gameObject))
 				{
 					closestNode = navNode;
 					closestDistance = distanceToNode;
@@ -134,8 +134,8 @@ public class NavigationNode : MonoBehaviour
 		return closestNode;
 	}
 	
-	public static void AddNodeToOpenList(NavigationNode theNode, float costFromPreviousObject, 
-		NavigationNode previousNode)
+	public static void AddNodeToOpenList(NavigationNodeBehavior theNode, float costFromPreviousObject, 
+		NavigationNodeBehavior previousNode)
 	{
 		float costSoFar = costFromPreviousObject;
 		if (previousNode != null)
@@ -148,12 +148,12 @@ public class NavigationNode : MonoBehaviour
 	}
 	
 	
-	public static NavigationNode FindSmallestCostSoFarInOpenList()
+	public static NavigationNodeBehavior FindSmallestCostSoFarInOpenList()
 	{
-		NavigationNode returnedNode = null; 
+		NavigationNodeBehavior returnedNode = null; 
 		float smallestCostSoFar = float.MaxValue;
 		
-		foreach(NavigationNode navNode in openList)
+		foreach(NavigationNodeBehavior navNode in openList)
 		{
 			if(navNode.costSoFar < smallestCostSoFar)
 			{
@@ -167,24 +167,24 @@ public class NavigationNode : MonoBehaviour
 	}
 	
 	
-	public static List<NavigationNode> RunDijsktras(GameObject startingObject, GameObject targetObject)
+	public static List<NavigationNodeBehavior> RunDijsktras(GameObject startingObject, GameObject targetObject)
 	{
 		openList.Clear(); 
 		closedList.Clear(); 
 		pathToTarget.Clear(); 
 		
-		foreach(NavigationNode navNode in allNodeList)
+		foreach(NavigationNodeBehavior navNode in allNodeList)
 		{
 			navNode.renderer.material = navNode.baseColor; 
 		}
 		
-		NavigationNode startingNode = AssignNeighborsToAIPathNode(startingObject); 
+		NavigationNodeBehavior startingNode = AssignNeighborsToAIPathNode(startingObject); 
 		if(startingNode == null)
 		{
 			startingNode = FindClosestNavNodeToGameObject(startingObject); 
 		}
 		
-		NavigationNode destinationNode = FindClosestNavNodeToGameObject(targetObject); 
+		NavigationNodeBehavior destinationNode = FindClosestNavNodeToGameObject(targetObject); 
 		
 		if(startingNode == null)
 		{
@@ -194,13 +194,13 @@ public class NavigationNode : MonoBehaviour
 		float costFromAIToStartingNode = Vector3.Distance(startingObject.transform.position, startingNode.transform.position); 
 		AddNodeToOpenList(startingNode, costFromAIToStartingNode, null); 
 		
-		NavigationNode currentNode = startingNode; 
+		NavigationNodeBehavior currentNode = startingNode; 
 		
 		int sanity = 1000; 
 		
 		while(currentNode != destinationNode)
 		{
-			foreach(NavigationNode neighborNode in currentNode.neighborList)
+			foreach(NavigationNodeBehavior neighborNode in currentNode.neighborList)
 			{
 				if(closedList.Contains(neighborNode))
 					continue; 
