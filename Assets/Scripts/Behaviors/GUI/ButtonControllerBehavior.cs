@@ -8,10 +8,10 @@ using System.Collections;
 /// </summary>
 public class ButtonControllerBehavior : MonoBehaviour
 {
+   
     // Use this for initialization
     void Start()
     {
-
     }
 
     // Update is called once per frame
@@ -31,10 +31,15 @@ public class ButtonControllerBehavior : MonoBehaviour
             // This scripts goes on either Camera or other empty object
             // ButtonBehavior goes on button object!
             ButtonBehavior buttonControl = hitInfo.collider.GetComponent<ButtonBehavior>();
-            if (buttonControl != null)
-                buttonControl.MouseOver();
-  
+            //if (buttonControl != null)
+            //    buttonControl.MouseOver();
+
+            if (Input.GetMouseButtonDown(0))
+                buttonControl.LeftButtonDown();
+
+            if (Input.GetMouseButtonUp(0))
+                buttonControl.LeftButtonUp();
+
         }
     }
-
 }

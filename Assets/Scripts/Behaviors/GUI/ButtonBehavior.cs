@@ -26,4 +26,13 @@ public class ButtonBehavior : MonoBehaviour
     {
         Debug.Log("Mouse is over Cube");
     }
+
+    public void LeftButtonDown()
+    {
+        Debug.Log("Left Mouse button is down on cube");
+    }
+    public void LeftButtonUp()
+    {
+        Debug.Log("Left Mouse button has been released");
+    }
 }
