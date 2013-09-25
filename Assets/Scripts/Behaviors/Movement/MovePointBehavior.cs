@@ -2,29 +2,26 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic; 
 
-public class MovePoint : MonoBehaviour 
+public class MovePointBehavior : MonoBehaviour 
 {
-   	
-	
-	
-	static List<MovePoint> openList = new List<MovePoint>(); 
-	static List<MovePoint> closedList = new List<MovePoint>(); 
-	static List<MovePoint> allNodeList = new List<MovePoint>(); 
+	static List<MovePointBehavior> openList = new List<MovePointBehavior>(); 
+	static List<MovePointBehavior> closedList = new List<MovePointBehavior>(); 
+	static List<MovePointBehavior> allNodeList = new List<MovePointBehavior>(); 
 	
 	//public List<MovePoint> neighborList = new List<MovePoint>(); 
-	static List<MovePoint> pathToTarget = new List<MovePoint>(); 
+	static List<MovePointBehavior> pathToTarget = new List<MovePointBehavior>(); 
 	
-	public MovePoint[] neighborList = new MovePoint[4]; 
+	public MovePointBehavior[] neighborList = new MovePointBehavior[4]; 
 	
 	public float costSoFar = 0.0f; 
-	public MovePoint previousPathNode = null; 
+	public MovePointBehavior previousPathNode = null; 
 	public GameObject lastedVisitedBy = null; 
 	public int lastVisitedFrame = 0; 
 	
 	public Material baseColor; 
 	public Material selectedColor; 
 	
-	public Grid theGrid; 
+	public GridBehavior theGrid; 
 
 	// Use this for initialization
 	void Start () 
@@ -35,7 +32,7 @@ public class MovePoint : MonoBehaviour
         //    //neighborList[i] = null; 
         //}
 		
-		theGrid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>(); 
+		theGrid = GameObject.FindGameObjectWithTag("Grid").GetComponent<GridBehavior>(); 
 		GameObject[] navNodeObjects = GameObject.FindGameObjectsWithTag("Waypoint"); 
 		
 		bool needToFillAllNodeList = false; 
@@ -49,7 +46,7 @@ public class MovePoint : MonoBehaviour
 		{
 			foreach(GameObject navNode in navNodeObjects)
 			{
-				MovePoint navNodeComponent = navNode.GetComponent<MovePoint>(); 
+				MovePointBehavior navNodeComponent = navNode.GetComponent<MovePointBehavior>(); 
 				if(needToFillAllNodeList && navNodeComponent != null)
 				{
 					allNodeList.Add(navNodeComponent); 
@@ -115,12 +112,12 @@ public class MovePoint : MonoBehaviour
 		
 	}
 	
-	public static MovePoint FindClosestNavNodeToGameObject(GameObject theObject)
+	public static MovePointBehavior FindClosestNavNodeToGameObject(GameObject theObject)
 	{
-		MovePoint closestNode = null;
+		MovePointBehavior closestNode = null;
 		float closestDistance = float.MaxValue;
 		
-		foreach (MovePoint navNode in allNodeList)
+		foreach (MovePointBehavior navNode in allNodeList)
 		{
 			float distanceToNode = Vector3.Distance(theObject.transform.position, navNode.transform.position);
 			
@@ -138,8 +135,8 @@ public class MovePoint : MonoBehaviour
 		return closestNode;
 	}
 	
-	public static void AddNodeToOpenList(MovePoint theNode, float costFromPreviousObject, 
-		MovePoint previousNode)
+	public static void AddNodeToOpenList(MovePointBehavior theNode, float costFromPreviousObject, 
+		MovePointBehavior previousNode)
 	{
 		float costSoFar = costFromPreviousObject;
 		if (previousNode != null)
@@ -152,12 +149,12 @@ public class MovePoint : MonoBehaviour
 	}
 	
 	
-	public static MovePoint FindSmallestCostSoFarInOpenList()
+	public static MovePointBehavior FindSmallestCostSoFarInOpenList()
 	{
-		MovePoint returnedNode = null; 
+		MovePointBehavior returnedNode = null; 
 		float smallestCostSoFar = float.MaxValue;
 		
-		foreach(MovePoint navNode in openList)
+		foreach(MovePointBehavior navNode in openList)
 		{
 			if(navNode.costSoFar < smallestCostSoFar)
 			{
@@ -171,24 +168,24 @@ public class MovePoint : MonoBehaviour
 	}
 	
 	
-	public static List<MovePoint> RunDijsktras(GameObject startingObject, GameObject targetObject)
+	public static List<MovePointBehavior> RunDijsktras(GameObject startingObject, GameObject targetObject)
 	{
 		openList.Clear(); 
 		closedList.Clear(); 
 		pathToTarget.Clear(); 
 		
-		foreach(MovePoint navNode in allNodeList)
+		foreach(MovePointBehavior navNode in allNodeList)
 		{
 			navNode.renderer.material = navNode.baseColor; 
 		}
 		
-		MovePoint startingNode = null; 
+		MovePointBehavior startingNode = null; 
 		if(startingNode == null)
 		{
 			startingNode = FindClosestNavNodeToGameObject(startingObject); 
 		}
 		
-		MovePoint destinationNode = FindClosestNavNodeToGameObject(targetObject); 
+		MovePointBehavior destinationNode = FindClosestNavNodeToGameObject(targetObject); 
 		
 		if(startingNode == null)
 		{
@@ -198,13 +195,13 @@ public class MovePoint : MonoBehaviour
 		float costFromAIToStartingNode = Vector3.Distance(startingObject.transform.position, startingNode.transform.position); 
 		AddNodeToOpenList(startingNode, costFromAIToStartingNode, null); 
 		
-		MovePoint currentNode = startingNode; 
+		MovePointBehavior currentNode = startingNode; 
 		
 		int sanity = 1000; 
 		int count = 0; 
 		while(currentNode != destinationNode)
 		{
-			foreach(MovePoint neighborNode in currentNode.neighborList)
+			foreach(MovePointBehavior neighborNode in currentNode.neighborList)
 			{
 				if(!neighborNode)
 				{

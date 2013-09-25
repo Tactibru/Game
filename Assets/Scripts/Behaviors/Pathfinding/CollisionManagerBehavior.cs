@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CollisionManager : MonoBehaviour 
+public class CollisionManagerBehavior : MonoBehaviour 
 {
 	public static int LayerMaskThatIgnoresMe(GameObject me)
 	{

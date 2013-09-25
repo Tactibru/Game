@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-public class Grid : MonoBehaviour 
+public class GridBehavior : MonoBehaviour 
 {
     public static int theMapLength = 4;
     public static int theMapWidth = 6;
 	
-    public MovePoint[] theMap = new MovePoint[theMapWidth * theMapLength];
+    public MovePointBehavior[] theMap = new MovePointBehavior[theMapWidth * theMapLength];
 	
 	public GameObject targetNode; 
 	public GameObject currentActor; 
@@ -40,13 +40,13 @@ public class Grid : MonoBehaviour
 	
 	void RunDijkstras()
 	{
-		if(currentActor.GetComponent<Actor>().currentlyMoving)
+		if(currentActor.GetComponent<ActorBehavior>().currentlyMoving)
 		{
 			return; 
 		}
 		else
 		{
-			currentActor.GetComponent<Actor>().pathList = MovePoint.RunDijsktras(currentActor.GetComponent<Actor>().currentMovePoint.gameObject, targetNode); 
+			currentActor.GetComponent<ActorBehavior>().pathList = MovePointBehavior.RunDijsktras(currentActor.GetComponent<ActorBehavior>().currentMovePoint.gameObject, targetNode); 
 		}
 	}
 	
@@ -61,12 +61,12 @@ public class Grid : MonoBehaviour
 			
 			if(Physics.Raycast(ray, out hitInfo))
 			{
-				if(hitInfo.transform.GetComponent<MovePoint>())
+				if(hitInfo.transform.GetComponent<MovePointBehavior>())
 				{
 					targetNode = hitInfo.transform.gameObject; 
 					
 				}
-				else if(hitInfo.transform.GetComponent<Actor>())
+				else if(hitInfo.transform.GetComponent<ActorBehavior>())
 				{
 					//Check if you click on a squad. 
 					currentActor = hitInfo.transform.gameObject; 

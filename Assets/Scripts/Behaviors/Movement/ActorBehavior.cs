@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic; 
-public class Actor : MonoBehaviour 
+public class ActorBehavior : MonoBehaviour 
 {
-    public MovePoint currentMovePoint;
-    public MovePoint pointToMoveTo;
+    public MovePointBehavior currentMovePoint;
+    public MovePointBehavior pointToMoveTo;
     public float timeToMoveToPoint;
 	
-	public List<MovePoint> pathList;
+	public List<MovePointBehavior> pathList;
 	
     public enum DirectionOfMovement
     {

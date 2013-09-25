@@ -76,16 +76,12 @@ namespace Editor.NodeSkeletonSystem
 		public void OnDisable()
 		{
 			if (markerTexture != null)
-			{
-				Destroy(markerTexture);
 				markerTexture = null;
-			}
 
 			if (blankTexture != null)
-			{
-				Destroy(blankTexture);
 				blankTexture = null;
-			}
+			
+			Resources.UnloadUnusedAssets();
 		}
 		
 		/// <summary>
