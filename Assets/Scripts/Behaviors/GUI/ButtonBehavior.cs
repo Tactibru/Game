@@ -13,18 +13,24 @@ public class ButtonBehavior : MonoBehaviour
     {
 	
 	}
+<<<<<<< HEAD
 
     /// <summary>
     /// False = Up, True = Down
     /// </summary>
     public bool lastState = false;
+=======
+>>>>>>> 3f2a510240e82851d813ffacd130b1b96816a164
 	
 	// Update is called once per frame
 	void Update () 
     {
        
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3f2a510240e82851d813ffacd130b1b96816a164
     /// <summary>
     /// Function that prints a statement saying that my current mouse position is over the cube
     /// </summary>
@@ -33,6 +39,7 @@ public class ButtonBehavior : MonoBehaviour
         Debug.Log("Mouse is over Cube");
     }
 
+<<<<<<< HEAD
     public void LMBPressed()
     {
     }
@@ -53,16 +60,23 @@ public class ButtonBehavior : MonoBehaviour
             LMBHeld();
 
         lastState = true;
+=======
+    public void LeftButtonDown()
+    {
+>>>>>>> 3f2a510240e82851d813ffacd130b1b96816a164
         Debug.Log("Left Mouse button is down on cube");
         renderer.material.color = Color.red;
     }
     public void LeftButtonUp()
     {
+<<<<<<< HEAD
         if (lastState == true)
             LMBReleased();
 
         lastState = false;
 
+=======
+>>>>>>> 3f2a510240e82851d813ffacd130b1b96816a164
         Debug.Log("Left Mouse button has been released");
         renderer.material.color = Color.green;
     }
