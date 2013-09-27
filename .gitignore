@@ -1,3 +1,4 @@
+_UpgradeReport_Files/
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
@@ -6,3 +7,4 @@
 *.csproj
 *.unityproj
 *.sln
+*.pidb
