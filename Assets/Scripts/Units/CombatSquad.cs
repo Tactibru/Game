@@ -11,7 +11,7 @@ namespace Units
 		/// <summary>
 		/// Maximum number of combat units per squad.
 		/// </summary>
-		private const int MAX_UNITS_PER_SQUAD = 5;
+		public const int MAX_UNITS_PER_SQUAD = 5;
 		
 		/// <summary>
 		/// Flags the squad as "dirty", forcing the speed to be recalculated.

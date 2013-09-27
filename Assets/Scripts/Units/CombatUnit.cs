@@ -10,6 +10,17 @@ namespace Units
 	public class CombatUnit : ScriptableObject
 	{
 		/// <summary>
+		/// Squad space occupied by this unit.
+		/// </summary>
+		public enum UnitSpace
+		{
+			OneByOne,
+			OneByTwo,
+			TwoByOne,
+			TwoByTwo
+		}
+		
+		/// <summary>
 		/// Unit name.
 		/// </summary>
 		public string Name;
@@ -48,5 +59,15 @@ namespace Units
 		/// Unit's adjustment to the player's starting honor.
 		/// </summary>
 		public int HonorMod;
+		
+		/// <summary>
+		/// Amount of space occupied by the unit.
+		/// </summary>
+		public UnitSpace Space;
+		
+		/// <summary>
+		/// Number of Squad seats taken up by this unit.
+		/// </summary>
+		public int UnitSize;
 	}
 }
