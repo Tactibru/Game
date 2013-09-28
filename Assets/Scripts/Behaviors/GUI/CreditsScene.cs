@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+
+
 /// <summary>
 /// A simple credits script that displays the title of the scene and has a return to main menu button.
 /// Author: Karl John Matthews
