@@ -28,7 +28,7 @@ namespace Editor.Units
 		/// </summary>
 		public override void OnInspectorGUI()
 		{
-			base.OnInspectorGUI();
+			
 		}
 	}
 }
