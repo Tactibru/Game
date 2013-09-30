@@ -4,8 +4,11 @@ using System.Collections.Generic;
 
 public class MovePoint : MonoBehaviour 
 {
-   	
-	
+
+    public MovePoint North;
+    public MovePoint South;
+    public MovePoint East;
+    public MovePoint West;
 	
 	static List<MovePoint> openList = new List<MovePoint>(); 
 	static List<MovePoint> closedList = new List<MovePoint>(); 
@@ -262,7 +265,8 @@ public class MovePoint : MonoBehaviour
 			}
 		}
 		
-		pathToTarget.Reverse(); 
+		//pathToTarget.Reverse();
+        
 		return pathToTarget; 
 		
 		

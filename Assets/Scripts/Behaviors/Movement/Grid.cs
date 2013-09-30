@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Grid : MonoBehaviour 
 {
-    public static int theMapLength = 4;
-    public static int theMapWidth = 6;
+    public static int theMapLength = 10;
+    public static int theMapWidth = 20;
 	
     public MovePoint[] theMap = new MovePoint[theMapWidth * theMapLength];
 	
@@ -24,6 +24,8 @@ public class Grid : MonoBehaviour
                     {
                         theMap[width + (length * theMapWidth)].neighborList[0] = theMap[width + ((length + 1) * theMapWidth)];
                         theMap[width + ((length + 1) * theMapWidth)].neighborList[2] = theMap[width + (length * theMapWidth)];
+                        theMap[width + (length * theMapWidth)].North = theMap[width + ((length + 1) * theMapWidth)];
+                        theMap[width + ((length + 1) * theMapWidth)].South = theMap[width + (length * theMapWidth)];
                     }
                 }
                 if (width < theMapWidth - 1)
@@ -32,6 +34,8 @@ public class Grid : MonoBehaviour
                     {
                         theMap[width + (length * theMapWidth)].neighborList[1] = theMap[width + 1 + (length * theMapWidth)];
                         theMap[width + 1 + (length * theMapWidth)].neighborList[3] = theMap[width + (length * theMapWidth)]; 
+                        theMap[width + (length * theMapWidth)].East = theMap[width + 1 + (length * theMapWidth)];
+                        theMap[width + 1 + (length * theMapWidth)].West = theMap[width + (length * theMapWidth)];
                     }
                 }
             }
