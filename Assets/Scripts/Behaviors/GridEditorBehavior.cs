@@ -11,9 +11,16 @@ public class GridEditorBehavior : MonoBehaviour
 	public int column; 
 	public bool booleanVariable; 
 	
+	public GameObject prefab; 
+	
 
 	// Use this for initialization
 	
+	
+	public void FunctionCall()
+	{
+		Debug.Log("Called Function"); 
+	}
 	// Update is called once per frame
 	void Update () 
 	{

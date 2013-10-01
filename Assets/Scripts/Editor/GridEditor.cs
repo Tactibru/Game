@@ -1,4 +1,5 @@
 using UnityEditor; 
+using UnityEngine; 
 using System.Collections; 
 /// <summary>
 /// Grid editor.
@@ -15,5 +16,9 @@ public class GridEditor:Editor
 		targetScript.row = EditorGUILayout.IntSlider("Row",targetScript.row, 1, 10); 
 		targetScript.column = EditorGUILayout.IntSlider("Column", targetScript.column, 1, 10); 
 		targetScript.booleanVariable = EditorGUILayout.Toggle("Bool", targetScript.booleanVariable); 
+		targetScript.prefab = EditorGUILayout.ObjectField("Prefab", targetScript.prefab, typeof(GameObject), true) as GameObject; 
+		
+		if(GUILayout.Button("Call Function"))
+			targetScript.FunctionCall(); 
 	}
 }
