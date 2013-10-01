@@ -4,12 +4,18 @@ using System.Collections.Generic;
 
 public class MovePointBehavior : MonoBehaviour 
 {
+    public MovePointBehavior North;
+    public MovePointBehavior South;
+    public MovePointBehavior East;
+    public MovePointBehavior West;
+
 	static List<MovePointBehavior> openList = new List<MovePointBehavior>(); 
 	static List<MovePointBehavior> closedList = new List<MovePointBehavior>(); 
 	static List<MovePointBehavior> allNodeList = new List<MovePointBehavior>(); 
 	
 	//public List<MovePoint> neighborList = new List<MovePoint>(); 
-	static List<MovePointBehavior> pathToTarget = new List<MovePointBehavior>(); 
+	static List<MovePointBehavior> pathToTarget = new List<MovePointBehavior>();
+    public int index;
 	
 	public MovePointBehavior[] neighborList = new MovePointBehavior[4]; 
 	
@@ -224,8 +230,8 @@ public class MovePointBehavior : MonoBehaviour
 				}
 				else
 				{
-					print(currentNode.transform.position.ToString()); 
-					print(neighborNode.transform.position.ToString()); 
+					//print(currentNode.transform.position.ToString()); 
+					//print(neighborNode.transform.position.ToString()); 
 					
 					float distanceToNode = Vector3.Distance(currentNode.transform.position, neighborNode.transform.position); 
 					print(distanceToNode.ToString()); 
@@ -259,7 +265,9 @@ public class MovePointBehavior : MonoBehaviour
 			}
 		}
 		
-		pathToTarget.Reverse(); 
+		pathToTarget.Reverse();
+        pathToTarget.RemoveAt(0);
+        
 		return pathToTarget; 
 		
 		
