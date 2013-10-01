@@ -6,6 +6,8 @@ public class ActorBehavior : MonoBehaviour
     public MovePointBehavior currentMovePoint;
     public MovePointBehavior pointToMoveTo;
     public float timeToMoveToPoint;
+    public int side;
+    public GridBehavior theGrid;
 	
 	public List<MovePointBehavior> pathList;
 	
@@ -39,19 +41,14 @@ public class ActorBehavior : MonoBehaviour
 
 	void Update () 
     {
-
-
         if (!currentlyMoving)
         {
             if (pathList.Count > 0)
             {
-               
-                //Debug.Log(pathList[0].index.ToString());
                 if (pathList[0] == currentMovePoint.neighborList[0])
                 //if (Input.GetKeyDown(KeyCode.UpArrow) && currentMovePoint.North)
                 {
-                    Debug.Log("hi");
-                    pointToMoveTo = currentMovePoint.North;
+                    pointToMoveTo = currentMovePoint.neighborList[0];
                     currentMovementDirection = DirectionOfMovement.North;
                     currentlyMoving = true;
                     currentMovementTime = timeToMoveToPoint;
@@ -59,7 +56,7 @@ public class ActorBehavior : MonoBehaviour
                 else if (pathList[0] == currentMovePoint.neighborList[2])
                 //else if (Input.GetKeyDown(KeyCode.DownArrow) && currentMovePoint.South)
                 {
-                    pointToMoveTo = currentMovePoint.South;
+                    pointToMoveTo = currentMovePoint.neighborList[2];
                     currentMovementDirection = DirectionOfMovement.South;
                     currentlyMoving = true;
                     currentMovementTime = timeToMoveToPoint;
@@ -67,7 +64,7 @@ public class ActorBehavior : MonoBehaviour
                 else if (pathList[0] == currentMovePoint.neighborList[3])
                 //else if (Input.GetKeyDown(KeyCode.LeftArrow) && currentMovePoint.West)
                 {
-                    pointToMoveTo = currentMovePoint.West;
+                    pointToMoveTo = currentMovePoint.neighborList[3];
                     currentMovementDirection = DirectionOfMovement.West;
                     currentlyMoving = true;
                     currentMovementTime = timeToMoveToPoint;
@@ -75,49 +72,16 @@ public class ActorBehavior : MonoBehaviour
                 else if (pathList[0] == currentMovePoint.neighborList[1])
                 //else if (Input.GetKeyDown(KeyCode.RightArrow) && currentMovePoint.East)
                 {
-                    pointToMoveTo = currentMovePoint.East;
+                    pointToMoveTo = currentMovePoint.neighborList[1];
                     currentMovementDirection = DirectionOfMovement.East;
                     currentlyMoving = true;
                     currentMovementTime = timeToMoveToPoint;
                 }
+                if (GridBehavior.preCombat)
+
+                    theGrid.startCombat();
             }
-            ////Debug.Log("Hi");
-            ////CheckMoveDirection();
-            ////if (pathList[0] == currentMovePoint.neighborList[0])
-            //if (Input.GetKeyDown(KeyCode.UpArrow) && currentMovePoint.North)
-            //{
-            //    Debug.Log("hi");
-            //    pointToMoveTo = currentMovePoint.North;
-            //    currentMovementDirection = DirectionOfMovement.North;
-            //    currentlyMoving = true;
-            //    currentMovementTime = timeToMoveToPoint;
-            //}
-            ////else if (pathList[0] == currentMovePoint.neighborList[2])
-            //else if (Input.GetKeyDown(KeyCode.DownArrow) && currentMovePoint.South)
-            //{
-            //    pointToMoveTo = currentMovePoint.South;
-            //    currentMovementDirection = DirectionOfMovement.South;
-            //    currentlyMoving = true;
-            //    currentMovementTime = timeToMoveToPoint;
-            //}
-            ////else if (pathList[0] == currentMovePoint.neighborList[3])
-            //else if (Input.GetKeyDown(KeyCode.LeftArrow) && currentMovePoint.West)
-            //{
-            //    pointToMoveTo = currentMovePoint.West;
-            //    currentMovementDirection = DirectionOfMovement.West;
-            //    currentlyMoving = true;
-            //    currentMovementTime = timeToMoveToPoint;
-            //}
-            ////else if (pathList[0] == currentMovePoint.neighborList[1])
-            //else if (Input.GetKeyDown(KeyCode.RightArrow) && currentMovePoint.East)
-            //{
-            //    pointToMoveTo = currentMovePoint.East;
-            //    currentMovementDirection = DirectionOfMovement.East;
-            //    currentlyMoving = true;
-            //    currentMovementTime = timeToMoveToPoint;
-            //}
         }
-        
         else
         {
             switch (currentMovementDirection)
@@ -132,6 +96,8 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
+                        if (GridBehavior.preCombat && pathList[0])
+                            theGrid.startCombat();
                     }
                     else
                     {
@@ -151,6 +117,8 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
+                        if (GridBehavior.preCombat && pathList[0])
+                            theGrid.startCombat();
                     }
                     else
                     {
@@ -170,6 +138,8 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
+                        if (GridBehavior.preCombat && pathList[0])
+                            theGrid.startCombat();
                     }
                     else
                     {
@@ -189,6 +159,8 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
+                        if (GridBehavior.preCombat && pathList[0])
+                            theGrid.startCombat();
                     }
                     else
                     {
@@ -201,41 +173,4 @@ public class ActorBehavior : MonoBehaviour
             }
         }
 	}
-
-    //void CheckMoveDirection()
-    //{
-    //    //if (pathList[0] == currentMovePoint.neighborList[0])
-    //    if(Input.GetKeyDown(KeyCode.W ) && currentMovePoint.North)
-    //    {
-    //        Debug.Log("hi");
-    //        pointToMoveTo = currentMovePoint.North;
-    //        currentMovementDirection = DirectionOfMovement.North;
-    //        currentlyMoving = true;
-    //        currentMovementTime = timeToMoveToPoint;
-    //    }
-    //    //else if (pathList[0] == currentMovePoint.neighborList[2])
-    //    else if(Input.GetKeyDown(KeyCode.DownArrow) && currentMovePoint.South)
-    //    {
-    //        pointToMoveTo = currentMovePoint.South;
-    //        currentMovementDirection = DirectionOfMovement.South;
-    //        currentlyMoving = true;
-    //        currentMovementTime = timeToMoveToPoint;
-    //    }
-    //    //else if (pathList[0] == currentMovePoint.neighborList[3])
-    //    else if (Input.GetKeyDown(KeyCode.RightArrow) && currentMovePoint.West)
-    //    {
-    //        pointToMoveTo = currentMovePoint.West;
-    //        currentMovementDirection = DirectionOfMovement.West;
-    //        currentlyMoving = true;
-    //        currentMovementTime = timeToMoveToPoint;
-    //    }
-    //    //else if (pathList[0] == currentMovePoint.neighborList[1])
-    //    else if (Input.GetKeyDown(KeyCode.LeftArrow) && currentMovePoint.East)
-    //    {
-    //        pointToMoveTo = currentMovePoint.East;
-    //        currentMovementDirection = DirectionOfMovement.East;
-    //        currentlyMoving = true;
-    //        currentMovementTime = timeToMoveToPoint;
-    //    }
-    //}
 }

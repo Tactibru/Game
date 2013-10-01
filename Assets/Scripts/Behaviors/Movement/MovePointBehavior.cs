@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public class MovePointBehavior : MonoBehaviour 
 {
-    public MovePointBehavior North;
-    public MovePointBehavior South;
-    public MovePointBehavior East;
-    public MovePointBehavior West;
+    //public MovePointBehavior North;
+    //public MovePointBehavior South;
+    //public MovePointBehavior East;
+    //public MovePointBehavior West;
 
 	static List<MovePointBehavior> openList = new List<MovePointBehavior>(); 
 	static List<MovePointBehavior> closedList = new List<MovePointBehavior>(); 
@@ -204,7 +204,7 @@ public class MovePointBehavior : MonoBehaviour
 		MovePointBehavior currentNode = startingNode; 
 		
 		int sanity = 1000; 
-		int count = 0; 
+		//int count = 0; 
 		while(currentNode != destinationNode)
 		{
 			foreach(MovePointBehavior neighborNode in currentNode.neighborList)
@@ -214,7 +214,7 @@ public class MovePointBehavior : MonoBehaviour
 					continue; 
 				}
 				
-				print(count.ToString()); 
+				//print(count.ToString()); 
 				if(closedList.Contains(neighborNode))
 					continue; 
 				else if(openList.Contains(neighborNode))
@@ -234,10 +234,10 @@ public class MovePointBehavior : MonoBehaviour
 					//print(neighborNode.transform.position.ToString()); 
 					
 					float distanceToNode = Vector3.Distance(currentNode.transform.position, neighborNode.transform.position); 
-					print(distanceToNode.ToString()); 
+					//print(distanceToNode.ToString()); 
 					AddNodeToOpenList(neighborNode, distanceToNode, currentNode); 
 				}
-				count++; 
+				//count++; 
 			}
 			closedList.Add(currentNode); 
 			if(sanity-- < 0)
@@ -264,9 +264,14 @@ public class MovePointBehavior : MonoBehaviour
 				return pathToTarget; 
 			}
 		}
-		
+        //if (GridBehavior.preCombat)
+        //    pathToTarget.RemoveAt(0);
+
 		pathToTarget.Reverse();
         pathToTarget.RemoveAt(0);
+
+        if (GridBehavior.preCombat)
+            pathToTarget.RemoveAt(pathToTarget.Count - 1);
         
 		return pathToTarget; 
 		
