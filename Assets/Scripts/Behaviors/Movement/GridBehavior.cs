@@ -3,41 +3,45 @@ using System.Collections;
 
 public class GridBehavior : MonoBehaviour 
 {
-    public static int theMapLength = 10;
-    public static int theMapWidth = 20;
-	
-    public MovePointBehavior[] theMap = new MovePointBehavior[theMapWidth * theMapLength];
+    public int theMapLength = 10;
+    public int theMapWidth = 20;
+
+    public MovePointBehavior[] theMap;
 	
 	public GameObject targetNode; 
 	public GameObject currentActor; 
     void Start()
     {
-		
+        //theMap = new MovePointBehavior[theMapLength * theMapWidth];
 		
         for (int length = 0; length < theMapLength; length++)
         {
             for (int width = 0; width < theMapWidth; width++)
             {
-                if(length < theMapLength -1)
-                {
-                    if(theMap[width + (length * theMapWidth)] && theMap[width + ((length + 1) * theMapWidth)])
+                //if (theMap[width + (length * theMapWidth)])
+                //{
+                //    theMap[width + (length * theMapWidth)].index = width + (length * theMapWidth);
+                    if (length < theMapLength - 1)
                     {
-                        theMap[width + (length * theMapWidth)].neighborList[0] = theMap[width + ((length + 1) * theMapWidth)];
-                        theMap[width + ((length + 1) * theMapWidth)].neighborList[2] = theMap[width + (length * theMapWidth)];
-                        theMap[width + (length * theMapWidth)].North = theMap[width + ((length + 1) * theMapWidth)];
-                        theMap[width + ((length + 1) * theMapWidth)].South = theMap[width + (length * theMapWidth)];
+                        if (theMap[width + (length * theMapWidth)] && theMap[width + ((length + 1) * theMapWidth)])
+                        {
+                            theMap[width + (length * theMapWidth)].neighborList[0] = theMap[width + ((length + 1) * theMapWidth)];
+                            theMap[width + ((length + 1) * theMapWidth)].neighborList[2] = theMap[width + (length * theMapWidth)];
+                            theMap[width + (length * theMapWidth)].North = theMap[width + ((length + 1) * theMapWidth)];
+                            theMap[width + ((length + 1) * theMapWidth)].South = theMap[width + (length * theMapWidth)];
+                        }
                     }
-                }
-                if (width < theMapWidth - 1)
-                {
-                    if (theMap[width + (length * theMapWidth)] && theMap[width + 1 + (length * theMapWidth)])
+                    if (width < theMapWidth - 1)
                     {
-                        theMap[width + (length * theMapWidth)].neighborList[1] = theMap[width + 1 + (length * theMapWidth)];
-                        theMap[width + 1 + (length * theMapWidth)].neighborList[3] = theMap[width + (length * theMapWidth)]; 
-                        theMap[width + (length * theMapWidth)].East = theMap[width + 1 + (length * theMapWidth)];
-                        theMap[width + 1 + (length * theMapWidth)].West = theMap[width + (length * theMapWidth)];
+                        if (theMap[width + (length * theMapWidth)] && theMap[width + 1 + (length * theMapWidth)])
+                        {
+                            theMap[width + (length * theMapWidth)].neighborList[1] = theMap[width + 1 + (length * theMapWidth)];
+                            theMap[width + 1 + (length * theMapWidth)].neighborList[3] = theMap[width + (length * theMapWidth)];
+                            theMap[width + (length * theMapWidth)].East = theMap[width + 1 + (length * theMapWidth)];
+                            theMap[width + 1 + (length * theMapWidth)].West = theMap[width + (length * theMapWidth)];
+                        }
                     }
-                }
+                //}
             }
         }
     }
