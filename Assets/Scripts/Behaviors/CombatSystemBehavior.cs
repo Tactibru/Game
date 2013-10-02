@@ -69,30 +69,6 @@ public class CombatSystemBehavior : MonoBehaviour
 		IEnumerable<CombatUnit> defFirstRow = defensiveSquad.Squad.Units.Where(l => l.Position.Row == 0).Select(l => l.Unit);
 		IEnumerable<CombatUnit> defSecondRow = defensiveSquad.Squad.Units.Where(l => l.Position.Row == 1).Select(l => l.Unit);
 
-		/*int totalStrength = offFirstRow.Sum(l => l.Strength);
-		int totalToughness = defFirstRow.Sum(l => l.Toughness);
-
-		int damage = Mathf.Max(totalStrength - totalToughness, 0);
-
-		Debug.Log(string.Format("Row 1 (Size: {1}) attacked for {0} damage.", damage, defFirstRow.Count()));
-
-		foreach (CombatUnit unit in defFirstRow)
-		{
-			int dmg = (damage / defFirstRow.Count());
-			unit.Health -= Mathf.Max(dmg, 0);
-
-			Debug.Log(string.Format("{0} took {1} damage.", unit.Name, dmg));
-
-			if (unit.Health == 0)
-				Debug.Log(string.Format("{0} was destroyed!", unit.Name));
-		}
-
-		defensiveSquad.Squad.Units.RemoveAll(l => (l.Position.Row == 0 && l.Unit.Health == 0));
-
-		int totalRemainingUnits = defensiveSquad.Squad.Units.Count;
-		if (totalRemainingUnits <= 0)
-			endCombat();*/
-
 		// Ensure there is actually somebody remaining!
 		if (offensiveSquad.Squad.Units.Count == 0)
 			endCombat(offensiveSquad);
