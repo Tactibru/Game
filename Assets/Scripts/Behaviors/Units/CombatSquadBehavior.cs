@@ -39,5 +39,9 @@ public class CombatSquadBehavior : MonoBehaviour {
 		}
 
 		squad = (CombatSquad)Instantiate(SquadPrefab);
+
+		// Iterate over and instantiate each of the squad's units.
+		for (int _i = 0; _i < squad.Units.Count; _i++ )
+			squad.Units[_i].Unit = (CombatUnit)Instantiate(squad.Units[_i].Unit);
 	}
 }

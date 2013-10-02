@@ -15,6 +15,23 @@ public class CombatSystemBehavior : MonoBehaviour
 	public Camera combatCamera;
 
 	/// <summary>
+	/// Marks which row in the combat sequence is the next active attacker.
+	/// </summary>
+	public enum CurrentAttacker
+	{
+		None,
+		OffensiveFront,
+		DefensiveFront,
+		OffensiveBack,
+		DefensiveBack
+	}
+
+	/// <summary>
+	/// Indiciates which attacker is next in the combat sequence.
+	/// </summary>
+	private CurrentAttacker currentAttacker;
+
+	/// <summary>
 	/// Represents the offensive squad in this combat.
 	/// </summary>
 	private CombatSquadBehavior offensiveSquad;
@@ -52,12 +69,12 @@ public class CombatSystemBehavior : MonoBehaviour
 		IEnumerable<CombatUnit> defFirstRow = defensiveSquad.Squad.Units.Where(l => l.Position.Row == 0).Select(l => l.Unit);
 		IEnumerable<CombatUnit> defSecondRow = defensiveSquad.Squad.Units.Where(l => l.Position.Row == 1).Select(l => l.Unit);
 
-		int totalStrength = offFirstRow.Sum(l => l.Strength);
+		/*int totalStrength = offFirstRow.Sum(l => l.Strength);
 		int totalToughness = defFirstRow.Sum(l => l.Toughness);
 
 		int damage = Mathf.Max(totalStrength - totalToughness, 0);
 
-		Debug.Log(string.Format("Row 1 attacked for {0} damage.", damage));
+		Debug.Log(string.Format("Row 1 (Size: {1}) attacked for {0} damage.", damage, defFirstRow.Count()));
 
 		foreach (CombatUnit unit in defFirstRow)
 		{
@@ -74,7 +91,73 @@ public class CombatSystemBehavior : MonoBehaviour
 
 		int totalRemainingUnits = defensiveSquad.Squad.Units.Count;
 		if (totalRemainingUnits <= 0)
-			endCombat();
+			endCombat();*/
+
+		// Ensure there is actually somebody remaining!
+		if (offensiveSquad.Squad.Units.Count == 0)
+			endCombat(offensiveSquad);
+
+		if (defensiveSquad.Squad.Units.Count == 0)
+			endCombat(defensiveSquad);
+
+		switch (currentAttacker)
+		{
+			case CurrentAttacker.OffensiveFront:
+				{
+					if (offFirstRow.Count() <= 0)
+					{
+						currentAttacker = CurrentAttacker.DefensiveFront;
+						break;
+					}
+
+					int totalStrength = offFirstRow.Sum(l => l.Strength);
+					int totalToughness = (defFirstRow.Count() > 0 ? defFirstRow.Sum(l => l.Toughness) : defSecondRow.Sum(l => l.Toughness));
+					int damage = Mathf.Max(totalStrength - totalToughness, 0);
+
+					int damagePerUnit = damage / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
+					foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
+					{
+						unit.Health -= damagePerUnit;
+
+						Debug.Log(string.Format("{0} took {1} damage.", unit.Name, damagePerUnit));
+
+						if (unit.Health <= 0)
+							Debug.Log(string.Format("{0} was destroyed!", unit.Name));
+					}
+
+					removeDeadUnits();
+
+					currentAttacker = CurrentAttacker.DefensiveFront;
+				} break;
+
+			case CurrentAttacker.DefensiveFront:
+				currentAttacker = CurrentAttacker.OffensiveBack;
+				break;
+
+			case CurrentAttacker.OffensiveBack:
+				currentAttacker = CurrentAttacker.DefensiveBack;
+				break;
+
+			case CurrentAttacker.DefensiveBack:
+				currentAttacker = CurrentAttacker.None;
+				break;
+
+			case CurrentAttacker.None:
+				endCombat(null);
+				break;
+		}
+	}
+
+	/// <summary>
+	/// Removes all dead units from both the offensive and defensive squads.
+	/// </summary>
+	private void removeDeadUnits()
+	{
+		if(offensiveSquad != null)
+			offensiveSquad.Squad.Units.RemoveAll(l => l.Unit.Health == 0);
+
+		if(defensiveSquad != null)
+			defensiveSquad.Squad.Units.RemoveAll(l => l.Unit.Health == 0);
 	}
 
 	/// <summary>
@@ -100,16 +183,22 @@ public class CombatSystemBehavior : MonoBehaviour
 
 		Debug.Log("Offensive size: " + offensiveSquad.Squad.Units.Count);
 		Debug.Log("Defensive size: " + defensiveSquad.Squad.Units.Count);
+
+		currentAttacker = CurrentAttacker.OffensiveFront;
 	}
 
 	/// <summary>
 	/// Completes the combat, 
 	/// </summary>
-	private void endCombat()
+	/// <param name="losingSquad">
+	/// Reference to the squad that lost the combat.
+	/// </param>
+	private void endCombat(CombatSquadBehavior losingSquad)
 	{
 		Debug.Log("Combat between " + offensiveSquad.ToString() + " and " + defensiveSquad.ToString() + " end.");
-
-		Destroy(defensiveSquad.gameObject);
+		
+		if(losingSquad != null)
+			Destroy(losingSquad.gameObject);
 
 		this.offensiveSquad = null;
 		this.defensiveSquad = null;
