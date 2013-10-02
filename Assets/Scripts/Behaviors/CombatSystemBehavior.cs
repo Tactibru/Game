@@ -104,43 +104,103 @@ public class CombatSystemBehavior : MonoBehaviour
 		{
 			case CurrentAttacker.OffensiveFront:
 				{
-					if (offFirstRow.Count() <= 0)
+					if (offFirstRow.Count() > 0)
 					{
-						currentAttacker = CurrentAttacker.DefensiveFront;
-						break;
+						int totalStrength = offFirstRow.Sum(l => l.Strength);
+						int totalToughness = (defFirstRow.Count() > 0 ? defFirstRow.Sum(l => l.Toughness) : defSecondRow.Sum(l => l.Toughness));
+						int damage = Mathf.Max(totalStrength - totalToughness, 0);
+
+						int damagePerUnit = damage / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
+						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
+						{
+							unit.Health -= damagePerUnit;
+
+							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", defensiveSquad.ToString(), unit.Name, damagePerUnit, unit.Health));
+
+							if (unit.Health <= 0)
+								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, defensiveSquad.Squad.Units.Count));
+						}
+
+						removeDeadUnits();
 					}
-
-					int totalStrength = offFirstRow.Sum(l => l.Strength);
-					int totalToughness = (defFirstRow.Count() > 0 ? defFirstRow.Sum(l => l.Toughness) : defSecondRow.Sum(l => l.Toughness));
-					int damage = Mathf.Max(totalStrength - totalToughness, 0);
-
-					int damagePerUnit = damage / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
-					foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
-					{
-						unit.Health -= damagePerUnit;
-
-						Debug.Log(string.Format("{0} took {1} damage.", unit.Name, damagePerUnit));
-
-						if (unit.Health <= 0)
-							Debug.Log(string.Format("{0} was destroyed!", unit.Name));
-					}
-
-					removeDeadUnits();
 
 					currentAttacker = CurrentAttacker.DefensiveFront;
 				} break;
 
 			case CurrentAttacker.DefensiveFront:
-				currentAttacker = CurrentAttacker.OffensiveBack;
-				break;
+				{
+					if (defFirstRow.Count() > 0)
+					{
+						int totalStrength = defFirstRow.Sum(l => l.Strength);
+						int totalToughness = (offFirstRow.Count() > 0 ? offFirstRow.Sum(l => l.Toughness) : offSecondRow.Sum(l => l.Toughness));
+						int damage = Mathf.Max(totalStrength - totalToughness, 0);
+
+						int damagePerUnit = damage / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
+						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
+						{
+							unit.Health -= damagePerUnit;
+
+							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", offensiveSquad.ToString(), unit.Name, damagePerUnit, unit.Health));
+
+							if (unit.Health <= 0)
+								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, offensiveSquad.Squad.Units.Count));
+						}
+
+						removeDeadUnits();
+					}
+
+					currentAttacker = CurrentAttacker.OffensiveBack;
+				} break;
 
 			case CurrentAttacker.OffensiveBack:
-				currentAttacker = CurrentAttacker.DefensiveBack;
-				break;
+				{
+					if (offSecondRow.Count() > 0)
+					{
+						int totalStrength = offSecondRow.Sum(l => l.Strength);
+						int totalToughness = (defFirstRow.Count() > 0 ? defFirstRow.Sum(l => l.Toughness) : defSecondRow.Sum(l => l.Toughness));
+						int damage = Mathf.Max(totalStrength - totalToughness, 0);
+
+						int damagePerUnit = damage / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
+						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
+						{
+							unit.Health -= damagePerUnit;
+
+							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", defensiveSquad.ToString(), unit.Name, damagePerUnit, unit.Health));
+
+							if (unit.Health <= 0)
+								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, defensiveSquad.Squad.Units.Count));
+						}
+
+						removeDeadUnits();
+					}
+
+					currentAttacker = CurrentAttacker.DefensiveBack;
+				} break;
 
 			case CurrentAttacker.DefensiveBack:
-				currentAttacker = CurrentAttacker.None;
-				break;
+				{
+					if (defSecondRow.Count() > 0)
+					{
+						int totalStrength = defSecondRow.Sum(l => l.Strength);
+						int totalToughness = (offFirstRow.Count() > 0 ? offFirstRow.Sum(l => l.Toughness) : offSecondRow.Sum(l => l.Toughness));
+						int damage = Mathf.Max(totalStrength - totalToughness, 0);
+
+						int damagePerUnit = damage / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
+						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
+						{
+							unit.Health -= damagePerUnit;
+
+							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", offensiveSquad.ToString(), unit.Name, damagePerUnit, unit.Health));
+
+							if (unit.Health <= 0)
+								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, offensiveSquad.Squad.Units.Count));
+						}
+
+						removeDeadUnits();
+					}
+
+					currentAttacker = CurrentAttacker.None;
+				} break;
 
 			case CurrentAttacker.None:
 				endCombat(null);
@@ -153,11 +213,21 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	private void removeDeadUnits()
 	{
-		if(offensiveSquad != null)
-			offensiveSquad.Squad.Units.RemoveAll(l => l.Unit.Health == 0);
+		if (offensiveSquad != null)
+		{
+			offensiveSquad.Squad.Units.RemoveAll(l => l.Unit.Health <= 0);
 
-		if(defensiveSquad != null)
-			defensiveSquad.Squad.Units.RemoveAll(l => l.Unit.Health == 0);
+			if (offensiveSquad.Squad.Units.Count == 0)
+				endCombat(offensiveSquad);
+		}
+
+		if (defensiveSquad != null)
+		{
+			defensiveSquad.Squad.Units.RemoveAll(l => l.Unit.Health <= 0);
+
+			if (defensiveSquad.Squad.Units.Count == 0)
+				endCombat(defensiveSquad);
+		}
 	}
 
 	/// <summary>
