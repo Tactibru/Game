@@ -67,6 +67,13 @@ namespace Editor.Units
 				labeledIntField("Speed", ref Target.Speed);
 				labeledIntField("Range", ref Target.Range);
 			}
+
+			// Set the target as dirty if the GUI values have changed.
+			if (GUI.changed)
+			{
+				EditorUtility.SetDirty(Target);
+				Debug.Log("Unit saved.");
+			}
 		}
 		
 		/// <summary>
