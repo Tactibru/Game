@@ -77,9 +77,6 @@ public class ActorBehavior : MonoBehaviour
                     currentlyMoving = true;
                     currentMovementTime = timeToMoveToPoint;
                 }
-                if (GridBehavior.preCombat)
-
-                    theGrid.startCombat();
             }
         }
         else
@@ -96,7 +93,7 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
-                        if (GridBehavior.preCombat && pathList[0])
+                        if (GridBehavior.preCombat && pathList.Count == 0)
                             theGrid.startCombat();
                     }
                     else
@@ -117,7 +114,7 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
-                        if (GridBehavior.preCombat && pathList[0])
+                        if (GridBehavior.preCombat && pathList.Count == 0)
                             theGrid.startCombat();
                     }
                     else
@@ -137,9 +134,9 @@ public class ActorBehavior : MonoBehaviour
                         transform.position = currentMovePoint.transform.position;
                         currentlyMoving = false;
                         pointToMoveTo = null;
-                        pathList.RemoveAt(0);
-                        if (GridBehavior.preCombat && pathList[0])
-                            theGrid.startCombat();
+						pathList.RemoveAt(0);
+						if (GridBehavior.preCombat && pathList.Count == 0)
+							theGrid.startCombat();
                     }
                     else
                     {
@@ -159,7 +156,7 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
-                        if (GridBehavior.preCombat && pathList[0])
+                        if (GridBehavior.preCombat && pathList.Count == 0)
                             theGrid.startCombat();
                     }
                     else

@@ -13,6 +13,7 @@ public class GridBehavior : MonoBehaviour
 	public GameObject targetNode; 
 	public GameObject currentActor;
     public GameObject targetActor;
+
     void Start()
     {
         //theMap = new MovePointBehavior[theMapLength * theMapWidth];
@@ -107,9 +108,34 @@ public class GridBehavior : MonoBehaviour
 
     public void startCombat()
     {
-        Debug.Log("Here is for combat start.");
+		// Locate the combat camera.
+		CombatSystemBehavior combatSystem = GameObject.Find("Combat Camera").GetComponent<CombatSystemBehavior>();
+		if (combatSystem == null)
+		{
+			Debug.LogError("Error: Combat camera could not be found in the scene!\nRemember to add the Combat Camera prefix (with the name 'Combat Camera') into the scene.");
+			return;
+		}
+
+		// Get the combat squad for both the offense and defense.
+		CombatSquadBehavior offensiveSquadBehavior = currentActor.GetComponent<CombatSquadBehavior>();
+		if (!offensiveSquadBehavior)
+		{
+			Debug.LogError("Offensive combat squad does not have a CombatSquadBehavior attached!");
+			return;
+		}
+
+		CombatSquadBehavior defensiveSquadBehavior = targetActor.GetComponent<CombatSquadBehavior>();
+		if (!defensiveSquadBehavior)
+		{
+			Debug.LogError("Defensive combat squad does not have a CombatSquadBehavior attached!");
+			return;
+		}
+
+		inCombat = true;
+
+		combatSystem.BeginCombat(offensiveSquadBehavior, defensiveSquadBehavior);
+
         //Current actor is attacker and target actor is defender.
-        
         targetActor = null;
         currentActor = null;
         preCombat = false;
