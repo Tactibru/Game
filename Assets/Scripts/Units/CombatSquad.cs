@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace Units
 {
@@ -8,47 +9,6 @@ namespace Units
 	/// </summary>
 	public class CombatSquad : ScriptableObject
 	{
-		/// <summary>
-		/// Stores the position of a unit in the squad.
-		/// </summary>
-		/// <remarks>
-		/// This is laid out assuming two rows of five columns each.
-		/// </remarks>
-		public struct UnitPosition
-		{
-			/// <summary>
-			/// Column the unit sits in.
-			/// </summary>
-			/// <remarks>
-			/// If the unit occupies 2 columns, this will be the leftmost column.
-			/// </remarks>
-			public int Column;
-
-			/// <summary>
-			/// Row the unit sits in.
-			/// </summary>
-			/// <remarks>
-			/// If the unit occupies 2 rows, this will be ignored.
-			/// </remarks>
-			public int Row;
-		}
-
-		/// <summary>
-		/// Provides information regarding unit position and size within a squad.
-		/// </summary>
-		public struct UnitData
-		{
-			/// <summary>
-			/// Contains the actual unit information.
-			/// </summary>
-			public CombatUnit Unit;
-
-			/// <summary>
-			/// Unit's position within the squad.
-			/// </summary>
-			public UnitPosition Position;
-		}
-
 		/// <summary>
 		/// Maximum number of combat units per squad.
 		/// </summary>
@@ -147,7 +107,7 @@ namespace Units
 			if (!IsPositionValid(unit, position))
 				return false;
 
-			UnitData unitData;
+			UnitData unitData = new UnitData();
 			unitData.Unit = unit;
 			unitData.Position = position;
 
@@ -181,11 +141,11 @@ namespace Units
 				return false;
 
 			// Verify that the proposed space is not occupied.
-			if (occupied[position.Row, position.Column] ||
+			/*if (occupied[position.Row, position.Column] ||
 				(twoRows && occupied[position.Row + 1, position.Column]) ||
 				(twoColumns && occupied[position.Row, position.Column + 1]) ||
 				(twoRows && twoColumns && occupied[position.Row + 1, position.Column + 1]))
-				return false;
+				return false;*/
 
 			return true;
 		}

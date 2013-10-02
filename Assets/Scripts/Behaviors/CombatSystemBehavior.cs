@@ -27,10 +27,15 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	void Update () 
 	{
-		if (InCombat) 
+		if (InCombat && !combatCamera.enabled)
 			combatCamera.enabled = true;
-		else
+		else if (!InCombat && combatCamera.enabled)
 			combatCamera.enabled = false;
+
+		if (!InCombat)
+			return;
+
+		// Perform combat logic.
 	}
 
 	/// <summary>
@@ -50,6 +55,9 @@ public class CombatSystemBehavior : MonoBehaviour
 		InCombat = true;
 
 		Debug.Log("Combat between " + offensiveSquad.ToString() + " and " + defensiveSquad.ToString() + " begin.");
+
+		Debug.Log("Offensive size: " + offensiveSquad.Squad.Units.Count);
+		Debug.Log("Defensive size: " + defensiveSquad.Squad.Units.Count);
 	}
 
 	/// <summary>

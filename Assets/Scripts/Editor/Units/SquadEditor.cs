@@ -22,13 +22,83 @@ namespace Editor.Units
 			CustomAssetUtility.CreateAsset<CombatSquad>();
 		}
 		#endregion
+
+		private bool[] showUnit = new bool[CombatSquad.MAX_UNITS_PER_SQUAD];
+
+		private CombatUnit unitPrefab = null;
+
+		private UnitPosition unitPosition = new UnitPosition();
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		private void unitPositionEditor(ref UnitPosition position)
+		{
+			EditorGUILayout.BeginHorizontal();
+			{
+				EditorGUILayout.BeginVertical();
+				{
+					GUILayout.Label("Column");
+					position.Column = EditorGUILayout.IntField(position.Column);
+				}
+				EditorGUILayout.EndVertical();
+
+				EditorGUILayout.BeginVertical();
+				{
+					GUILayout.Label("Row");
+					position.Row = EditorGUILayout.IntField(position.Row);
+				}
+				EditorGUILayout.EndVertical();
+			}
+			EditorGUILayout.EndHorizontal();
+		}
 		
 		/// <summary>
 		/// Implements the GUI displayed in the inspector, so that items can be entered by value.
 		/// </summary>
 		public override void OnInspectorGUI()
 		{
-			
+			GUILayout.BeginHorizontal();
+			{
+				GUILayout.Label("Unit Count:");
+				GUILayout.FlexibleSpace();
+				EditorGUILayout.SelectableLabel(Target.Units.Count.ToString(), GUILayout.Width(50));
+			}
+			GUILayout.EndHorizontal();
+
+			for (int _i = 0; _i < Target.Units.Count; _i++)
+			{
+				GUILayout.BeginHorizontal();
+				{
+					showUnit[_i] = EditorGUILayout.Foldout(showUnit[_i], Target.Units[_i].Unit.Name);
+					GUILayout.FlexibleSpace();
+
+					if (GUILayout.Button("X"))
+						Target.Units.RemoveAt(_i);
+				}
+				GUILayout.EndHorizontal();
+
+				if (showUnit[_i])
+				{
+					Target.Units[_i].Unit = (CombatUnit)EditorGUILayout.ObjectField(Target.Units[_i].Unit, typeof(CombatUnit), false);
+					unitPositionEditor(ref Target.Units[_i].Position);
+				}
+			}
+
+			GUILayout.Space(20);
+
+			unitPrefab = (CombatUnit)EditorGUILayout.ObjectField(unitPrefab, typeof(CombatUnit), false);
+			unitPositionEditor(ref unitPosition);
+
+			if (GUILayout.Button("Add Unit"))
+				if (unitPrefab != null && Target.IsPositionValid(unitPrefab, unitPosition))
+				{
+					if (!Target.AddUnit(unitPrefab, unitPosition))
+						Debug.Log("Couldn't add unit.");
+				}
+				else
+					Debug.LogWarning("Attempted to add invalid unit.");
 		}
 	}
 }
