@@ -71,7 +71,8 @@ namespace Editor.Units
 			{
 				GUILayout.BeginHorizontal();
 				{
-					showUnit[_i] = EditorGUILayout.Foldout(showUnit[_i], Target.Units[_i].Unit.Name);
+					string foldoutName = string.Format("{0} ({1}, {2})", Target.Units[_i].Unit.Name, Target.Units[_i].Position.Row, Target.Units[_i].Position.Column);
+					showUnit[_i] = EditorGUILayout.Foldout(showUnit[_i], foldoutName);
 					GUILayout.FlexibleSpace();
 
 					if (GUILayout.Button("X"))
@@ -86,7 +87,7 @@ namespace Editor.Units
 				}
 			}
 
-			GUILayout.Space(20);
+			EditorGUILayout.HelpBox("Set the unit asset and position here, then click Add Unit to add the unit to the squad.", MessageType.Info);
 
 			unitPrefab = (CombatUnit)EditorGUILayout.ObjectField(unitPrefab, typeof(CombatUnit), false);
 			unitPositionEditor(ref unitPosition);
