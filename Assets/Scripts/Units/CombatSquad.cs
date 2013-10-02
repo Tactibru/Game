@@ -108,7 +108,7 @@ namespace Units
 				return false;
 
 			UnitData unitData = new UnitData();
-			unitData.Unit = unit;
+			unitData.Unit = unit;//(CombatUnit)Instantiate(unit);
 			unitData.Position = position;
 
 			Units.Add(unitData);

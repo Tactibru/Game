@@ -23,10 +23,19 @@ namespace Editor.Units
 		}
 		#endregion
 
+		/// <summary>
+		/// Stores whether or not the foldouts for the units in the squad are expanded or not.
+		/// </summary>
 		private bool[] showUnit = new bool[CombatSquad.MAX_UNITS_PER_SQUAD];
 
+		/// <summary>
+		/// Unit prefab to be added to the squad.
+		/// </summary>
 		private CombatUnit unitPrefab = null;
 
+		/// <summary>
+		/// Position within the squad to add the potential unit.
+		/// </summary>
 		private UnitPosition unitPosition = new UnitPosition();
 
 		/// <summary>
@@ -100,6 +109,13 @@ namespace Editor.Units
 				}
 				else
 					Debug.LogWarning("Attempted to add invalid unit.");
+
+			// Set the target as dirty if the GUI values have changed.
+			if (GUI.changed)
+			{
+				EditorUtility.SetDirty(Target);
+				Debug.Log("Squad saved.");
+			}
 		}
 	}
 }
