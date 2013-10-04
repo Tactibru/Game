@@ -9,3 +9,4 @@ _UpgradeReport_Files/
 *.sln
 *.pidb
 test_Data
+/Assets/Standard Assets
