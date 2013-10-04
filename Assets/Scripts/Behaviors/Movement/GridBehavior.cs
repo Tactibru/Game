@@ -14,6 +14,10 @@ public class GridBehavior : MonoBehaviour
 	public GameObject currentActor;
     public GameObject targetActor;
 
+    public MovePointBehavior theMovePointPrehab;
+
+    char[] abc = new char[30] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd'};
+
     void Start()
     {
         //theMap = new MovePointBehavior[theMapLength * theMapWidth];
@@ -131,7 +135,7 @@ public class GridBehavior : MonoBehaviour
 			return;
 		}
 
-		inCombat = true;
+		//inCombat = true;
 
 		combatSystem.BeginCombat(offensiveSquadBehavior, defensiveSquadBehavior);
 
@@ -139,5 +143,28 @@ public class GridBehavior : MonoBehaviour
         targetActor = null;
         currentActor = null;
         preCombat = false;
+    }
+
+    public void CreateGrid()
+    {
+        theMap = new MovePointBehavior[theMapLength * theMapWidth];
+
+        float xPositionOffset = -(theMapLength / 2);
+        float yPositionOffset = -(theMapWidth / 2);
+        float currentXPosition = 0.0f;
+        float currentYPosition = 0.0f;
+
+        for (int width = 0; width < theMapWidth; width++)
+        {
+            currentXPosition = xPositionOffset;
+            currentYPosition = yPositionOffset + width;
+            for (int length = 0; length < theMapLength; length++)
+            {
+                MovePointBehavior newMovePoint = (MovePointBehavior)Instantiate(theMovePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition), Quaternion.identity);
+                newMovePoint.name = abc[length].ToString() + width.ToString();
+                theMap[length + (width * theMapLength)] = newMovePoint;
+                currentXPosition = xPositionOffset + length;
+            }
+        }
     }
 }
