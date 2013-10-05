@@ -1,3 +1,4 @@
+using Editor.Util;
 using UnityEditor; 
 using UnityEngine; 
 using System.Collections; 
@@ -5,8 +6,11 @@ using System.Collections;
 /// Grid editor.
 /// This class, takes variables from another class that you want to edit. 
 /// </summary>
+/// n
+namespace Editor.Grid
+{
 [CustomEditor(typeof(GridEditorBehavior))]
-public class GridEditor:Editor
+public class GridEditor:EditorBase<GridEditorBehavior>
 {
 	public override void OnInspectorGUI()
 	{
@@ -21,4 +25,5 @@ public class GridEditor:Editor
 		if(GUILayout.Button("Call Function"))
 			targetScript.FunctionCall(); 
 	}
+}
 }
