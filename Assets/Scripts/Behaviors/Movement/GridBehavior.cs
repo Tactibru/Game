@@ -82,12 +82,16 @@ public class GridBehavior : MonoBehaviour
 			}
 			
 		}
-		if(currentActor && targetNode)
+		if(currentActor)
 		{
-			RunDijkstras();
-			currentActor = null; 
-			targetNode = null; 
+			MovePoint.DepthFirstSearch(currentActor.GetComponent<Actor>()); 
+			if(targetNode)
+			{
+				RunDijkstras();
+			
+			}
 		}
-	
+		currentActor = null; 
+		targetNode = null; 
 	}
 }

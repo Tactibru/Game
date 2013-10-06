@@ -10,6 +10,7 @@ public class MovePoint : MonoBehaviour
 	static List<MovePoint> openList = new List<MovePoint>(); 
 	static List<MovePoint> closedList = new List<MovePoint>(); 
 	static List<MovePoint> allNodeList = new List<MovePoint>(); 
+	static List<MovePoint> DepthList = new List<MovePoint>(); 
 	
 	//public List<MovePoint> neighborList = new List<MovePoint>(); 
 	static List<MovePoint> pathToTarget = new List<MovePoint>(); 
@@ -21,10 +22,10 @@ public class MovePoint : MonoBehaviour
 	public GameObject lastedVisitedBy = null; 
 	public int lastVisitedFrame = 0; 
 	
-	public Material baseColor; 
+	public  Material baseColor; 
 	public Material selectedColor; 
 	
-	public Grid theGrid; 
+	public GridBehavior theGrid; 
 
 	// Use this for initialization
 	void Start () 
@@ -33,7 +34,7 @@ public class MovePoint : MonoBehaviour
 		/// <summary>
     /// Start initializes all the nodes in the grid. 
     /// </summary>
-		theGrid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>(); 
+		theGrid = GameObject.FindGameObjectWithTag("Grid").GetComponent<GridBehavior>(); 
 		GameObject[] navNodeObjects = GameObject.FindGameObjectsWithTag("Waypoint"); 
 		
 		bool needToFillAllNodeList = false; 
@@ -310,6 +311,23 @@ public class MovePoint : MonoBehaviour
 		
 		
 	}
+
+
+    public static void DepthFirstSearch(Actor actor)
+    {
+        foreach(MovePoint node in actor.pathList)
+        {
+			foreach(MovePoint second in node.neighborList)
+			{
+				DepthList.Add(second); 
+				second.renderer.material = second.baseColor;
+			}
+				
+
+        }
+    }
+
+
 	
 	// Update is called once per frame
 	void Update () {
