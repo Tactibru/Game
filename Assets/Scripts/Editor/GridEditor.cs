@@ -23,7 +23,7 @@ public class GridEditor:EditorBase<GridBehavior>
 		//targetScript.booleanVariable = EditorGUILayout.Toggle("Bool", targetScript.booleanVariable); 
 		targetScript.theMovePointPrehab = EditorGUILayout.ObjectField("Movepoint", targetScript.theMovePointPrehab, typeof(MovePointBehavior), true) as MovePointBehavior; 
 		
-		if(GUILayout.Button("Call Function"))
+		if(GUILayout.Button("Create Grid"))
 			targetScript.CreateGrid(); 
 	}
 }
