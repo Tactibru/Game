@@ -160,6 +160,9 @@ public class GridBehavior : MonoBehaviour
 
     public void CreateGrid()
     {
+    	for(int _i = (gameObject.transform.childCount - 1); _i >= 0; _i--)
+		DestroyImmediate(transform.GetChild (_i).gameObject);
+    	
         theMap = new MovePointBehavior[theMapLength * theMapWidth];
 
         float xPositionOffset = -(theMapLength / 2);
@@ -174,6 +177,7 @@ public class GridBehavior : MonoBehaviour
             for (int length = 0; length < theMapLength; length++)
             {
                 MovePointBehavior newMovePoint = (MovePointBehavior)Instantiate(theMovePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition), Quaternion.identity);
+                newMovePoint.transform.parent = transform;
                 newMovePoint.name = abc[length].ToString() + width.ToString();
                 theMap[length + (width * theMapLength)] = newMovePoint;
                 currentXPosition = xPositionOffset + length +1;
