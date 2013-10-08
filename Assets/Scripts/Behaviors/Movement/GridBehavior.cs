@@ -163,7 +163,7 @@ public class GridBehavior : MonoBehaviour
                 MovePointBehavior newMovePoint = (MovePointBehavior)Instantiate(theMovePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition), Quaternion.identity);
                 newMovePoint.name = abc[length].ToString() + width.ToString();
                 theMap[length + (width * theMapLength)] = newMovePoint;
-                currentXPosition = xPositionOffset + length;
+                currentXPosition = xPositionOffset + length +1;
             }
         }
     }
