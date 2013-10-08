@@ -93,6 +93,19 @@ public class GridBehavior : MonoBehaviour
                 }
             }
 		}
+
+		/*if(currentActor)
+		{
+			MovePoint.DepthFirstSearch(currentActor.GetComponent<Actor>()); 
+			if(targetNode)
+			{
+				RunDijkstras();
+			
+			}
+		}
+		currentActor = null; 
+		targetNode = null; */
+
 		if(currentActor && (targetNode || targetActor))
 		{
             if (!preCombat)
