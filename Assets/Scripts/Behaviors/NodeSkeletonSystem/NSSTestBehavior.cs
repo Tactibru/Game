@@ -3,14 +3,16 @@ using System.Collections;
 
 public class NSSTestBehavior : MonoBehaviour {
 
-	public GameObject prefab;
+	public GameObject headPrefab;
+	public GameObject handPrefab;
 
 	// Use this for initialization
 	void Start () {
 		NodeSkeletonBehavior behavior = gameObject.GetComponent<NodeSkeletonBehavior>();
 		if (behavior != null)
 		{
-			behavior.AttachToNode("head", prefab);
+			behavior.AttachToNode("head", headPrefab);
+			behavior.AttachToNode("hand", handPrefab);
 		}
 	}
 	
