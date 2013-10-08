@@ -24,6 +24,7 @@ public class ActorBehavior : MonoBehaviour
 
     private float currentMovementTime = 0.0f;
     public bool currentlyMoving = false;
+    public bool actorHasMovedThisTurn = false;
 
 	/// <summary>
 	/// The start function is only making sure the agent starts on its assigned position.

@@ -179,6 +179,8 @@ public class MovePointBehavior : MonoBehaviour
 		openList.Clear(); 
 		closedList.Clear(); 
 		pathToTarget.Clear(); 
+
+        GridBehavior theGrid = GameObject.FindGameObjectWithTag("Grid").GetComponent<GridBehavior>(); 
 		
 		foreach(MovePointBehavior navNode in allNodeList)
 		{
@@ -213,6 +215,14 @@ public class MovePointBehavior : MonoBehaviour
 				{
 					continue; 
 				}
+
+                for (int index = 0; index < theGrid.ignoreList.Count; index++)
+                {
+                    if (neighborNode == theGrid.ignoreList[index])
+                    {
+                        continue;
+                    }
+                }
 				
 				//print(count.ToString()); 
 				if(closedList.Contains(neighborNode))
