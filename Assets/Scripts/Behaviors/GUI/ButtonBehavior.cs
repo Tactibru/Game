@@ -12,7 +12,7 @@ public class ButtonBehavior : MonoBehaviour
     /// </summary>
     public bool lastState = false;
 	
-    /// <summary>
+	 /// <summary>
     /// Function that prints a statement saying that my current mouse position is over the cube
     /// </summary>
     public void MouseOver()
@@ -22,14 +22,17 @@ public class ButtonBehavior : MonoBehaviour
 
     public void LMBPressed()
     {
+		Debug.Log("The left mouse button is being pressed");
     }
 
     public void LMBReleased()
     {
+		Debug.Log("The left mouse button is being released");
     }
 
     public void LMBHeld()
     {
+		Debug.Log("The left mouse button is being held");
     }
 
     public void LeftButtonDown()
