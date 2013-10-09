@@ -216,38 +216,43 @@ public class MovePointBehavior : MonoBehaviour
 					continue; 
 				}
 
+                bool ignored = false;
+
                 for (int index = 0; index < theGrid.ignoreList.Count; index++)
                 {
                     if (neighborNode == theGrid.ignoreList[index])
                     {
-                        continue;
+                        ignored = true;
                     }
                 }
 				
 				//print(count.ToString()); 
-				if(closedList.Contains(neighborNode))
-					continue; 
-				else if(openList.Contains(neighborNode))
-				{
-					float costToNode = currentNode.costSoFar;
-					float distanceToNode = Vector3.Distance(currentNode.transform.position, neighborNode.transform.position); 
-					
-					if(neighborNode.costSoFar > costToNode + distanceToNode)
-					{
-						neighborNode.costSoFar = costToNode + distanceToNode; 
-						neighborNode.previousPathNode = currentNode; 
-					}
-				}
-				else
-				{
-					//print(currentNode.transform.position.ToString()); 
-					//print(neighborNode.transform.position.ToString()); 
-					
-					float distanceToNode = Vector3.Distance(currentNode.transform.position, neighborNode.transform.position); 
-					//print(distanceToNode.ToString()); 
-					AddNodeToOpenList(neighborNode, distanceToNode, currentNode); 
-				}
-				//count++; 
+                if (!ignored)
+                {
+                    if (closedList.Contains(neighborNode))
+                        continue;
+                    else if (openList.Contains(neighborNode))
+                    {
+                        float costToNode = currentNode.costSoFar;
+                        float distanceToNode = Vector3.Distance(currentNode.transform.position, neighborNode.transform.position);
+
+                        if (neighborNode.costSoFar > costToNode + distanceToNode)
+                        {
+                            neighborNode.costSoFar = costToNode + distanceToNode;
+                            neighborNode.previousPathNode = currentNode;
+                        }
+                    }
+                    else
+                    {
+                        //print(currentNode.transform.position.ToString()); 
+                        //print(neighborNode.transform.position.ToString()); 
+
+                        float distanceToNode = Vector3.Distance(currentNode.transform.position, neighborNode.transform.position);
+                        //print(distanceToNode.ToString()); 
+                        AddNodeToOpenList(neighborNode, distanceToNode, currentNode);
+                    }
+                    //count++; 
+                }
 			}
 			closedList.Add(currentNode); 
 			if(sanity-- < 0)
