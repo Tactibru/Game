@@ -21,9 +21,9 @@ public class GridEditor:EditorBase<GridBehavior>
 		targetScript.theMapLength = EditorGUILayout.IntSlider("Map Length",targetScript.theMapLength, 1, 30); 
 		targetScript.theMapWidth = EditorGUILayout.IntSlider("Map Width", targetScript.theMapWidth, 1, 30); 
 		//targetScript.booleanVariable = EditorGUILayout.Toggle("Bool", targetScript.booleanVariable); 
-		//targetScript.prefab = EditorGUILayout.ObjectField("Prefab", targetScript.prefab, typeof(GameObject), true) as GameObject; 
+		targetScript.theMovePointPrehab = EditorGUILayout.ObjectField("Movepoint", targetScript.theMovePointPrehab, typeof(MovePointBehavior), true) as MovePointBehavior; 
 		
-		if(GUILayout.Button("Call Function"))
+		if(GUILayout.Button("Create Grid"))
 			targetScript.CreateGrid(); 
 	}
 }

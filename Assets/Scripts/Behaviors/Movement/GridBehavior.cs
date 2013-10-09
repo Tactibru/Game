@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GridBehavior : MonoBehaviour 
 {
@@ -7,6 +8,8 @@ public class GridBehavior : MonoBehaviour
     public int theMapWidth = 20;
     public static bool inCombat = false;
     public static bool preCombat = false;
+    public GameControllerBehaviour gameController;
+    public List<MovePointBehavior> ignoreList;
 
     public MovePointBehavior[] theMap;
 	
@@ -21,6 +24,14 @@ public class GridBehavior : MonoBehaviour
     void Start()
     {
         //theMap = new MovePointBehavior[theMapLength * theMapWidth];
+        gameController = GameObject.FindGameObjectWithTag("Grid").GetComponent<GameControllerBehaviour>();
+
+        for (int index = 0; index < gameController.enemyTeam.Count; index++)
+            ignoreList.Add(gameController.enemyTeam[index].currentMovePoint);
+        for (int index = 0; index < gameController.playerTeam.Count; index++)
+            ignoreList.Add(gameController.playerTeam[index].currentMovePoint);
+        for (int index = 0; index < gameController.nuetrals.Count; index++)
+            ignoreList.Add(gameController.nuetrals[index].currentMovePoint);
 		
         for (int length = 0; length < theMapLength; length++)
         {
@@ -87,7 +98,8 @@ public class GridBehavior : MonoBehaviour
                         else
                         {
                             //Check if you click on a squad. 
-                            currentActor = hitInfo.transform.gameObject;
+                            if (!currentActor.GetComponent<ActorBehavior>().actorHasMovedThisTurn)
+                                currentActor = hitInfo.transform.gameObject;
                         }
                     }
                 }
@@ -111,14 +123,20 @@ public class GridBehavior : MonoBehaviour
             if (!preCombat)
             {
                 if (targetActor)
+                {
                     preCombat = true;
+                    ignoreList.Remove(currentActor.GetComponent<ActorBehavior>().currentMovePoint);
+                }
                 RunDijkstras();
                 if (targetNode)
                 {
+                    ignoreList.Remove(currentActor.GetComponent<ActorBehavior>().currentMovePoint);
+                    ignoreList.Add(targetNode.GetComponent<MovePointBehavior>());
                     currentActor = null;
                     targetNode = null;
                     targetActor = null;
                 }
+                currentActor.GetComponent<ActorBehavior>().actorHasMovedThisTurn = true;
             }
 		}
 	}
@@ -153,6 +171,9 @@ public class GridBehavior : MonoBehaviour
 		combatSystem.BeginCombat(offensiveSquadBehavior, defensiveSquadBehavior);
 
         //Current actor is attacker and target actor is defender.
+
+
+        ignoreList.Add(currentActor.GetComponent<ActorBehavior>().currentMovePoint);
         targetActor = null;
         currentActor = null;
         preCombat = false;
@@ -160,6 +181,9 @@ public class GridBehavior : MonoBehaviour
 
     public void CreateGrid()
     {
+    	for(int _i = (gameObject.transform.childCount - 1); _i >= 0; _i--)
+		DestroyImmediate(transform.GetChild (_i).gameObject);
+    	
         theMap = new MovePointBehavior[theMapLength * theMapWidth];
 
         float xPositionOffset = -(theMapLength / 2);
@@ -174,9 +198,10 @@ public class GridBehavior : MonoBehaviour
             for (int length = 0; length < theMapLength; length++)
             {
                 MovePointBehavior newMovePoint = (MovePointBehavior)Instantiate(theMovePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition), Quaternion.identity);
+                newMovePoint.transform.parent = transform;
                 newMovePoint.name = abc[length].ToString() + width.ToString();
                 theMap[length + (width * theMapLength)] = newMovePoint;
-                currentXPosition = xPositionOffset + length;
+                currentXPosition = xPositionOffset + length +1;
             }
         }
     }
