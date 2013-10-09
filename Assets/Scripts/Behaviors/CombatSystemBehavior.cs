@@ -51,6 +51,11 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	private List<NodeSkeletonBehavior> unitPrefabs;
 
+	/// <summary>
+	/// HACK: Temporarily pads the combat scene out.
+	/// </summary>
+	private float hackTimeImpl;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -73,7 +78,13 @@ public class CombatSystemBehavior : MonoBehaviour
 		if (!InCombat)
 			return;
 
-		/*// Perform combat logic.
+		// TODO: REPLACE HACK, CRAP CODE.
+		hackTimeImpl += Time.deltaTime;
+		if (hackTimeImpl <= 1.0f)
+			return;
+		hackTimeImpl = 0.0f;
+
+		// Perform combat logic.
 		IEnumerable<CombatUnit> offFirstRow = offensiveSquad.Squad.Units.Where(l => l.Position.Row == 0).Select(l => l.Unit);
 		IEnumerable<CombatUnit> offSecondRow = offensiveSquad.Squad.Units.Where(l => l.Position.Row == 1).Select(l => l.Unit);
 		IEnumerable<CombatUnit> defFirstRow = defensiveSquad.Squad.Units.Where(l => l.Position.Row == 0).Select(l => l.Unit);
@@ -183,7 +194,7 @@ public class CombatSystemBehavior : MonoBehaviour
 			case CurrentAttacker.None:
 				endCombat(null);
 				break;
-		}*/
+		}
 	}
 
 	/// <summary>
@@ -287,6 +298,7 @@ public class CombatSystemBehavior : MonoBehaviour
 		this.offensiveSquad = null;
 		this.defensiveSquad = null;
 
+		GridBehavior.preCombat = false;
 		GridBehavior.inCombat = false;
 		InCombat = false;
 	}
