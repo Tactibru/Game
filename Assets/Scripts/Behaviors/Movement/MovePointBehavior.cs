@@ -9,12 +9,12 @@ public class MovePointBehavior : MonoBehaviour
     //public MovePointBehavior East;
     //public MovePointBehavior West;
 
-	static List<MovePointBehavior> openList = new List<MovePointBehavior>(); 
-	static List<MovePointBehavior> closedList = new List<MovePointBehavior>(); 
-	static List<MovePointBehavior> allNodeList = new List<MovePointBehavior>(); 
+	/* static */ List<MovePointBehavior> openList = new List<MovePointBehavior>(); 
+	/* static */ List<MovePointBehavior> closedList = new List<MovePointBehavior>(); 
+	/* static */ List<MovePointBehavior> allNodeList = new List<MovePointBehavior>(); 
 	
 	//public List<MovePoint> neighborList = new List<MovePoint>(); 
-	static List<MovePointBehavior> pathToTarget = new List<MovePointBehavior>();
+	/* static */ List<MovePointBehavior> pathToTarget = new List<MovePointBehavior>();
     public int index;
 	
 	public MovePointBehavior[] neighborList = new MovePointBehavior[4]; 
@@ -85,7 +85,7 @@ public class MovePointBehavior : MonoBehaviour
 	
 	
 	
-	public static int LayerMaskThatIgnoresMe(GameObject me)
+	public /* static */ int LayerMaskThatIgnoresMe(GameObject me)
 	{
 		int layerMask = 1<<(LayerMask.NameToLayer("Ignore Raycast")); 
 		layerMask |= 1<<me.layer; 
@@ -93,10 +93,16 @@ public class MovePointBehavior : MonoBehaviour
 		
 		return layerMask; 
 	}
-	
-	public static bool CanSeeObject(GameObject viewerObject, GameObject targetObject, float visionConeAngle = 180.0f)
+
+	public bool CanSeeObject(GameObject viewerObject, GameObject targetObject)
 	{
-		if(!targetObject)
+		return CanSeeObject(viewerObject, targetObject, 180.0f);
+	}
+	
+	public /* static */ bool CanSeeObject(GameObject viewerObject, GameObject targetObject, float visionConeAngle)
+	{
+				return true;
+		/*if(!targetObject)
 			return false; 
 		
 		Vector3 vectorToObject = targetObject.transform.position - viewerObject.transform.position; 
@@ -116,10 +122,10 @@ public class MovePointBehavior : MonoBehaviour
 			
 		}
 		return false; 
-		
+		*/
 	}
 	
-	public static MovePointBehavior FindClosestNavNodeToGameObject(GameObject theObject)
+	public /* static */ MovePointBehavior FindClosestNavNodeToGameObject(GameObject theObject)
 	{
 		MovePointBehavior closestNode = null;
 		float closestDistance = float.MaxValue;
@@ -142,7 +148,7 @@ public class MovePointBehavior : MonoBehaviour
 		return closestNode;
 	}
 	
-	public static void AddNodeToOpenList(MovePointBehavior theNode, float costFromPreviousObject, 
+	public /* static */ void AddNodeToOpenList(MovePointBehavior theNode, float costFromPreviousObject, 
 		MovePointBehavior previousNode)
 	{
 		float costSoFar = costFromPreviousObject;
@@ -156,7 +162,7 @@ public class MovePointBehavior : MonoBehaviour
 	}
 	
 	
-	public static MovePointBehavior FindSmallestCostSoFarInOpenList()
+	public /* static */ MovePointBehavior FindSmallestCostSoFarInOpenList()
 	{
 		MovePointBehavior returnedNode = null; 
 		float smallestCostSoFar = float.MaxValue;
@@ -174,8 +180,7 @@ public class MovePointBehavior : MonoBehaviour
 		
 	}
 	
-	
-	public static List<MovePointBehavior> RunDijsktras(GameObject startingObject, GameObject targetObject)
+	public /* static */ List<MovePointBehavior> RunDijsktras(GameObject startingObject, GameObject targetObject)
 	{
 		openList.Clear(); 
 		closedList.Clear(); 
@@ -188,26 +193,23 @@ public class MovePointBehavior : MonoBehaviour
 			navNode.renderer.material = navNode.baseColor; 
 		}
 		
-		MovePointBehavior startingNode = null; 
-		if(startingNode == null)
-		{
-			startingNode = FindClosestNavNodeToGameObject(startingObject); 
-		}
+		MovePointBehavior startingNode = FindClosestNavNodeToGameObject(startingObject); 
 		
 		MovePointBehavior destinationNode = FindClosestNavNodeToGameObject(targetObject); 
 		
 		if(startingNode == null)
 		{
 			print("No starting node!"); 
-			return pathToTarget; 
+			return pathToTarget;
 		}
+
 		float costFromAIToStartingNode = Vector3.Distance(startingObject.transform.position, startingNode.transform.position); 
 		AddNodeToOpenList(startingNode, costFromAIToStartingNode, null); 
 		
 		MovePointBehavior currentNode = startingNode; 
 		
 		int sanity = 1000; 
-		//int count = 0; 
+		 
 		while(currentNode != destinationNode)
 		{
 			foreach(MovePointBehavior neighborNode in currentNode.neighborList)
@@ -295,7 +297,7 @@ public class MovePointBehavior : MonoBehaviour
 	}
 
 
-    public static void DepthFirstSearch(ActorBehavior actor)
+    public /* static */ void DepthFirstSearch(ActorBehavior actor)
     {
         foreach (MovePointBehavior node in actor.currentMovePoint.neighborList)
         {

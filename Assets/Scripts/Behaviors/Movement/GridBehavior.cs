@@ -67,10 +67,13 @@ public class GridBehavior : MonoBehaviour
 		}
 		else
 		{
+			ActorBehavior actor = currentActor.GetComponent<ActorBehavior> ();
+			MovePointBehavior startingPoint = actor.currentMovePoint;
+
             if(targetNode)
-			    currentActor.GetComponent<ActorBehavior>().pathList = MovePointBehavior.RunDijsktras(currentActor.GetComponent<ActorBehavior>().currentMovePoint.gameObject, targetNode); 
+				actor.pathList = startingPoint.RunDijsktras(actor.currentMovePoint.gameObject, targetNode); 
             else
-                currentActor.GetComponent<ActorBehavior>().pathList = MovePointBehavior.RunDijsktras(currentActor.GetComponent<ActorBehavior>().currentMovePoint.gameObject, targetActor.GetComponent<ActorBehavior>().currentMovePoint.gameObject); 
+				actor.pathList = startingPoint.RunDijsktras(actor.currentMovePoint.gameObject, targetActor.GetComponent<ActorBehavior>().currentMovePoint.gameObject); 
 		}
 	}
 	
@@ -86,31 +89,36 @@ public class GridBehavior : MonoBehaviour
 
                 if (Physics.Raycast(ray, out hitInfo))
                 {
-                    if (hitInfo.transform.GetComponent<MovePointBehavior>())
+					if (!currentActor)
+					{
+						if (hitInfo.transform.GetComponent<ActorBehavior> ())
+							if (!hitInfo.transform.GetComponent<ActorBehavior> ().actorHasMovedThisTurn && hitInfo.transform.GetComponent<ActorBehavior> ().theSide == gameController.currentTurn)
+							{
+								currentActor = hitInfo.transform.gameObject;
+							}
+					}
+					else if (hitInfo.transform.GetComponent<MovePointBehavior>() && hitInfo.transform.GetComponent<MovePointBehavior>().renderer.isVisible)
                     {
                         targetNode = hitInfo.transform.gameObject;
-
                     }
                     else if (hitInfo.transform.GetComponent<ActorBehavior>())
                     {
-                        if (currentActor && hitInfo.transform.GetComponent<ActorBehavior>().theSide != currentActor.GetComponent<ActorBehavior>().theSide)
-                        {
+                        if (hitInfo.transform.GetComponent<ActorBehavior>().theSide != currentActor.GetComponent<ActorBehavior>().theSide)
+						{
                             targetActor = hitInfo.transform.gameObject;
-                        }
-                        else
-                        {
-                            //Check if you click on a squad. 
-                            if (!hitInfo.transform.GetComponent<ActorBehavior>().actorHasMovedThisTurn && hitInfo.transform.GetComponent<ActorBehavior>().theSide == gameController.currentTurn)
-                                currentActor = hitInfo.transform.gameObject;
-                        }
+							MovePointBehavior targetActorPoint = targetActor.GetComponent<ActorBehavior>().currentMovePoint;
+							
+							ignoreList.Remove(targetActorPoint);
+						}
                     }
                 }
             }
 		}
-        //After choosing a unit, show movepoints they can go to
-        if (currentActor && (!targetNode || !targetActor))
+        
+		//After choosing a unit, show movepoints they can go to
+        if (currentActor && (!targetNode && !targetActor))
         {
-            MovePointBehavior.DepthFirstSearch(currentActor.GetComponent<ActorBehavior>()); 
+			currentActor.GetComponent<ActorBehavior>().currentMovePoint.DepthFirstSearch(currentActor.GetComponent<ActorBehavior>()); 
         }
 
 		if(currentActor && (targetNode || targetActor))
@@ -118,13 +126,13 @@ public class GridBehavior : MonoBehaviour
             //if you can't see the point, you can't move to it. 
             //if(targetNode && !targetNode.renderer.enabled)
             //{
-                if(targetNode && !targetNode.renderer.enabled)
+                /*if(targetNode && !targetNode.renderer.enabled)
                 {
                     ableToMoveHere = false; 
                     currentActor = null; 
                     targetNode = null; 
                     targetActor = null; 
-                }
+                }*/
                 foreach(MovePointBehavior movePoint in theMap)
                 {
                     //change visiblilty of nodes. 
@@ -144,7 +152,7 @@ public class GridBehavior : MonoBehaviour
                     ignoreList.Remove(currentActor.GetComponent<ActorBehavior>().currentMovePoint);
                 }
                 RunDijkstras();
-				currentActor.GetComponent<ActorBehavior>().actorHasMovedThisTurn = true;
+
                 if (targetNode)
                 {
                     ignoreList.Remove(currentActor.GetComponent<ActorBehavior>().currentMovePoint);
@@ -153,7 +161,6 @@ public class GridBehavior : MonoBehaviour
                     targetNode = null;
                     targetActor = null;
                 }
-                Debug.Log("hi");     
             }
             ableToMoveHere = true; 
 		}

@@ -11,10 +11,16 @@ public class CollisionManagerBehavior : MonoBehaviour
 		
 		return layerMask; 
 	}
-	
-	public static bool CanSeeObject(GameObject viewerObject, GameObject targetObject, float visionConeAngle = 180.0f)
+
+	public static bool CanSeeObject(GameObject viewerObject, GameObject targetObject)
 	{
-		if(!targetObject)
+		return CanSeeObject(viewerObject, targetObject, 180.0f);
+	}
+	
+	public static bool CanSeeObject(GameObject viewerObject, GameObject targetObject, float visionConeAngle)
+	{
+		return true;
+		/*if(!targetObject)
 			return false; 
 		
 		Vector3 vectorToObject = targetObject.transform.position - viewerObject.transform.position; 
@@ -33,12 +39,12 @@ public class CollisionManagerBehavior : MonoBehaviour
 			}
 			
 		}
-		return false; 
+		return false; */
 		
 	}
 	
 	public static bool CheckCollision(GameObject colliderObject, float radius,
-		Vector3 oldPos, ref Vector3 newPos, ref Vector3 velocity, GameObject ignoreObject = null)
+		Vector3 oldPos, ref Vector3 newPos, ref Vector3 velocity, GameObject ignoreObject)
 	{
 		Vector3 travelVector = newPos - oldPos;
 		float distanceAttempted = travelVector.magnitude;
