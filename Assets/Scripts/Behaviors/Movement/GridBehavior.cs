@@ -18,6 +18,8 @@ public class GridBehavior : MonoBehaviour
     public GameObject targetActor;
 
     public MovePointBehavior theMovePointPrehab;
+    //used for depth-first
+    bool ableToMoveHere = true;
 
     char[] abc = new char[30] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd'};
 
@@ -106,22 +108,35 @@ public class GridBehavior : MonoBehaviour
                 }
             }
 		}
-
-		/*if(currentActor)
-		{
-			MovePoint.DepthFirstSearch(currentActor.GetComponent<Actor>()); 
-			if(targetNode)
-			{
-				RunDijkstras();
-			
-			}
-		}
-		currentActor = null; 
-		targetNode = null; */
+        //After choosing a unit, show movepoints they can go to
+        if (currentActor && (!targetNode || !targetActor))
+        {
+            MovePointBehavior.DepthFirstSearch(currentActor.GetComponent<ActorBehavior>(); 
+        }
 
 		if(currentActor && (targetNode || targetActor))
 		{
-            if (!preCombat)
+            //if you can't see the point, you can't move to it. 
+            if(targetNode.renderer.enabled == false)
+            {
+                if(targetNode.renderer.enabled == false)
+                {
+                    ableToMoveHere = false; 
+                    currentActor = null; 
+                    targetNode = null; 
+                    targetActor = null; 
+                }
+                foreach(MovePointBehavior movePoint in theMap)
+                {
+                    //change visiblilty of nodes. 
+                    if(movePoint.renderer.enabled == true)
+                        movePoint.renderer.enabled = false; 
+                }
+
+            }
+
+
+            if (!preCombat && ableToMoveHere == true)
             {
                 if (targetActor)
                 {
@@ -139,6 +154,7 @@ public class GridBehavior : MonoBehaviour
                     targetActor = null;
                 }
             }
+            ableToMoveHere = true; 
 		}
 	}
 
