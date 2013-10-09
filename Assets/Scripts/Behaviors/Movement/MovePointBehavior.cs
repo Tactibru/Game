@@ -32,6 +32,7 @@ public class MovePointBehavior : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     {
+		renderer.enabled = false; 
         //for(int i= 0; i < 4; i++)
         //{
 			 
@@ -287,7 +288,24 @@ public class MovePointBehavior : MonoBehaviour
 		
 		
 	}
-	
+
+
+    public static void DepthFirstSearch(ActorBehavior actor)
+    {
+        foreach (MovePointBehavior node in actor.currentMovePoint.neighborList)
+        {
+            if (!node)
+                continue;
+
+            node.renderer.enable = true;
+            foreach (MovePointBehavior secondNode in node.neighborList)
+            {
+                if (!secondNode)
+                    continue;
+                secondNode.renderer.enabled = true; 
+            }
+        }
+    }
 	// Update is called once per frame
 	void Update () {
 	
