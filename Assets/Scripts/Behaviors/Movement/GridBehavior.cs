@@ -98,6 +98,7 @@ public class GridBehavior : MonoBehaviour
                         else
                         {
                             //Check if you click on a squad. 
+							currentActor = hitInfo.transform.gameObject;
                             if (!currentActor.GetComponent<ActorBehavior>().actorHasMovedThisTurn)
                                 currentActor = hitInfo.transform.gameObject;
                         }
@@ -128,6 +129,7 @@ public class GridBehavior : MonoBehaviour
                     ignoreList.Remove(currentActor.GetComponent<ActorBehavior>().currentMovePoint);
                 }
                 RunDijkstras();
+				currentActor.GetComponent<ActorBehavior>().actorHasMovedThisTurn = true;
                 if (targetNode)
                 {
                     ignoreList.Remove(currentActor.GetComponent<ActorBehavior>().currentMovePoint);
@@ -136,7 +138,6 @@ public class GridBehavior : MonoBehaviour
                     targetNode = null;
                     targetActor = null;
                 }
-                currentActor.GetComponent<ActorBehavior>().actorHasMovedThisTurn = true;
             }
 		}
 	}

@@ -27,6 +27,11 @@ public class CombatSystemBehavior : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Indicates the prefab to be used for the Node Skeleton that units will be built from.
+	/// </summary>
+	public NodeSkeletonBehavior unitSkeleton;
+
+	/// <summary>
 	/// Indiciates which attacker is next in the combat sequence.
 	/// </summary>
 	private CurrentAttacker currentAttacker;
