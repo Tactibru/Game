@@ -93,15 +93,14 @@ public class GridBehavior : MonoBehaviour
                     }
                     else if (hitInfo.transform.GetComponent<ActorBehavior>())
                     {
-                        if (currentActor && hitInfo.transform.GetComponent<ActorBehavior>().side != currentActor.GetComponent<ActorBehavior>().side)
+                        if (currentActor && hitInfo.transform.GetComponent<ActorBehavior>().theSide != currentActor.GetComponent<ActorBehavior>().theSide)
                         {
                             targetActor = hitInfo.transform.gameObject;
                         }
                         else
                         {
                             //Check if you click on a squad. 
-							currentActor = hitInfo.transform.gameObject;
-                            if (!currentActor.GetComponent<ActorBehavior>().actorHasMovedThisTurn)
+                            if (!hitInfo.transform.GetComponent<ActorBehavior>().actorHasMovedThisTurn && hitInfo.transform.GetComponent<ActorBehavior>().theSide == gameController.currentTurn)
                                 currentActor = hitInfo.transform.gameObject;
                         }
                     }
@@ -138,6 +137,7 @@ public class GridBehavior : MonoBehaviour
 
             if (!preCombat && ableToMoveHere == true)
             {
+                currentActor.GetComponent<ActorBehavior>().actorHasMovedThisTurn = true;
                 if (targetActor)
                 {
                     preCombat = true;
@@ -153,6 +153,7 @@ public class GridBehavior : MonoBehaviour
                     targetNode = null;
                     targetActor = null;
                 }
+                Debug.Log("hi");     
             }
             ableToMoveHere = true; 
 		}
@@ -188,9 +189,28 @@ public class GridBehavior : MonoBehaviour
 		combatSystem.BeginCombat(offensiveSquadBehavior, defensiveSquadBehavior);
 
         //Current actor is attacker and target actor is defender.
+        ignoreList.Clear();
+        for (int index = 0; index < gameController.enemyTeam.Count; index++)
+            ignoreList.Add(gameController.enemyTeam[index].currentMovePoint);
+        for (int index = 0; index < gameController.playerTeam.Count; index++)
+            ignoreList.Add(gameController.playerTeam[index].currentMovePoint);
 
+        if (!targetActor)
+        {
+            if (gameController.currentTurn == GameControllerBehaviour.UnitSide.player)
+                gameController.enemyTeamTotal--;
+            else
+                gameController.playerTeamTotal--;
+        }
 
-        ignoreList.Add(currentActor.GetComponent<ActorBehavior>().currentMovePoint);
+        if (!currentActor)
+        {
+            if (gameController.currentTurn == GameControllerBehaviour.UnitSide.player)
+                gameController.playerTeamTotal--;
+            else
+                gameController.enemyTeamTotal--;
+        }
+        
         targetActor = null;
         currentActor = null;
         preCombat = false;

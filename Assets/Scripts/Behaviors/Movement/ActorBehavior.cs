@@ -6,7 +6,7 @@ public class ActorBehavior : MonoBehaviour
     public MovePointBehavior currentMovePoint;
     public MovePointBehavior pointToMoveTo;
     public float timeToMoveToPoint;
-    public int side;
+    public GameControllerBehaviour.UnitSide theSide;
     public GridBehavior theGrid;
 	
 	public List<MovePointBehavior> pathList;
