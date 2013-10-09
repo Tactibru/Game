@@ -297,7 +297,7 @@ public class MovePointBehavior : MonoBehaviour
             if (!node)
                 continue;
 
-            node.renderer.enable = true;
+            node.renderer.enabled = true;
             foreach (MovePointBehavior secondNode in node.neighborList)
             {
                 if (!secondNode)
