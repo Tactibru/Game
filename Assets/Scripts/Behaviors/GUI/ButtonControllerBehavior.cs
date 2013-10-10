@@ -26,13 +26,9 @@ public class ButtonControllerBehavior : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hitInfo))
         {
-            // Create a new ButtonBehavior in Scripts/Behaviors/GUI
-            // Instead of checking for ButtonControllerBehavior, check for ButtonBehavior
-            // This scripts goes on either Camera or other empty object
-            // ButtonBehavior goes on button object!
             ButtonBehavior buttonControl = hitInfo.collider.GetComponent<ButtonBehavior>();
-            //if (buttonControl != null)
-            //    buttonControl.MouseOver();
+            if (buttonControl != null)
+                buttonControl.MouseOver();
 
             if (Input.GetMouseButtonDown(0))
                 buttonControl.LeftButtonDown();
