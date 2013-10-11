@@ -11,7 +11,8 @@ public class GameControllerBehaviour : MonoBehaviour
     public int playerTeamTotal;
     public int enemyTeamTotal;
     public int nuetralTotal;
-    
+    public int leftToMoveThis;
+    private GUIStyle gUIStyle;
 
     public enum UnitSide
     {
@@ -38,6 +39,11 @@ public class GameControllerBehaviour : MonoBehaviour
         playerTeamTotal = playerTeam.Count;
         enemyTeamTotal = enemyTeam.Count;
         nuetralTotal = nuetrals.Count;
+        leftToMoveThis = playerTeamTotal;
+
+        gUIStyle = new GUIStyle();
+        gUIStyle.fontSize = 10;
+        gUIStyle.normal.textColor = Color.white;
 	}
 
     // Update is called once per frame
@@ -53,7 +59,7 @@ public class GameControllerBehaviour : MonoBehaviour
             Application.LoadLevel("PlayerLosses");
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || leftToMoveThis == 0)
         {
             for (int index = 0; index < playerTeam.Count; index++)
                 playerTeam[index].actorHasMovedThisTurn = false;
@@ -65,9 +71,23 @@ public class GameControllerBehaviour : MonoBehaviour
                 nuetrals[index].actorHasMovedThisTurn = false;
 
             if (currentTurn == UnitSide.player)
+            {
                 currentTurn = UnitSide.enemy;
+                leftToMoveThis = enemyTeamTotal;
+            }
             else
+            {
                 currentTurn = UnitSide.player;
+                leftToMoveThis = playerTeamTotal;
+            }
         }
 	}
+
+    void OnGUI()
+    {
+        if(currentTurn == UnitSide.player)
+            GUI.Label(new Rect(10, 10, 300, 60), "The Player Turn!");
+        else
+            GUI.Label(new Rect(10, 10, 300, 60), "The Enemy Turn!");
+    }
 }

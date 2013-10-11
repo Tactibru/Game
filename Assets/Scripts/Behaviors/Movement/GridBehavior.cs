@@ -146,6 +146,8 @@ public class GridBehavior : MonoBehaviour
             if (!preCombat && ableToMoveHere == true)
             {
                 currentActor.GetComponent<ActorBehavior>().actorHasMovedThisTurn = true;
+                currentActor.GetComponent<ActorBehavior>().canMove = true;
+                gameController.leftToMoveThis--;
                 if (targetActor)
                 {
                     preCombat = true;
