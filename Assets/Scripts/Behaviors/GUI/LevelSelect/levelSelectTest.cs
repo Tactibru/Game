@@ -7,10 +7,12 @@ public class levelSelectTest : MonoBehaviour {
 	/// 
 	/// Script to make a level selection menu.
 	/// </summary>
-
+	
+		
+	
 	// Use this for initialization
 	void Start () {
-	
+		
 	}
 	
 	// Update is called once per frame
@@ -45,7 +47,29 @@ public class levelSelectTest : MonoBehaviour {
 			Application.LoadLevel(2);	// Currently this loads the "Game Scene"
 		}
 		
+		// End level select menu group
 		GUI.EndGroup();
 		
+		// =========================================================
+		
+		// notes: gotta be careful about text length.
+		
+		// Level selecting group, TEST
+		//GUI.BeginGroup(new Rect(100,10,300,300));
+		GUI.BeginGroup(new Rect(10, 200, 300, 300));
+		
+		// Background box for design reasons
+		GUI.Box (new Rect(10,10,100,300), "Level Select");
+		
+		// Each level in application gets it's own button. Still needs top be fixed and only load levels we need.
+		for(int i = 1; i < Application.levelCount; i++)
+		{
+			if(GUI.Button (new Rect(20, 40 + (i * 30),80,20), "Level " + i))
+			{
+				Application.LoadLevel(i);
+			}
+		}
+		
+		GUI.EndGroup();
 	}
 }
