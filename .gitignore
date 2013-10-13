@@ -8,5 +8,6 @@ _UpgradeReport_Files/
 *.unityproj
 *.sln
 *.pidb
+*.userprefs
 test_Data
 /Assets/Standard Assets
