@@ -2,22 +2,33 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+[System.Serializable]
 public class GridBehavior : MonoBehaviour 
 {
-    public int theMapLength = 10;
-    public int theMapWidth = 20;
     public static bool inCombat = false;
     public static bool preCombat = false;
     public GameControllerBehaviour gameController;
     public List<MovePointBehavior> ignoreList;
 
-    public MovePointBehavior[] theMap;
+    //public MovePointBehavior[] theMap;
+    //public FenceBehavour[] theVerticalFence;
+    //public FenceBehavour[] theHorizontalFence;
 	
 	public GameObject targetNode; 
 	public GameObject currentActor;
     public GameObject targetActor;
 
+    [SerializeField]
     public MovePointBehavior theMovePointPrehab;
+    public MovePointBehavior theAltMovePointPrehab;
+    public FenceBehavour theFencePointPrehab;
+    public bool isFenced;
+    public int theMapLength;
+    public int theMapWidth;
+    public MovePointBehavior[] theMap;
+    public FenceBehavour[] theVerticalFence;
+    public FenceBehavour[] theHorizontalFence;
+
     //used for depth-first
     bool ableToMoveHere = true;
 
@@ -25,8 +36,13 @@ public class GridBehavior : MonoBehaviour
 
     void Start()
     {
-        //theMap = new MovePointBehavior[theMapLength * theMapWidth];
+       
         gameController = GameObject.FindGameObjectWithTag("Grid").GetComponent<GameControllerBehaviour>();
+        Debug.Log(theMapLength.ToString());
+        Debug.Log(theMapWidth.ToString());
+        Debug.Log(theVerticalFence.Length.ToString());
+        Debug.Log(theHorizontalFence.Length.ToString());
+        Debug.Log(theMap.Length.ToString());
 
         for (int index = 0; index < gameController.enemyTeam.Count; index++)
             ignoreList.Add(gameController.enemyTeam[index].currentMovePoint);
@@ -39,20 +55,46 @@ public class GridBehavior : MonoBehaviour
         {
             for (int width = 0; width < theMapWidth; width++)
             {
+               
                 if (length < theMapLength - 1)
                 {
-                    if (theMap[width + (length * theMapWidth)] && theMap[width + ((length + 1) * theMapWidth)])
+                    //Debug.Log((width + (length * theMapWidth)).ToString());
+                    
+                    if (isFenced)
                     {
-                        theMap[width + (length * theMapWidth)].neighborList[0] = theMap[width + ((length + 1) * theMapWidth)];
-                        theMap[width + ((length + 1) * theMapWidth)].neighborList[2] = theMap[width + (length * theMapWidth)];
+                        if (theMap[width + (length * theMapWidth)] && theMap[width + ((length + 1) * theMapWidth)] && theVerticalFence[width + (length * theMapWidth)])
+                        {
+                            theMap[width + (length * theMapWidth)].neighborList[0] = theMap[width + ((length + 1) * theMapWidth)];
+                            theMap[width + ((length + 1) * theMapWidth)].neighborList[2] = theMap[width + (length * theMapWidth)];
+                        }
+                    }
+                    else
+                    {
+                        if (theMap[width + (length * theMapWidth)] && theMap[width + ((length + 1) * theMapWidth)])
+                        {
+                            theMap[width + (length * theMapWidth)].neighborList[0] = theMap[width + ((length + 1) * theMapWidth)];
+                            theMap[width + ((length + 1) * theMapWidth)].neighborList[2] = theMap[width + (length * theMapWidth)];
+                        }
                     }
                 }
+
                 if (width < theMapWidth - 1)
                 {
-                    if (theMap[width + (length * theMapWidth)] && theMap[width + 1 + (length * theMapWidth)])
+                    if (isFenced)
                     {
-                        theMap[width + (length * theMapWidth)].neighborList[1] = theMap[width + 1 + (length * theMapWidth)];
-                        theMap[width + 1 + (length * theMapWidth)].neighborList[3] = theMap[width + (length * theMapWidth)];
+                        if (theMap[width + (length * theMapWidth)] && theMap[width + 1 + (length * theMapWidth)] && theHorizontalFence[width + (length * theMapWidth)])
+                        {
+                            theMap[width + (length * theMapWidth)].neighborList[1] = theMap[width + 1 + (length * theMapWidth)];
+                            theMap[width + 1 + (length * theMapWidth)].neighborList[3] = theMap[width + (length * theMapWidth)];
+                        }
+                    }
+                    else
+                    {
+                        if (theMap[width + (length * theMapWidth)] && theMap[width + 1 + (length * theMapWidth)])
+                        {
+                            theMap[width + (length * theMapWidth)].neighborList[1] = theMap[width + 1 + (length * theMapWidth)];
+                            theMap[width + 1 + (length * theMapWidth)].neighborList[3] = theMap[width + (length * theMapWidth)];
+                        }
                     }
                 } 
             }
@@ -228,14 +270,27 @@ public class GridBehavior : MonoBehaviour
     public void CreateGrid()
     {
     	for(int _i = (gameObject.transform.childCount - 1); _i >= 0; _i--)
-		DestroyImmediate(transform.GetChild (_i).gameObject);
+		    DestroyImmediate(transform.GetChild (_i).gameObject);
+
     	
         theMap = new MovePointBehavior[theMapLength * theMapWidth];
+
+        if (isFenced)
+        {
+            theVerticalFence = new FenceBehavour[(theMapLength) * theMapWidth];
+            theHorizontalFence = new FenceBehavour[theMapLength * (theMapWidth)];
+        }
 
         float xPositionOffset = -(theMapLength / 2);
         float yPositionOffset = -(theMapWidth / 2);
         float currentXPosition = 0.0f;
         float currentYPosition = 0.0f;
+
+        //Debug.Log(theMapLength.ToString());
+        //Debug.Log(theMapWidth.ToString());
+        //Debug.Log(theVerticalFence.Length.ToString());
+        //Debug.Log(theHorizontalFence.Length.ToString());
+        //Debug.Log(theMap.Length.ToString());
 
         for (int width = 0; width < theMapWidth; width++)
         {
@@ -243,11 +298,36 @@ public class GridBehavior : MonoBehaviour
             currentYPosition = yPositionOffset + width;
             for (int length = 0; length < theMapLength; length++)
             {
-                MovePointBehavior newMovePoint = (MovePointBehavior)Instantiate(theMovePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition), Quaternion.identity);
+                MovePointBehavior newMovePoint = null;
+                if((length + width) % 2 == 0)
+                    newMovePoint = (MovePointBehavior)Instantiate(theMovePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition), Quaternion.identity);
+                else
+                    newMovePoint = (MovePointBehavior)Instantiate(theAltMovePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition), Quaternion.identity);
                 newMovePoint.transform.parent = transform;
                 newMovePoint.name = abc[length].ToString() + width.ToString();
                 theMap[length + (width * theMapLength)] = newMovePoint;
-                currentXPosition = xPositionOffset + length +1;
+                
+
+                if (isFenced)
+                {
+                    if (width < theMapWidth - 1)
+                    {
+                        FenceBehavour newVerticalFence = (FenceBehavour)Instantiate(theFencePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition + 0.5f), Quaternion.identity);
+                        newVerticalFence.transform.parent = transform;
+                        newVerticalFence.name = abc[length].ToString() + width.ToString() + "fence" + abc[length].ToString() + (width + 1).ToString();
+                        theVerticalFence[length + (width * theMapLength)] = newVerticalFence;
+                    }
+
+                    if (length < theMapLength - 1)
+                    {
+                        FenceBehavour newHorizontalFence = (FenceBehavour)Instantiate(theFencePointPrehab, new Vector3(currentXPosition + 0.5f, 1.0f, currentYPosition), Quaternion.identity);
+                        newHorizontalFence.transform.parent = transform;
+                        newHorizontalFence.name = abc[length].ToString() + width.ToString() + "fence" + abc[length + 1].ToString() + width.ToString();
+                        theVerticalFence[length + (width * theMapLength)] = newHorizontalFence;
+                    }
+                }
+
+                currentXPosition = xPositionOffset + length + 1;
             }
         }
     }
