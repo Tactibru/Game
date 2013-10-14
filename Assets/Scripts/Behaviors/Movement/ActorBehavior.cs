@@ -8,6 +8,7 @@ public class ActorBehavior : MonoBehaviour
     public float timeToMoveToPoint;
     public GameControllerBehaviour.UnitSide theSide;
     public GridBehavior theGrid;
+    public bool canMove = false;
 	
 	public List<MovePointBehavior> pathList;
 	
@@ -42,7 +43,7 @@ public class ActorBehavior : MonoBehaviour
 
 	void Update () 
     {
-        if (!currentlyMoving)
+        if (!currentlyMoving && canMove)
         {
             if (pathList.Count > 0)
             {
@@ -80,7 +81,7 @@ public class ActorBehavior : MonoBehaviour
                 }
             }
         }
-        else
+        else if(canMove)
         {
             switch (currentMovementDirection)
             {
@@ -95,7 +96,14 @@ public class ActorBehavior : MonoBehaviour
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
                         if (GridBehavior.preCombat && pathList.Count == 0)
+                        {
                             theGrid.startCombat();
+                            canMove = false;
+                        }
+                        else if (pathList.Count == 0)
+                        {
+                            canMove = false;
+                        }
                     }
                     else
                     {
@@ -116,7 +124,14 @@ public class ActorBehavior : MonoBehaviour
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
                         if (GridBehavior.preCombat && pathList.Count == 0)
+                        {
                             theGrid.startCombat();
+                            canMove = false;
+                        }
+                        else if (pathList.Count == 0)
+                        {
+                            canMove = false;
+                        }
                     }
                     else
                     {
@@ -136,8 +151,15 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
 						pathList.RemoveAt(0);
-						if (GridBehavior.preCombat && pathList.Count == 0)
-							theGrid.startCombat();
+                        if (GridBehavior.preCombat && pathList.Count == 0)
+                        {
+                            theGrid.startCombat();
+                            canMove = false;
+                        }
+                        else if (pathList.Count == 0)
+                        {
+                            canMove = false;
+                        }
                     }
                     else
                     {
@@ -158,7 +180,14 @@ public class ActorBehavior : MonoBehaviour
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
                         if (GridBehavior.preCombat && pathList.Count == 0)
+                        {
                             theGrid.startCombat();
+                            canMove = false;
+                        }
+                        else if (pathList.Count == 0)
+                        {
+                            canMove = false;
+                        }
                     }
                     else
                     {

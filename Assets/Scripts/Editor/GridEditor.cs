@@ -18,10 +18,16 @@ public class GridEditor:EditorBase<GridBehavior>
 		//This is where you create your target, by script. 
 		GridBehavior targetScript = (GridBehavior)target; 
 		//To create a GUI element for each variable. 
+        GUI.changed = false;
 		targetScript.theMapLength = EditorGUILayout.IntSlider("Map Length",targetScript.theMapLength, 1, 30); 
 		targetScript.theMapWidth = EditorGUILayout.IntSlider("Map Width", targetScript.theMapWidth, 1, 30); 
-		//targetScript.booleanVariable = EditorGUILayout.Toggle("Bool", targetScript.booleanVariable); 
-		targetScript.theMovePointPrehab = EditorGUILayout.ObjectField("Movepoint", targetScript.theMovePointPrehab, typeof(MovePointBehavior), true) as MovePointBehavior; 
+		targetScript.isFenced = EditorGUILayout.Toggle("Is Fenced", targetScript.isFenced); 
+		targetScript.theMovePointPrehab = EditorGUILayout.ObjectField("Movepoint", targetScript.theMovePointPrehab, typeof(MovePointBehavior), true) as MovePointBehavior;
+        targetScript.theAltMovePointPrehab = EditorGUILayout.ObjectField("AltMovePoint", targetScript.theAltMovePointPrehab, typeof(MovePointBehavior), true) as MovePointBehavior;
+        targetScript.theFencePointPrehab = EditorGUILayout.ObjectField("Fence", targetScript.theFencePointPrehab, typeof(FenceBehavour), true) as FenceBehavour;
+
+        if (GUI.changed)
+            EditorUtility.SetDirty(targetScript);
 		
 		if(GUILayout.Button("Create Grid"))
 			targetScript.CreateGrid(); 
