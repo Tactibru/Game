@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Units;
+using NodeSkeletonSystem;
 
 /// <summary>
 /// Script that switches between the main camera and the combat when the InCombat boolean is true
@@ -254,8 +255,24 @@ public class CombatSystemBehavior : MonoBehaviour
 
 			NodeSkeletonBehavior skele = (NodeSkeletonBehavior)Instantiate(unitSkeleton);
 
+			// Load body parts for the unit.
+			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
+			{
+				GameObject prefab = (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/001", node.Name));
+				
+				if(prefab == null)
+				{
+					Debug.LogWarning(string.Format ("Could not find prefab for 'Prefabs/UnitParts/{0}/001'", node.Name));
+					continue;
+				}
+				
+				skele.AttachToNode(node.Name, prefab);
+			}
+
 			skele.transform.parent = transform;
-			skele.transform.localScale = (Vector3.one / 2.0f);
+			Vector3 scale = (Vector3.one / 2.0f);
+			scale.x *= -1.0f;
+			skele.transform.localScale = scale;
 			skele.transform.localPosition = Vector3.zero;
 
 			skele.transform.Translate(x, y, z);
