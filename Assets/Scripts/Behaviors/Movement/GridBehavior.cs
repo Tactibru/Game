@@ -47,7 +47,7 @@ public class GridBehavior : MonoBehaviour
         //Debug.Log(theMapLength.ToString());
         //Debug.Log(theMapWidth.ToString());
         //Debug.Log(theVerticalFence.Length.ToString());
-        //Debug.Log(theHorizontalFence.Length.ToString());
+        Debug.Log(theHorizontalFence.Length.ToString());
         //Debug.Log(theMap.Length.ToString());
 
         for (int index = 0; index < gameController.enemyTeam.Count; index++)
@@ -88,8 +88,10 @@ public class GridBehavior : MonoBehaviour
                 {
                     if (isFenced)
                     {
+                        //Debug.Log("Hi 1");
                         if (theMap[width + (length * theMapWidth)] && theMap[width + 1 + (length * theMapWidth)] && theHorizontalFence[width + (length * theMapWidth)])
                         {
+                            Debug.Log("Hi 2");
                             theMap[width + (length * theMapWidth)].neighborList[1] = theMap[width + 1 + (length * theMapWidth)];
                             theMap[width + 1 + (length * theMapWidth)].neighborList[3] = theMap[width + (length * theMapWidth)];
                         }
@@ -355,7 +357,7 @@ public class GridBehavior : MonoBehaviour
                         FenceBehavour newHorizontalFence = (FenceBehavour)Instantiate(theFencePointPrehab, new Vector3(currentXPosition + 0.5f, 1.0f, currentYPosition), Quaternion.identity);
                         newHorizontalFence.transform.parent = transform;
                         newHorizontalFence.name = abc[z].ToString() + x.ToString() + "fence" + abc[z + 1].ToString() + x.ToString();
-                        theVerticalFence[z + (x * theMapWidth)] = newHorizontalFence;
+                        theHorizontalFence[z + (x * theMapWidth)] = newHorizontalFence;
                     }
                 }
 

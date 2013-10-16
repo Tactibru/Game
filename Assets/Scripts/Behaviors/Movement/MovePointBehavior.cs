@@ -285,8 +285,10 @@ public class MovePointBehavior : MonoBehaviour
         //if (GridBehavior.preCombat)
         //    pathToTarget.RemoveAt(0);
 
-		pathToTarget.Reverse();
         pathToTarget.RemoveAt(0);
+		pathToTarget.Reverse();
+        // pathToTarget.RemoveAt(0);
+        
 
         if (GridBehavior.preCombat)
             pathToTarget.RemoveAt(pathToTarget.Count - 1);
