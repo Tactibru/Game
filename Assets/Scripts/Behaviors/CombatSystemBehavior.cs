@@ -255,6 +255,13 @@ public class CombatSystemBehavior : MonoBehaviour
 	
 	private void createUnits (IEnumerable<UnitData> units, bool flipHorizontally, float offset)
 	{
+		// Create a base object
+		GameObject unitBase = (GameObject)Instantiate(new GameObject());
+		unitBase.name = "__UNITBASE__";
+		unitBase.transform.parent = transform;
+		unitBase.transform.localPosition = Vector3.zero;
+		unitBase.AddComponent<MonoBehaviour>();
+		
 		foreach(UnitData data in units)
 		{
 			float x = (flipHorizontally ? (-1.0f + (0.33f * data.Position.Row)) : 1.0f - (0.33f * data.Position.Row));
@@ -278,7 +285,7 @@ public class CombatSystemBehavior : MonoBehaviour
 				skele.AttachToNode(node.Name, prefab);
 			}
 
-			skele.transform.parent = transform;
+			skele.transform.parent = unitBase.transform;
 			Vector3 scale = (Vector3.one / 2.0f);
 			if(flipHorizontally)
 				scale.x *= -1.0f;
@@ -298,6 +305,14 @@ public class CombatSystemBehavior : MonoBehaviour
 	private void endCombat(CombatSquadBehavior losingSquad)
 	{
 		Debug.Log("Combat between " + offensiveSquad.ToString() + " and " + defensiveSquad.ToString() + " end.");
+		
+		//foreach(GameObject obj in transform.GetComponentsInChildren<MonoBehaviour>())
+		MonoBehaviour[] objects = GetComponentsInChildren<MonoBehaviour>();
+		for(int _i = (objects.Count() - 1); _i >= 0; _i--)
+		{
+			if(objects[_i].name == "__UNITBASE__")
+				DestroyImmediate(objects[_i].gameObject);
+		}
 		
 		if(losingSquad != null)
 			Destroy(losingSquad.gameObject);
