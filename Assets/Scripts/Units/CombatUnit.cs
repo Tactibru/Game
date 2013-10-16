@@ -25,22 +25,11 @@ namespace Units
 		/// Represents the <see cref="NodeSkeletonSystem.NodeSkeletonStructure"/> that will be used for this unit.
 		/// </summary>
 		public NodeSkeletonStructure Skeleton;
-
-		/// <summary>
-		/// Represents the directory (within the Unit Art Assets directory) where the unit's art assets will be located.
-		/// </summary>
-		/// <example>
-		/// Assuming a "Ruffian" is set, the assets should be:
-		/// Textures\Units\Heads\Ruffian_001.png
-		/// Textures\Units\Heads\Ruffian_002.png
-		/// etc.
-		/// </example>
-		public string AssetDirectory = "Ruffian";
 		
 		/// <summary>
 		/// Unit name.
 		/// </summary>
-		public string Name = "Combat Unit";
+		public string Name = "Ruffian";
 		
 		/// <summary>
 		/// Unit's total health value.

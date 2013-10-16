@@ -247,9 +247,17 @@ public class CombatSystemBehavior : MonoBehaviour
 		int unitCount = offensiveSquad.Squad.Units.Count + defensiveSquad.Squad.Units.Count;
 		unitPrefabs = new List<NodeSkeletonBehavior>(unitCount);
 
-		foreach(UnitData data in offensiveSquad.Squad.Units)
+		createUnits(offensiveSquad.Squad.Units, true, 0.0f);
+		createUnits (defensiveSquad.Squad.Units, false, 1.0f);
+
+		currentAttacker = CurrentAttacker.OffensiveFront;
+	}
+	
+	private void createUnits (IEnumerable<UnitData> units, bool flipHorizontally, float offset)
+	{
+		foreach(UnitData data in units)
 		{
-			float x = -1.0f + (0.33f * data.Position.Row);
+			float x = (flipHorizontally ? (-1.0f + (0.33f * data.Position.Row)) : 1.0f - (0.33f * data.Position.Row));
 			float y = 0.7f - (0.33f * data.Position.Column);
 			float z = 0.9f - (0.05f * data.Position.Column);
 
@@ -258,7 +266,8 @@ public class CombatSystemBehavior : MonoBehaviour
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
 			{
-				GameObject prefab = (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/001", node.Name));
+				GameObject prefab = (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/{1}", node.Name, data.Unit.Name));
+				prefab = (prefab ?? (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/001", node.Name)));
 				
 				if(prefab == null)
 				{
@@ -271,29 +280,13 @@ public class CombatSystemBehavior : MonoBehaviour
 
 			skele.transform.parent = transform;
 			Vector3 scale = (Vector3.one / 2.0f);
-			scale.x *= -1.0f;
+			if(flipHorizontally)
+				scale.x *= -1.0f;
 			skele.transform.localScale = scale;
 			skele.transform.localPosition = Vector3.zero;
 
 			skele.transform.Translate(x, y, z);
 		}
-		
-		foreach (UnitData data in defensiveSquad.Squad.Units)
-		{
-			float x = 1.0f - (0.33f * data.Position.Row);
-			float y = 0.7f - (0.33f * data.Position.Column);
-			float z = 0.9f - (0.05f * data.Position.Column);
-
-			NodeSkeletonBehavior skele = (NodeSkeletonBehavior)Instantiate(unitSkeleton);
-
-			skele.transform.parent = transform;
-			skele.transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f);
-			skele.transform.localPosition = Vector3.zero;
-
-			skele.transform.Translate(x, y, z);
-		}
-
-		currentAttacker = CurrentAttacker.OffensiveFront;
 	}
 
 	/// <summary>
