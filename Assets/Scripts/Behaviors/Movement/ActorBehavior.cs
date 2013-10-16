@@ -29,6 +29,8 @@ public class ActorBehavior : MonoBehaviour
 
 	/// <summary>
 	/// The start function is only making sure the agent starts on its assigned position.
+    /// 
+    /// Alex Reiss
 	/// </summary>
 
 
@@ -39,6 +41,8 @@ public class ActorBehavior : MonoBehaviour
 	
 	/// <summary>
 	/// The update function is to catch input and to do the movement of the agent, this is temporary code. for testing purposes only. 
+    /// 
+    /// Alex Reiss
 	/// </summary>
 
 	void Update () 

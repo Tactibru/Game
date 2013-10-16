@@ -1,18 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FenceBehavour : MonoBehaviour {
+public class FenceBehavour : MonoBehaviour 
+{
 
-    public MovePointBehavior leftSide;
-    public MovePointBehavior rightSide;
+   /// <summary>
+   /// Being to set the fences to be invisible.
+   /// 
+   /// Alex Reiss
+   /// </summary>
 
-	// Use this for initialization
-	void Start () {
 	
+	void Start () 
+    {
+        transform.renderer.enabled = false;
 	}
 	
-	// Update is called once per frame
-	void Update () {
 	
-	}
 }
