@@ -5,7 +5,7 @@ public class ActorBehavior : MonoBehaviour
 {
     public MovePointBehavior currentMovePoint;
     public MovePointBehavior pointToMoveTo;
-    public float timeToMoveToPoint;
+    public float timeToMoveToPoint = 1.0f;
     public GameControllerBehaviour.UnitSide theSide;
     public GridBehavior theGrid;
     public bool canMove = false;
@@ -102,6 +102,7 @@ public class ActorBehavior : MonoBehaviour
                     }
                     else
                     {
+						Debug.Log (timeToMoveToPoint);
                         float forTForLerp = (timeToMoveToPoint - currentMovementTime) / timeToMoveToPoint;
                         float forTheChangeInZ = Mathf.Lerp(currentMovePoint.transform.position.z, pointToMoveTo.transform.position.z, forTForLerp);
                         transform.position = new Vector3(transform.position.x, transform.position.y, forTheChangeInZ);
