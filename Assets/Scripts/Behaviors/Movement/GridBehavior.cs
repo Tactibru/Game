@@ -25,7 +25,7 @@ public class GridBehavior : MonoBehaviour
     public bool isFenced;
     public int theMapLength;
     public int theMapWidth;
-    public MovePointBehavior[] theMap;
+    public MovePointBehavior[] theMap = new MovePointBehavior[900];
     public FenceBehavour[] theVerticalFence;
     public FenceBehavour[] theHorizontalFence;
 
@@ -34,15 +34,21 @@ public class GridBehavior : MonoBehaviour
 
     char[] abc = new char[30] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd'};
 
+    /// <summary>
+    /// This to setup neighbor lists for each node in the grid.
+    /// 
+    /// Alex Reiss
+    /// </summary>
+
     void Start()
     {
        
         gameController = GameObject.FindGameObjectWithTag("Grid").GetComponent<GameControllerBehaviour>();
-        Debug.Log(theMapLength.ToString());
-        Debug.Log(theMapWidth.ToString());
-        Debug.Log(theVerticalFence.Length.ToString());
-        Debug.Log(theHorizontalFence.Length.ToString());
-        Debug.Log(theMap.Length.ToString());
+        //Debug.Log(theMapLength.ToString());
+        //Debug.Log(theMapWidth.ToString());
+        //Debug.Log(theVerticalFence.Length.ToString());
+        //Debug.Log(theHorizontalFence.Length.ToString());
+        //Debug.Log(theMap.Length.ToString());
 
         for (int index = 0; index < gameController.enemyTeam.Count; index++)
             ignoreList.Add(gameController.enemyTeam[index].currentMovePoint);
@@ -100,6 +106,12 @@ public class GridBehavior : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// Run Dijkstrass
+    /// 
+    /// I do not create this function, Alex Reiss.
+    /// </summary>
 	
 	void RunDijkstras()
 	{
@@ -118,7 +130,13 @@ public class GridBehavior : MonoBehaviour
 				actor.pathList = startingPoint.RunDijsktras(actor.currentMovePoint.gameObject, targetActor.GetComponent<ActorBehavior>().currentMovePoint.gameObject); 
 		}
 	}
-	
+
+    /// <summary>
+    /// Run Update.
+    /// 
+    /// I do not create this function, Alex Reiss.
+    /// </summary>
+
     // Update is called once per frame
     void Update()
     {
@@ -210,6 +228,12 @@ public class GridBehavior : MonoBehaviour
 		}
 	}
 
+    /// <summary>
+    /// I created this function to start combat, for he combat system. The end resets all pre combat stuff.
+    /// 
+    /// Alex Reiss
+    /// </summary>
+
     public void startCombat()
     {
 		// Locate the combat camera.
@@ -267,6 +291,14 @@ public class GridBehavior : MonoBehaviour
         preCombat = false;
     }
 
+    /// <summary>
+    /// Creates the grid. The fenced variable is used to determine fences are required.
+    /// 
+    /// Fences are just a name that makes it easier for the gmae designers, the fences are just a means to remove an edge from the graph visually.
+    /// 
+    /// Alex Reiss
+    /// </summary>
+
     public void CreateGrid()
     {
     	for(int _i = (gameObject.transform.childCount - 1); _i >= 0; _i--)
@@ -281,8 +313,8 @@ public class GridBehavior : MonoBehaviour
             theHorizontalFence = new FenceBehavour[theMapLength * (theMapWidth)];
         }
 
-        float xPositionOffset = -(theMapLength / 2);
-        float yPositionOffset = -(theMapWidth / 2);
+        float xPositionOffset = -(theMapWidth / 2);
+        float yPositionOffset = -(theMapLength / 2);
         float currentXPosition = 0.0f;
         float currentYPosition = 0.0f;
 
@@ -292,42 +324,42 @@ public class GridBehavior : MonoBehaviour
         //Debug.Log(theHorizontalFence.Length.ToString());
         //Debug.Log(theMap.Length.ToString());
 
-        for (int width = 0; width < theMapWidth; width++)
+        for (int x = 0; x < theMapLength; x++)
         {
             currentXPosition = xPositionOffset;
-            currentYPosition = yPositionOffset + width;
-            for (int length = 0; length < theMapLength; length++)
+            currentYPosition = yPositionOffset + x;
+            for (int z = 0; z < theMapWidth; z++)
             {
                 MovePointBehavior newMovePoint = null;
-                if((length + width) % 2 == 0)
+                if((z + x) % 2 == 0)
                     newMovePoint = (MovePointBehavior)Instantiate(theMovePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition), Quaternion.identity);
                 else
                     newMovePoint = (MovePointBehavior)Instantiate(theAltMovePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition), Quaternion.identity);
                 newMovePoint.transform.parent = transform;
-                newMovePoint.name = abc[length].ToString() + width.ToString();
-                theMap[length + (width * theMapLength)] = newMovePoint;
+                newMovePoint.name = abc[z].ToString() + x.ToString();
+                theMap[z + (x * theMapWidth)] = newMovePoint;
                 
 
                 if (isFenced)
                 {
-                    if (width < theMapWidth - 1)
+                    if (x < theMapLength - 1)
                     {
                         FenceBehavour newVerticalFence = (FenceBehavour)Instantiate(theFencePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition + 0.5f), Quaternion.identity);
                         newVerticalFence.transform.parent = transform;
-                        newVerticalFence.name = abc[length].ToString() + width.ToString() + "fence" + abc[length].ToString() + (width + 1).ToString();
-                        theVerticalFence[length + (width * theMapLength)] = newVerticalFence;
+                        newVerticalFence.name = abc[z].ToString() + x.ToString() + "fence" + abc[z].ToString() + (x + 1).ToString();
+                        theVerticalFence[z + (x * theMapWidth)] = newVerticalFence;
                     }
 
-                    if (length < theMapLength - 1)
+                    if (z < theMapWidth - 1)
                     {
                         FenceBehavour newHorizontalFence = (FenceBehavour)Instantiate(theFencePointPrehab, new Vector3(currentXPosition + 0.5f, 1.0f, currentYPosition), Quaternion.identity);
                         newHorizontalFence.transform.parent = transform;
-                        newHorizontalFence.name = abc[length].ToString() + width.ToString() + "fence" + abc[length + 1].ToString() + width.ToString();
-                        theVerticalFence[length + (width * theMapLength)] = newHorizontalFence;
+                        newHorizontalFence.name = abc[z].ToString() + x.ToString() + "fence" + abc[z + 1].ToString() + x.ToString();
+                        theVerticalFence[z + (x * theMapWidth)] = newHorizontalFence;
                     }
                 }
 
-                currentXPosition = xPositionOffset + length + 1;
+                currentXPosition = xPositionOffset + z + 1;
             }
         }
     }

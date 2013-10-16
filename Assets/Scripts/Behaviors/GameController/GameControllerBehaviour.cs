@@ -24,7 +24,11 @@ public class GameControllerBehaviour : MonoBehaviour
 
     public GameControllerBehaviour.UnitSide currentTurn = UnitSide.player;
 
-	// Use this for initialization
+	/// <summary>
+	/// Sets the sides up, the end condition up, and the turn counter.
+    /// 
+    /// Alex Reiss
+	/// </summary>
 	void Start () 
     {
         for (int index = 0; index < playerTeam.Count; index++)
@@ -46,18 +50,22 @@ public class GameControllerBehaviour : MonoBehaviour
         gUIStyle.normal.textColor = Color.white;
 	}
 
-    // Update is called once per frame
+    /// <summary>
+    /// Checks end game conditions, and end turn conditions.
+    /// 
+    /// Alex Reiss
+    /// </summary>
     void Update()
     {
-        //if(enemyTeamTotal == 0)
-        //{
-        //    Application.LoadLevel("PlayerWins");
-        //}
+        if (enemyTeamTotal == 0)
+        {
+            Application.LoadLevel("PlayerWins");
+        }
 
-        //if (playerTeamTotal == 0)
-        //{
-        //    Application.LoadLevel("PlayerLosses");
-        //}
+        if (playerTeamTotal == 0)
+        {
+            Application.LoadLevel("PlayerLosses");
+        }
 
         if (Input.GetKeyDown(KeyCode.Space) || leftToMoveThis == 0)
         {
@@ -82,6 +90,12 @@ public class GameControllerBehaviour : MonoBehaviour
             }
         }
 	}
+
+    /// <summary>
+    /// Used to tell what turn it is, to the player.
+    /// 
+    /// Alex Reiss
+    /// </summary>
 
     void OnGUI()
     {
