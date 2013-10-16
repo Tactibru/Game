@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using NodeSkeletonSystem;
 
 namespace Units
 {
@@ -19,11 +20,16 @@ namespace Units
 			TwoByOne,
 			TwoByTwo
 		}
+
+		/// <summary>
+		/// Represents the <see cref="NodeSkeletonSystem.NodeSkeletonStructure"/> that will be used for this unit.
+		/// </summary>
+		public NodeSkeletonStructure Skeleton;
 		
 		/// <summary>
 		/// Unit name.
 		/// </summary>
-		public string Name = "Combat Unit";
+		public string Name = "Ruffian";
 		
 		/// <summary>
 		/// Unit's total health value.
