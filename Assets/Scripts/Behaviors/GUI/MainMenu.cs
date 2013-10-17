@@ -41,29 +41,29 @@ public class MainMenu : MonoBehaviour
     {
         GUI.Label(new Rect(Screen.width / 2 - 150, 25, 300, 100), "Tactibru", menuTitle);
 
-        if (GUI.Button(new Rect(Screen.width / 2 - 150, Screen.height / 4 + 100, 300, 50), "Play", menuGUI))
-        {
-            Application.LoadLevel("GameSceneGUITest");
-        }
-
-        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 150, 300, 50), "Mode", menuGUI))
-        {
-            Application.LoadLevel("ModeSceneGUITest");
-        }
-
-        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 200, 300, 50), "Settings", menuGUI))
-        {
-            Application.LoadLevel("SettingsSceneGUITest");
-        }
-
-        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 250, 300, 50), "Credits", menuGUI))
-        {
-            Application.LoadLevel("CreditsSceneGUITest");
-        }
-        
-        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 300, 300, 50), "Exit", menuGUI))
-        {
-            Application.Quit();
-        }
+//        if (GUI.Button(new Rect(Screen.width / 2 - 150, Screen.height / 4 + 100, 300, 50), "Play", menuGUI))
+//        {
+//            Application.LoadLevel("GameSceneGUITest");
+//        }
+//
+//        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 150, 300, 50), "Mode", menuGUI))
+//        {
+//            Application.LoadLevel("ModeSceneGUITest");
+//        }
+//
+//        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 200, 300, 50), "Settings", menuGUI))
+//        {
+//            Application.LoadLevel("SettingsSceneGUITest");
+//        }
+//
+//        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 250, 300, 50), "Credits", menuGUI))
+//        {
+//            Application.LoadLevel("CreditsSceneGUITest");
+//        }
+//        
+//        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 300, 300, 50), "Exit", menuGUI))
+//        {
+//            Application.Quit();
+//        }
     }
 }
