@@ -1,8 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+/// <summary>
+/// Script that creates one instance of a button manager that holds all the buttons for an individual scene.
+/// 
+/// Author: Karl Matthews
+/// </summary>
 public class ButtonManagerBehavior : MonoBehaviour
 {
+	/// <summary>
+	/// Creates one instance of the button manager
+	/// 
+	/// The function then creates a new instance of the button if not found, but if it is found then get the component of the button manager.
+	/// </summary>
 	static ButtonManagerBehavior instance;
 	public static ButtonManagerBehavior Instance
 	{
@@ -23,11 +32,19 @@ public class ButtonManagerBehavior : MonoBehaviour
 		}
 	}
 	
+	
+	/// <summary>
+	/// An overidable start function that sets an instance to this game object.
+	/// </summary>
 	protected virtual void Start()
 	{
 		instance = this;
 	}
 	
+	/// <summary>
+	/// Virtual button pressed function that takes in the button name that exits the game if the button pressed is the exit button.
+	/// Then if I am inside the unity editor then I just shut off the play button if the exit button is pressed.
+	/// </summary>
 	public virtual void ButtonPressed(string buttonName)
 	{
 		switch (buttonName) 
