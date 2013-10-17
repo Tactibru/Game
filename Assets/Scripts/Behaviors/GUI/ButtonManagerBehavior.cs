@@ -47,7 +47,7 @@ public class ButtonManagerBehavior : MonoBehaviour
 	/// </summary>
 	public virtual void ButtonPressed(string buttonName)
 	{
-		switch (buttonName) 
+		/*switch (buttonName) 
 		{
 		case "Exit Button":
 			Application.Quit();
@@ -58,6 +58,6 @@ public class ButtonManagerBehavior : MonoBehaviour
 		default:
 			Debug.LogWarning(string.Format("No handler found for {0}!", buttonName));
 			break;
-		}	
+		}*/	
 	}
 }
