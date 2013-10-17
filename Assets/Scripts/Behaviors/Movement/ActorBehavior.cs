@@ -5,7 +5,7 @@ public class ActorBehavior : MonoBehaviour
 {
     public MovePointBehavior currentMovePoint;
     public MovePointBehavior pointToMoveTo;
-    public float timeToMoveToPoint;
+    public float timeToMoveToPoint = 1.0f;
     public GameControllerBehaviour.UnitSide theSide;
     public GridBehavior theGrid;
     public bool canMove = false;
@@ -99,18 +99,10 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
-                        if (GridBehavior.preCombat && pathList.Count == 0)
-                        {
-                            theGrid.startCombat();
-                            canMove = false;
-                        }
-                        else if (pathList.Count == 0)
-                        {
-                            canMove = false;
-                        }
                     }
                     else
                     {
+						Debug.Log (timeToMoveToPoint);
                         float forTForLerp = (timeToMoveToPoint - currentMovementTime) / timeToMoveToPoint;
                         float forTheChangeInZ = Mathf.Lerp(currentMovePoint.transform.position.z, pointToMoveTo.transform.position.z, forTForLerp);
                         transform.position = new Vector3(transform.position.x, transform.position.y, forTheChangeInZ);
@@ -127,15 +119,6 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
-                        if (GridBehavior.preCombat && pathList.Count == 0)
-                        {
-                            theGrid.startCombat();
-                            canMove = false;
-                        }
-                        else if (pathList.Count == 0)
-                        {
-                            canMove = false;
-                        }
                     }
                     else
                     {
@@ -155,15 +138,6 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
 						pathList.RemoveAt(0);
-                        if (GridBehavior.preCombat && pathList.Count == 0)
-                        {
-                            theGrid.startCombat();
-                            canMove = false;
-                        }
-                        else if (pathList.Count == 0)
-                        {
-                            canMove = false;
-                        }
                     }
                     else
                     {
@@ -183,15 +157,6 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
-                        if (GridBehavior.preCombat && pathList.Count == 0)
-                        {
-                            theGrid.startCombat();
-                            canMove = false;
-                        }
-                        else if (pathList.Count == 0)
-                        {
-                            canMove = false;
-                        }
                     }
                     else
                     {
@@ -203,5 +168,11 @@ public class ActorBehavior : MonoBehaviour
                     break;
             }
         }
+        
+        if (GridBehavior.preCombat && pathList.Count == 0)
+				theGrid.startCombat();
+                        
+            if (pathList.Count == 0)
+            	canMove = false;
 	}
 }

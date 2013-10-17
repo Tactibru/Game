@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Units;
+using NodeSkeletonSystem;
 
 /// <summary>
 /// Script that switches between the main camera and the combat when the InCombat boolean is true
@@ -246,37 +247,53 @@ public class CombatSystemBehavior : MonoBehaviour
 		int unitCount = offensiveSquad.Squad.Units.Count + defensiveSquad.Squad.Units.Count;
 		unitPrefabs = new List<NodeSkeletonBehavior>(unitCount);
 
-		foreach(UnitData data in offensiveSquad.Squad.Units)
-		{
-			float x = -1.0f + (0.33f * data.Position.Row);
-			float y = 0.7f - (0.33f * data.Position.Column);
-			float z = 0.9f - (0.05f * data.Position.Column);
-
-			NodeSkeletonBehavior skele = (NodeSkeletonBehavior)Instantiate(unitSkeleton);
-
-			skele.transform.parent = transform;
-			skele.transform.localScale = (Vector3.one / 2.0f);
-			skele.transform.localPosition = Vector3.zero;
-
-			skele.transform.Translate(x, y, z);
-		}
-		
-		foreach (UnitData data in defensiveSquad.Squad.Units)
-		{
-			float x = 1.0f - (0.33f * data.Position.Row);
-			float y = 0.7f - (0.33f * data.Position.Column);
-			float z = 0.9f - (0.05f * data.Position.Column);
-
-			NodeSkeletonBehavior skele = (NodeSkeletonBehavior)Instantiate(unitSkeleton);
-
-			skele.transform.parent = transform;
-			skele.transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f);
-			skele.transform.localPosition = Vector3.zero;
-
-			skele.transform.Translate(x, y, z);
-		}
+		createUnits(offensiveSquad.Squad.Units, true, 0.0f);
+		createUnits (defensiveSquad.Squad.Units, false, 1.0f);
 
 		currentAttacker = CurrentAttacker.OffensiveFront;
+	}
+	
+	private void createUnits (IEnumerable<UnitData> units, bool flipHorizontally, float offset)
+	{
+		// Create a base object
+		GameObject unitBase = (GameObject)Instantiate(new GameObject());
+		unitBase.name = "__UNITBASE__";
+		unitBase.transform.parent = transform;
+		unitBase.transform.localPosition = Vector3.zero;
+		unitBase.AddComponent<MonoBehaviour>();
+		
+		foreach(UnitData data in units)
+		{
+			float x = (flipHorizontally ? (-1.0f + (0.33f * data.Position.Row)) : 1.0f - (0.33f * data.Position.Row));
+			float y = 0.7f - (0.33f * data.Position.Column);
+			float z = 0.9f - (0.05f * data.Position.Column);
+
+			NodeSkeletonBehavior skele = (NodeSkeletonBehavior)Instantiate(unitSkeleton);
+
+			// Load body parts for the unit.
+			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
+			{
+				GameObject prefab = (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/{1}", node.Name, data.Unit.Name));
+				prefab = (prefab ?? (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/001", node.Name)));
+				
+				if(prefab == null)
+				{
+					Debug.LogWarning(string.Format ("Could not find prefab for 'Prefabs/UnitParts/{0}/001'", node.Name));
+					continue;
+				}
+				
+				skele.AttachToNode(node.Name, prefab);
+			}
+
+			skele.transform.parent = unitBase.transform;
+			Vector3 scale = (Vector3.one / 2.0f);
+			if(flipHorizontally)
+				scale.x *= -1.0f;
+			skele.transform.localScale = scale;
+			skele.transform.localPosition = Vector3.zero;
+
+			skele.transform.Translate(x, y, z);
+		}
 	}
 
 	/// <summary>
@@ -288,6 +305,14 @@ public class CombatSystemBehavior : MonoBehaviour
 	private void endCombat(CombatSquadBehavior losingSquad)
 	{
 		Debug.Log("Combat between " + offensiveSquad.ToString() + " and " + defensiveSquad.ToString() + " end.");
+		
+		//foreach(GameObject obj in transform.GetComponentsInChildren<MonoBehaviour>())
+		MonoBehaviour[] objects = GetComponentsInChildren<MonoBehaviour>();
+		for(int _i = (objects.Count() - 1); _i >= 0; _i--)
+		{
+			if(objects[_i].name == "__UNITBASE__")
+				DestroyImmediate(objects[_i].gameObject);
+		}
 		
 		if(losingSquad != null)
 			Destroy(losingSquad.gameObject);

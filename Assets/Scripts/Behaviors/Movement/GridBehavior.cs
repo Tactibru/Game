@@ -152,10 +152,12 @@ public class GridBehavior : MonoBehaviour
 					if (!currentActor)
 					{
 						if (hitInfo.transform.GetComponent<ActorBehavior> ())
+						{
 							if (!hitInfo.transform.GetComponent<ActorBehavior> ().actorHasMovedThisTurn && hitInfo.transform.GetComponent<ActorBehavior> ().theSide == gameController.currentTurn)
 							{
 								currentActor = hitInfo.transform.gameObject;
 							}
+						}
 					}
 					else if (hitInfo.transform.GetComponent<MovePointBehavior>() && hitInfo.transform.GetComponent<MovePointBehavior>().renderer.isVisible)
                     {
