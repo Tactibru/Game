@@ -91,7 +91,7 @@ public class GridBehavior : MonoBehaviour
                         //Debug.Log("Hi 1");
                         if (theMap[width + (length * theMapWidth)] && theMap[width + 1 + (length * theMapWidth)] && theHorizontalFence[width + (length * theMapWidth)])
                         {
-                            Debug.Log("Hi 2");
+                            //Debug.Log("Hi 2");
                             theMap[width + (length * theMapWidth)].neighborList[1] = theMap[width + 1 + (length * theMapWidth)];
                             theMap[width + 1 + (length * theMapWidth)].neighborList[3] = theMap[width + (length * theMapWidth)];
                         }
