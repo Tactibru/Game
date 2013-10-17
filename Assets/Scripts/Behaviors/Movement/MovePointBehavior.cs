@@ -193,7 +193,7 @@ public class MovePointBehavior : MonoBehaviour
 			navNode.renderer.material = navNode.baseColor; 
 		}
 		
-		MovePointBehavior startingNode = FindClosestNavNodeToGameObject(startingObject); 
+		MovePointBehavior startingNode = FindClosestNavNodeToGameObject(startingObject);
 		
 		MovePointBehavior destinationNode = FindClosestNavNodeToGameObject(targetObject); 
 		
@@ -212,6 +212,9 @@ public class MovePointBehavior : MonoBehaviour
 		 
 		while(currentNode != destinationNode)
 		{
+			if(currentNode == null)
+				continue;
+			
 			foreach(MovePointBehavior neighborNode in currentNode.neighborList)
 			{
 				if(!neighborNode)
@@ -285,17 +288,16 @@ public class MovePointBehavior : MonoBehaviour
         //if (GridBehavior.preCombat)
         //    pathToTarget.RemoveAt(0);
 
-		pathToTarget.Reverse();
         pathToTarget.RemoveAt(0);
+		pathToTarget.Reverse();
+        // pathToTarget.RemoveAt(0);
+        
 
         if (GridBehavior.preCombat)
             pathToTarget.RemoveAt(pathToTarget.Count - 1);
         
-		return pathToTarget; 
-		
-		
+		return pathToTarget;
 	}
-
 
     public /* static */ void DepthFirstSearch(ActorBehavior actor)
     {

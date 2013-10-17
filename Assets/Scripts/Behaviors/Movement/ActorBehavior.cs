@@ -5,7 +5,7 @@ public class ActorBehavior : MonoBehaviour
 {
     public MovePointBehavior currentMovePoint;
     public MovePointBehavior pointToMoveTo;
-    public float timeToMoveToPoint;
+    public float timeToMoveToPoint = 1.0f;
     public GameControllerBehaviour.UnitSide theSide;
     public GridBehavior theGrid;
     public bool canMove = false;
@@ -29,6 +29,8 @@ public class ActorBehavior : MonoBehaviour
 
 	/// <summary>
 	/// The start function is only making sure the agent starts on its assigned position.
+    /// 
+    /// Alex Reiss
 	/// </summary>
 
 
@@ -39,17 +41,22 @@ public class ActorBehavior : MonoBehaviour
 	
 	/// <summary>
 	/// The update function is to catch input and to do the movement of the agent, this is temporary code. for testing purposes only. 
+    /// 
+    /// Alex Reiss
 	/// </summary>
 
 	void Update () 
     {
         if (!currentlyMoving && canMove)
         {
+           
             if (pathList.Count > 0)
             {
+                
                 if (pathList[0] == currentMovePoint.neighborList[0])
                 //if (Input.GetKeyDown(KeyCode.UpArrow) && currentMovePoint.North)
                 {
+                    Debug.Log("Hi");
                     pointToMoveTo = currentMovePoint.neighborList[0];
                     currentMovementDirection = DirectionOfMovement.North;
                     currentlyMoving = true;
@@ -58,6 +65,7 @@ public class ActorBehavior : MonoBehaviour
                 else if (pathList[0] == currentMovePoint.neighborList[2])
                 //else if (Input.GetKeyDown(KeyCode.DownArrow) && currentMovePoint.South)
                 {
+                    Debug.Log("Hi");
                     pointToMoveTo = currentMovePoint.neighborList[2];
                     currentMovementDirection = DirectionOfMovement.South;
                     currentlyMoving = true;
@@ -66,6 +74,7 @@ public class ActorBehavior : MonoBehaviour
                 else if (pathList[0] == currentMovePoint.neighborList[3])
                 //else if (Input.GetKeyDown(KeyCode.LeftArrow) && currentMovePoint.West)
                 {
+                    Debug.Log("Hi");
                     pointToMoveTo = currentMovePoint.neighborList[3];
                     currentMovementDirection = DirectionOfMovement.West;
                     currentlyMoving = true;
@@ -74,6 +83,7 @@ public class ActorBehavior : MonoBehaviour
                 else if (pathList[0] == currentMovePoint.neighborList[1])
                 //else if (Input.GetKeyDown(KeyCode.RightArrow) && currentMovePoint.East)
                 {
+                    Debug.Log("Hi");
                     pointToMoveTo = currentMovePoint.neighborList[1];
                     currentMovementDirection = DirectionOfMovement.East;
                     currentlyMoving = true;
@@ -95,18 +105,10 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
-                        if (GridBehavior.preCombat && pathList.Count == 0)
-                        {
-                            theGrid.startCombat();
-                            canMove = false;
-                        }
-                        else if (pathList.Count == 0)
-                        {
-                            canMove = false;
-                        }
                     }
                     else
                     {
+						Debug.Log (timeToMoveToPoint);
                         float forTForLerp = (timeToMoveToPoint - currentMovementTime) / timeToMoveToPoint;
                         float forTheChangeInZ = Mathf.Lerp(currentMovePoint.transform.position.z, pointToMoveTo.transform.position.z, forTForLerp);
                         transform.position = new Vector3(transform.position.x, transform.position.y, forTheChangeInZ);
@@ -123,15 +125,6 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
-                        if (GridBehavior.preCombat && pathList.Count == 0)
-                        {
-                            theGrid.startCombat();
-                            canMove = false;
-                        }
-                        else if (pathList.Count == 0)
-                        {
-                            canMove = false;
-                        }
                     }
                     else
                     {
@@ -151,15 +144,6 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
 						pathList.RemoveAt(0);
-                        if (GridBehavior.preCombat && pathList.Count == 0)
-                        {
-                            theGrid.startCombat();
-                            canMove = false;
-                        }
-                        else if (pathList.Count == 0)
-                        {
-                            canMove = false;
-                        }
                     }
                     else
                     {
@@ -179,15 +163,6 @@ public class ActorBehavior : MonoBehaviour
                         currentlyMoving = false;
                         pointToMoveTo = null;
                         pathList.RemoveAt(0);
-                        if (GridBehavior.preCombat && pathList.Count == 0)
-                        {
-                            theGrid.startCombat();
-                            canMove = false;
-                        }
-                        else if (pathList.Count == 0)
-                        {
-                            canMove = false;
-                        }
                     }
                     else
                     {
@@ -199,5 +174,11 @@ public class ActorBehavior : MonoBehaviour
                     break;
             }
         }
+        
+        if (GridBehavior.preCombat && pathList.Count == 0)
+				theGrid.startCombat();
+                        
+            if (pathList.Count == 0)
+            	canMove = false;
 	}
 }
