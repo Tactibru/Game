@@ -49,11 +49,14 @@ public class ActorBehavior : MonoBehaviour
     {
         if (!currentlyMoving && canMove)
         {
+           
             if (pathList.Count > 0)
             {
+                
                 if (pathList[0] == currentMovePoint.neighborList[0])
                 //if (Input.GetKeyDown(KeyCode.UpArrow) && currentMovePoint.North)
                 {
+                    Debug.Log("Hi");
                     pointToMoveTo = currentMovePoint.neighborList[0];
                     currentMovementDirection = DirectionOfMovement.North;
                     currentlyMoving = true;
@@ -62,6 +65,7 @@ public class ActorBehavior : MonoBehaviour
                 else if (pathList[0] == currentMovePoint.neighborList[2])
                 //else if (Input.GetKeyDown(KeyCode.DownArrow) && currentMovePoint.South)
                 {
+                    Debug.Log("Hi");
                     pointToMoveTo = currentMovePoint.neighborList[2];
                     currentMovementDirection = DirectionOfMovement.South;
                     currentlyMoving = true;
@@ -70,6 +74,7 @@ public class ActorBehavior : MonoBehaviour
                 else if (pathList[0] == currentMovePoint.neighborList[3])
                 //else if (Input.GetKeyDown(KeyCode.LeftArrow) && currentMovePoint.West)
                 {
+                    Debug.Log("Hi");
                     pointToMoveTo = currentMovePoint.neighborList[3];
                     currentMovementDirection = DirectionOfMovement.West;
                     currentlyMoving = true;
@@ -78,6 +83,7 @@ public class ActorBehavior : MonoBehaviour
                 else if (pathList[0] == currentMovePoint.neighborList[1])
                 //else if (Input.GetKeyDown(KeyCode.RightArrow) && currentMovePoint.East)
                 {
+                    Debug.Log("Hi");
                     pointToMoveTo = currentMovePoint.neighborList[1];
                     currentMovementDirection = DirectionOfMovement.East;
                     currentlyMoving = true;
