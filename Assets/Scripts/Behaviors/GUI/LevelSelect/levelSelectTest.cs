@@ -27,6 +27,7 @@ public class levelSelectTest : MonoBehaviour {
 	/// </summary>
 	void OnGUI()
 	{
+		/*
 		// Level select menu group
 		GUI.BeginGroup(new Rect(10, 10, 300, 200));
 		
@@ -71,5 +72,6 @@ public class levelSelectTest : MonoBehaviour {
 		}
 		
 		GUI.EndGroup();
+		*/
 	}
 }
