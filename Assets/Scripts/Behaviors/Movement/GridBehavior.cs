@@ -127,9 +127,9 @@ public class GridBehavior : MonoBehaviour
 			MovePointBehavior startingPoint = actor.currentMovePoint;
 
             if(targetNode)
-				actor.pathList = startingPoint.RunDijsktras(actor.currentMovePoint.gameObject, targetNode); 
+				actor.pathList = startingPoint.RunDijsktras(actor.currentMovePoint.gameObject, targetNode, this); 
             else
-				actor.pathList = startingPoint.RunDijsktras(actor.currentMovePoint.gameObject, targetActor.GetComponent<ActorBehavior>().currentMovePoint.gameObject); 
+				actor.pathList = startingPoint.RunDijsktras(actor.currentMovePoint.gameObject, targetActor.GetComponent<ActorBehavior>().currentMovePoint.gameObject, this); 
 		}
 	}
 
@@ -217,7 +217,9 @@ public class GridBehavior : MonoBehaviour
                     preCombat = true;
                     ignoreList.Remove(currentActor.GetComponent<ActorBehavior>().currentMovePoint);
                 }
+				Debug.Log("RUN");
                 RunDijkstras();
+				Debug.Log("RAN"); 
 
                 if (targetNode)
                 {

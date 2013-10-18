@@ -72,7 +72,15 @@ public class MovePointBehavior : MonoBehaviour
 	
 	
 	
-	
+	/// <summary>
+	/// Determines whether this instance has been queried the specified whosAsking.
+	/// </summary>
+	/// <returns>
+	/// <c>true</c> if this instance has been queried the specified whosAsking; otherwise, <c>false</c>.
+	/// </returns>
+	/// <param name='whosAsking'>
+	/// If set to <c>true</c> whos asking.
+	/// </param>
 	public bool HasBeenQueried(GameObject whosAsking)
 	{
 		if (lastedVisitedBy == whosAsking && lastVisitedFrame == Time.frameCount)
@@ -84,7 +92,16 @@ public class MovePointBehavior : MonoBehaviour
 	}
 	
 	
-	
+	/// <summary>
+	/// Makes nodes ignore raycasts from themselves
+	/// Layers the mask that ignores me.
+	/// </summary>
+	/// <returns>
+	/// The mask that ignores me.
+	/// </returns>
+	/// <param name='me'>
+	/// Me.
+	/// </param>
 	public /* static */ int LayerMaskThatIgnoresMe(GameObject me)
 	{
 		int layerMask = 1<<(LayerMask.NameToLayer("Ignore Raycast")); 
@@ -98,7 +115,7 @@ public class MovePointBehavior : MonoBehaviour
 	{
 		return CanSeeObject(viewerObject, targetObject, 180.0f);
 	}
-	
+	//tried to run this again, did not fix the game crash. 
 	public /* static */ bool CanSeeObject(GameObject viewerObject, GameObject targetObject, float visionConeAngle)
 	{
 				return true;
@@ -139,6 +156,7 @@ public class MovePointBehavior : MonoBehaviour
 				//The cheap check passed, now do the expensive Line of Sight check
 				if (CanSeeObject(theObject, navNode.gameObject))
 				{
+					//CAN BE BROKEN
 					closestNode = navNode;
 					closestDistance = distanceToNode;
 				}
@@ -147,7 +165,20 @@ public class MovePointBehavior : MonoBehaviour
 		
 		return closestNode;
 	}
-	
+	/// <summary>
+	/// This is where the algorithm adds a node to the open list
+    /// calculates cost so far and then sets the previous path nodes for dijkstras to follow. 
+	/// Adds the node to open list.
+	/// </summary>
+	/// <param name='theNode'>
+	/// The node.
+	/// </param>
+	/// <param name='costFromPreviousObject'>
+	/// Cost from previous object.
+	/// </param>
+	/// <param name='previousNode'>
+	/// Previous node.
+	/// </param>
 	public /* static */ void AddNodeToOpenList(MovePointBehavior theNode, float costFromPreviousObject, 
 		MovePointBehavior previousNode)
 	{
@@ -161,7 +192,12 @@ public class MovePointBehavior : MonoBehaviour
 		openList.Add(theNode);
 	}
 	
-	
+	/// <summary>
+	/// Finds the smallest cost so far in open list.
+	/// </summary>
+	/// <returns>
+	/// The smallest cost so far in open list.
+	/// </returns>
 	public /* static */ MovePointBehavior FindSmallestCostSoFarInOpenList()
 	{
 		MovePointBehavior returnedNode = null; 
@@ -179,19 +215,33 @@ public class MovePointBehavior : MonoBehaviour
 		return returnedNode; 
 		
 	}
-	
-	public /* static */ List<MovePointBehavior> RunDijsktras(GameObject startingObject, GameObject targetObject)
+	/// <summary>
+	/// Runs the dijsktras.
+	///  Dijkstras will run and select the correct path for the unit to use to find their target. 
+	/// </summary>
+	/// <returns>
+	/// The dijsktras.
+	/// </returns>
+	/// <param name='startingObject'>
+	/// Starting object.
+	/// </param>
+	/// <param name='targetObject'>
+	/// Target object.
+	/// </param>
+	public /* static */ List<MovePointBehavior> RunDijsktras(GameObject startingObject, GameObject targetObject, GridBehavior theGrid)
 	{
 		openList.Clear(); 
 		closedList.Clear(); 
 		pathToTarget.Clear(); 
 
-        GridBehavior theGrid = GameObject.FindGameObjectWithTag("Grid").GetComponent<GridBehavior>(); 
-		
+        //GridBehavior theGrid = GameObject.FindGameObjectWithTag("Grid").GetComponent<GridBehavior>(); 
+		/*
+		 * commented out, because rendering was ffor debugging
 		foreach(MovePointBehavior navNode in allNodeList)
 		{
 			navNode.renderer.material = navNode.baseColor; 
 		}
+		*/
 		
 		MovePointBehavior startingNode = FindClosestNavNodeToGameObject(startingObject);
 		
@@ -301,20 +351,35 @@ public class MovePointBehavior : MonoBehaviour
 
     public /* static */ void DepthFirstSearch(ActorBehavior actor)
     {
-        foreach (MovePointBehavior node in actor.currentMovePoint.neighborList)
-        {
-            if (!node)
-                continue;
-
-            node.renderer.enabled = true;
-            foreach (MovePointBehavior secondNode in node.neighborList)
-            {
-                if (!secondNode)
-                    continue;
-                secondNode.renderer.enabled = true; 
-            }
-        }
+        //need to know grid
+		//need to know where the target point is
+		//traverse its neighbors and add those to the moveable list
+		//once we ran past one neighbor
+		//run again and keep adding to the depth list. 
+		List<MovePointBehavior> canMoveTo = new List<MovePointBehavior>(); 
+		canMoveTo.Add(actor.currentMovePoint); 
+		MovePointBehavior temp = actor.currentMovePoint; 
+		
+		canMoveTo = DFSUtil(temp); 
+		
+		foreach(MovePointBehavior movePoint in canMoveTo)
+		{
+			if(!movePoint)
+				continue; 
+			movePoint.renderer.enabled = true; 
+		}
     }
+	
+	List<MovePointBehavior> DFSUtil(MovePointBehavior node)
+	{
+		List<MovePointBehavior> canMoveList = new List<MovePointBehavior>(); 
+		foreach(MovePointBehavior neighbor in node.neighborList)
+		{
+			canMoveList.Add(neighbor); 
+		}
+		
+		return canMoveList; 
+	}
 	// Update is called once per frame
 	void Update () {
 	
