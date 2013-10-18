@@ -349,25 +349,26 @@ public class MovePointBehavior : MonoBehaviour
 		return pathToTarget;
 	}
 
-    public /* static */ void DepthFirstSearch(ActorBehavior actor)
+    public void DepthFirstSearch(ActorBehavior actor)
     {
-        //need to know grid
-		//need to know where the target point is
-		//traverse its neighbors and add those to the moveable list
-		//once we ran past one neighbor
-		//run again and keep adding to the depth list. 
-		List<MovePointBehavior> canMoveTo = new List<MovePointBehavior>(); 
-		canMoveTo.Add(actor.currentMovePoint); 
-		MovePointBehavior temp = actor.currentMovePoint; 
-		
-		canMoveTo = DFSUtil(temp); 
-		
-		foreach(MovePointBehavior movePoint in canMoveTo)
-		{
-			if(!movePoint)
-				continue; 
-			movePoint.renderer.enabled = true; 
-		}
+        //Need to know grid
+        //need to know where the target point is
+        //traverse its neighbors and add those to the moveable list
+        //once we ran past one neight
+        //runa gain and keep adding to the depth list. 
+
+        List<MovePointBehavior> canMoveTo = new List<MovePointBehavior>();
+        canMoveTo.Add(actor.currentMovePoint);
+        MovePointBehavior temp = actor.currentMovePoint;
+
+        canMoveTo = DFSUtil(temp);
+
+        foreach (MovePointBehavior movePoint in canMoveTo)
+        {
+            if (!movePoint)
+                continue;
+            movePoint.renderer.enabled = true; 
+        }
     }
 	
 	List<MovePointBehavior> DFSUtil(MovePointBehavior node)
@@ -380,6 +381,7 @@ public class MovePointBehavior : MonoBehaviour
 		
 		return canMoveList; 
 	}
+
 	// Update is called once per frame
 	void Update () {
 	
