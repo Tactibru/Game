@@ -100,7 +100,7 @@ public class MovePointBehavior : MonoBehaviour
 	/// The mask that ignores me.
 	/// </returns>
 	/// <param name='me'>
-	/// Me.
+	/// 
 	/// </param>
 	public /* static */ int LayerMaskThatIgnoresMe(GameObject me)
 	{
