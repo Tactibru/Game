@@ -135,7 +135,7 @@ public class GridBehavior : MonoBehaviour
 
     /// <summary>
     /// Run Update.
-    /// 
+    ///
     /// I do not create this function, Alex Reiss.
     /// </summary>
 
