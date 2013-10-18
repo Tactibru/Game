@@ -118,8 +118,7 @@ public class MovePointBehavior : MonoBehaviour
 	//tried to run this again, did not fix the game crash. 
 	public /* static */ bool CanSeeObject(GameObject viewerObject, GameObject targetObject, float visionConeAngle)
 	{
-				return true;
-		/*if(!targetObject)
+		if(!targetObject)
 			return false; 
 		
 		Vector3 vectorToObject = targetObject.transform.position - viewerObject.transform.position; 
@@ -139,7 +138,6 @@ public class MovePointBehavior : MonoBehaviour
 			
 		}
 		return false; 
-		*/
 	}
 	
 	public /* static */ MovePointBehavior FindClosestNavNodeToGameObject(GameObject theObject)
