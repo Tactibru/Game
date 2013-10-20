@@ -347,41 +347,43 @@ public class MovePointBehavior : MonoBehaviour
 		return pathToTarget;
 	}
 
+	/// <summary>
+	/// Creates a list of nodes that the actor can move to.
+	/// </summary>
+	/// <param name="actor"></param>
     public void DepthFirstSearch(ActorBehavior actor)
     {
-        //Need to know grid
-        //need to know where the target point is
-        //traverse its neighbors and add those to the moveable list
-        //once we ran past one neight
-        //runa gain and keep adding to the depth list. 
+		int depth = 0;
 
-        List<MovePointBehavior> canMoveTo = new List<MovePointBehavior>();
-        canMoveTo.Add(actor.currentMovePoint);
-        MovePointBehavior temp = actor.currentMovePoint;
-
-        canMoveTo = DFSUtil(temp);
-
-        foreach (MovePointBehavior movePoint in canMoveTo)
-        {
-            if (!movePoint)
-                continue;
-            movePoint.renderer.enabled = true; 
-        }
-    }
-	
-	List<MovePointBehavior> DFSUtil(MovePointBehavior node)
-	{
-		List<MovePointBehavior> canMoveList = new List<MovePointBehavior>(); 
-		foreach(MovePointBehavior neighbor in node.neighborList)
+		if(actor.currentMovePoint == null)
 		{
-			canMoveList.Add(neighbor); 
+			Debug.LogError("Current move point is null!");
+			return;
 		}
-		
-		return canMoveList; 
-	}
 
-	// Update is called once per frame
-	void Update () {
-	
+		doDFS(actor.currentMovePoint, 3, depth);
+    }
+
+	/// <summary>
+	/// Performs the logic behind the depth-first search.
+	/// </summary>
+	/// <param name="movePoint">Node to perform the depth-first check on.</param>
+	/// <param name="maxDepth">Maximum depth to perform checking to.</param>
+	/// <param name="currentDepth">Current depth within the search.</param>
+	private void doDFS(MovePointBehavior movePoint, int maxDepth, int currentDepth)
+	{
+		if (currentDepth >= maxDepth || movePoint.neighborList.Length == 0)
+			return;
+
+		currentDepth++;
+
+		foreach (MovePointBehavior neighbor in movePoint.neighborList)
+		{
+			if (neighbor == null)
+				continue;
+
+			neighbor.renderer.enabled = true;
+			doDFS(neighbor, maxDepth, currentDepth);
+		}
 	}
 }

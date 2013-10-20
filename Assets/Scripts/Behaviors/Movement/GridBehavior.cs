@@ -126,9 +126,9 @@ public class GridBehavior : MonoBehaviour
 			ActorBehavior actor = currentActor.GetComponent<ActorBehavior> ();
 			MovePointBehavior startingPoint = actor.currentMovePoint;
 
-            if(targetNode)
-				actor.pathList = startingPoint.RunDijsktras(actor.currentMovePoint.gameObject, targetNode, this); 
-            else
+			if (targetNode)
+				actor.pathList = startingPoint.RunDijsktras(actor.currentMovePoint.gameObject, targetNode, this);
+			else
 				actor.pathList = startingPoint.RunDijsktras(actor.currentMovePoint.gameObject, targetActor.GetComponent<ActorBehavior>().currentMovePoint.gameObject, this); 
 		}
 	}
