@@ -21,8 +21,6 @@ public class ActorBehavior : MonoBehaviour
         None
     }
 
-    private DirectionOfMovement currentMovementDirection = DirectionOfMovement.None;
-
     private float currentMovementTime = 0.0f;
     public bool currentlyMoving = false;
     public bool actorHasMovedThisTurn = false;
