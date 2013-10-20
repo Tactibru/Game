@@ -9,5 +9,6 @@ _UpgradeReport_Files/
 *.sln
 *.pidb
 *.userprefs
+*.suo
 test_Data
 /Assets/Standard Assets
