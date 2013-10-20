@@ -1,20 +1,15 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using Units;
 
 public class MovePointBehavior : MonoBehaviour 
 {
-    //public MovePointBehavior North;
-    //public MovePointBehavior South;
-    //public MovePointBehavior East;
-    //public MovePointBehavior West;
-
-	/* static */ List<MovePointBehavior> openList = new List<MovePointBehavior>(); 
-	/* static */ List<MovePointBehavior> closedList = new List<MovePointBehavior>(); 
-	/* static */ List<MovePointBehavior> allNodeList = new List<MovePointBehavior>(); 
+	List<MovePointBehavior> openList = new List<MovePointBehavior>(); 
+	List<MovePointBehavior> closedList = new List<MovePointBehavior>(); 
+	List<MovePointBehavior> allNodeList = new List<MovePointBehavior>(); 
 	
-	//public List<MovePoint> neighborList = new List<MovePoint>(); 
-	/* static */ List<MovePointBehavior> pathToTarget = new List<MovePointBehavior>();
+	List<MovePointBehavior> pathToTarget = new List<MovePointBehavior>();
     public int index;
 	
 	public MovePointBehavior[] neighborList = new MovePointBehavior[4]; 
@@ -102,7 +97,7 @@ public class MovePointBehavior : MonoBehaviour
 	/// <param name='me'>
 	/// 
 	/// </param>
-	public /* static */ int LayerMaskThatIgnoresMe(GameObject me)
+	public int LayerMaskThatIgnoresMe(GameObject me)
 	{
 		int layerMask = 1<<(LayerMask.NameToLayer("Ignore Raycast")); 
 		layerMask |= 1<<me.layer; 
@@ -115,8 +110,9 @@ public class MovePointBehavior : MonoBehaviour
 	{
 		return CanSeeObject(viewerObject, targetObject, 180.0f);
 	}
+	
 	//tried to run this again, did not fix the game crash. 
-	public /* static */ bool CanSeeObject(GameObject viewerObject, GameObject targetObject, float visionConeAngle)
+	public bool CanSeeObject(GameObject viewerObject, GameObject targetObject, float visionConeAngle)
 	{
 		if(!targetObject)
 			return false; 
@@ -140,7 +136,7 @@ public class MovePointBehavior : MonoBehaviour
 		return false; 
 	}
 	
-	public /* static */ MovePointBehavior FindClosestNavNodeToGameObject(GameObject theObject)
+	public MovePointBehavior FindClosestNavNodeToGameObject(GameObject theObject)
 	{
 		MovePointBehavior closestNode = null;
 		float closestDistance = float.MaxValue;
@@ -177,7 +173,7 @@ public class MovePointBehavior : MonoBehaviour
 	/// <param name='previousNode'>
 	/// Previous node.
 	/// </param>
-	public /* static */ void AddNodeToOpenList(MovePointBehavior theNode, float costFromPreviousObject, 
+	public void AddNodeToOpenList(MovePointBehavior theNode, float costFromPreviousObject, 
 		MovePointBehavior previousNode)
 	{
 		float costSoFar = costFromPreviousObject;
@@ -196,7 +192,7 @@ public class MovePointBehavior : MonoBehaviour
 	/// <returns>
 	/// The smallest cost so far in open list.
 	/// </returns>
-	public /* static */ MovePointBehavior FindSmallestCostSoFarInOpenList()
+	public MovePointBehavior FindSmallestCostSoFarInOpenList()
 	{
 		MovePointBehavior returnedNode = null; 
 		float smallestCostSoFar = float.MaxValue;
@@ -226,20 +222,11 @@ public class MovePointBehavior : MonoBehaviour
 	/// <param name='targetObject'>
 	/// Target object.
 	/// </param>
-	public /* static */ List<MovePointBehavior> RunDijsktras(GameObject startingObject, GameObject targetObject, GridBehavior theGrid)
+	public List<MovePointBehavior> RunDijsktras(GameObject startingObject, GameObject targetObject, GridBehavior theGrid)
 	{
 		openList.Clear(); 
 		closedList.Clear(); 
 		pathToTarget.Clear(); 
-
-        //GridBehavior theGrid = GameObject.FindGameObjectWithTag("Grid").GetComponent<GridBehavior>(); 
-		/*
-		 * commented out, because rendering was ffor debugging
-		foreach(MovePointBehavior navNode in allNodeList)
-		{
-			navNode.renderer.material = navNode.baseColor; 
-		}
-		*/
 		
 		MovePointBehavior startingNode = FindClosestNavNodeToGameObject(startingObject);
 		
@@ -361,7 +348,14 @@ public class MovePointBehavior : MonoBehaviour
 			return;
 		}
 
-		doDFS(actor.currentMovePoint, 3, depth);
+		int maxDistance = 0;
+		CombatSquadBehavior csb = actor.GetComponent<CombatSquadBehavior>();
+		if (csb == null)
+			Debug.LogWarning("Attempting to move a unit that does not have a squad associated!");
+
+		maxDistance = (csb == null ? 1 : csb.Squad.Speed);
+
+		doDFS(actor.currentMovePoint, maxDistance, depth);
     }
 
 	/// <summary>
