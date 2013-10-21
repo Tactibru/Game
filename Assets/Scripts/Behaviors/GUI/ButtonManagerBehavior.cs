@@ -13,6 +13,12 @@ public class ButtonManagerBehavior : MonoBehaviour
 	/// The function then creates a new instance of the button if not found, but if it is found then get the component of the button manager.
 	/// </summary>
 	static ButtonManagerBehavior instance;
+
+	/// <summary>
+	/// Creates one instance of the button manager
+	/// 
+	/// The function then creates a new instance of the button if not found, but if it is found then get the component of the button manager.
+	/// </summary>
 	public static ButtonManagerBehavior Instance
 	{
 		get

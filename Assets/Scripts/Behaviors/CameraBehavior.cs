@@ -81,7 +81,7 @@ public class CameraBehavior : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Constraints the camera to within the X & Z coordinates in minimumPosition and maximumPosition.
+	/// Constraints the camera to within the X and Z coordinates in minimumPosition and maximumPosition.
 	/// </summary>
 	public void ConstrainCamera()
 	{
