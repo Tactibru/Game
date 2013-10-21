@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Units;
 
+/// <summary>
+/// Represents a grid point on the map that units can move to.
+/// </summary>
 public class MovePointBehavior : MonoBehaviour 
 {
 	/// <summary>
@@ -23,6 +26,7 @@ public class MovePointBehavior : MonoBehaviour
 	/// </summary>
 	/// <param name="targetNode">Final node the unit should move to.</param>
 	/// <param name="maxDistance">Maximum distnance the unit can move.</param>
+	/// <param name="grid">Grid that the pathfinding is occurring on.</param>
 	/// <returns></returns>
 	public List<MovePointBehavior> FindPath(MovePointBehavior targetNode, int maxDistance, GridBehavior grid)
 	{
@@ -137,10 +141,10 @@ public class MovePointBehavior : MonoBehaviour
 	/// <summary>
 	/// Performs the logic behind the depth-first search.
 	/// </summary>
-	/// <param name="movePoint">Node to perform the depth-first check on.</param>
 	/// <param name="maxDepth">Maximum depth to perform checking to.</param>
 	/// <param name="currentDepth">Current depth within the search.</param>
-	/// <param name="grid">Grid </param>
+	/// <param name="grid">Grid the graph is being built on.</param>
+	/// <param name="path">List of move points representing the constructed path.</param>
 	private void buildGraph(int maxDepth, int currentDepth, GridBehavior grid, ref List<MovePointBehavior> path)
 	{
 		if (currentDepth >= maxDepth || neighborList.Length == 0)

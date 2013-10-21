@@ -11,8 +11,14 @@ using NodeSkeletonSystem;
 /// </summary>
 public class CombatSystemBehavior : MonoBehaviour 
 {
-	public bool InCombat;
+	/// <summary>
+	/// Internally tracks the primary scene camera, used in the tactical view.
+	/// </summary>
 	public Camera mainCamera;
+
+	/// <summary>
+	/// Internally tracks the camera used to display the combat window.
+	/// </summary>
 	public Camera combatCamera;
 
 	/// <summary>
@@ -20,10 +26,29 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	public enum CurrentAttacker
 	{
+		/// <summary>
+		/// Default, blanket value that shouldn't be set.
+		/// </summary>
 		None,
+
+		/// <summary>
+		/// Marks the offensive side's front row as the current attacker.
+		/// </summary>
 		OffensiveFront,
+
+		/// <summary>
+		/// Marks the defensive side's front row as the current attacker.
+		/// </summary>
 		DefensiveFront,
+
+		/// <summary>
+		/// Marks the offensive side's back row as the current attacker.
+		/// </summary>
 		OffensiveBack,
+
+		/// <summary>
+		/// Marks the defensive side's back row as the current attacker.
+		/// </summary>
 		DefensiveBack
 	}
 
@@ -65,7 +90,6 @@ public class CombatSystemBehavior : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		InCombat = false;
 		mainCamera.enabled = true;
 		combatCamera.enabled = false;
 	}
@@ -76,12 +100,12 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	void Update () 
 	{
-		if (InCombat && !combatCamera.enabled)
+		if (GridBehavior.inCombat && !combatCamera.enabled)
 			combatCamera.enabled = true;
-		else if (!InCombat && combatCamera.enabled)
+		else if (!GridBehavior.inCombat && combatCamera.enabled)
 			combatCamera.enabled = false;
 
-		if (!InCombat)
+		if (!GridBehavior.inCombat)
 			return;
 
 		// TODO: REPLACE HACK, CRAP CODE.
@@ -242,7 +266,6 @@ public class CombatSystemBehavior : MonoBehaviour
 		this.grid = grid;
 
 		GridBehavior.inCombat = true;
-		InCombat = true;
 
 		this.offensiveSquad = offensiveSquad;
 		this.defensiveSquad = defensiveSquad;
@@ -345,6 +368,5 @@ public class CombatSystemBehavior : MonoBehaviour
 
 		GridBehavior.preCombat = false;
 		GridBehavior.inCombat = false;
-		InCombat = false;
 	}
 }
