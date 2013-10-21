@@ -1,4 +1,4 @@
-using UnityEngine;
+	using UnityEngine;
 using System.Collections;
 using System.Collections.Generic; 
 public class ActorBehavior : MonoBehaviour 
@@ -20,8 +20,6 @@ public class ActorBehavior : MonoBehaviour
         West,
         None
     }
-
-    private DirectionOfMovement currentMovementDirection = DirectionOfMovement.None;
 
     private float currentMovementTime = 0.0f;
     public bool currentlyMoving = false;
@@ -49,7 +47,6 @@ public class ActorBehavior : MonoBehaviour
     {
         if (!currentlyMoving && canMove)
         {
-
             if (pathList.Count > 0)
             {
                 for (int index = 0; index < currentMovePoint.neighborList.Length; index++)
@@ -207,10 +204,10 @@ public class ActorBehavior : MonoBehaviour
         //    }
         }
         
-        if (GridBehavior.preCombat && pathList.Count == 0)
-				theGrid.startCombat();
-                        
-            if (pathList.Count == 0)
-            	canMove = false;
+        if (GridBehavior.preCombat && pathList.Count == 0 && canMove)
+			theGrid.startCombat();
+		
+		if (pathList.Count == 0)
+			canMove = false;
 	}
 }
