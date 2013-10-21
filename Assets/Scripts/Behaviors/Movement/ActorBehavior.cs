@@ -21,8 +21,6 @@ public class ActorBehavior : MonoBehaviour
         None
     }
 
-    private DirectionOfMovement currentMovementDirection = DirectionOfMovement.None;
-
     private float currentMovementTime = 0.0f;
     public bool currentlyMoving = false;
     public bool actorHasMovedThisTurn = false;
@@ -49,7 +47,6 @@ public class ActorBehavior : MonoBehaviour
     {
         if (!currentlyMoving && canMove)
         {
-
             if (pathList.Count > 0)
             {
                 for (int index = 0; index < currentMovePoint.neighborList.Length; index++)

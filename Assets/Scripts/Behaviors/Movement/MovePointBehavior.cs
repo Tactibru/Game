@@ -1,387 +1,161 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using Units;
 
 public class MovePointBehavior : MonoBehaviour 
 {
-    //public MovePointBehavior North;
-    //public MovePointBehavior South;
-    //public MovePointBehavior East;
-    //public MovePointBehavior West;
+	/// <summary>
+	/// Stores a list of nodes that this move point is connected to.
+	/// </summary>
+	public MovePointBehavior[] neighborList = new MovePointBehavior[4];
 
-	/* static */ List<MovePointBehavior> openList = new List<MovePointBehavior>(); 
-	/* static */ List<MovePointBehavior> closedList = new List<MovePointBehavior>(); 
-	/* static */ List<MovePointBehavior> allNodeList = new List<MovePointBehavior>(); 
-	
-	//public List<MovePoint> neighborList = new List<MovePoint>(); 
-	/* static */ List<MovePointBehavior> pathToTarget = new List<MovePointBehavior>();
-    public int index;
-	
-	public MovePointBehavior[] neighborList = new MovePointBehavior[4]; 
-	
-	public float costSoFar = 0.0f; 
-	public MovePointBehavior previousPathNode = null; 
-	public GameObject lastedVisitedBy = null; 
-	public int lastVisitedFrame = 0; 
-	
-	public Material baseColor; 
-	public Material selectedColor; 
-	
-	public GridBehavior theGrid; 
+	/// <summary>
+	/// Attempts to find a path to the target node.
+	/// </summary>
+	/// <param name="targetNode">Final node the unit should move to.</param>
+	/// <param name="maxDistance">Maximum distnance the unit can move.</param>
+	/// <returns></returns>
+	public List<MovePointBehavior> FindPath(MovePointBehavior targetNode, int maxDistance, GridBehavior grid)
+	{
+		// Build the Dijkstra's Graph
+		List<MovePointBehavior> graph = new List<MovePointBehavior>();
+		List<MovePointBehavior> tGraph = new List<MovePointBehavior>();
+		
+		buildGraph(maxDistance, 0, grid, ref graph);
 
-	// Use this for initialization
-	void Start () 
+		if (!graph.Contains(targetNode))
+			return null;
+
+		Dictionary<MovePointBehavior, int> distance = new Dictionary<MovePointBehavior, int>();
+		Dictionary<MovePointBehavior, MovePointBehavior> previous = new Dictionary<MovePointBehavior, MovePointBehavior>();
+
+		foreach (MovePointBehavior node in graph)
+		{
+			distance.Add(node, int.MaxValue);
+			previous.Add(node, null);
+
+			tGraph.Add(node);
+		}
+
+		distance[this] = 0;
+		previous[this] = null;
+
+		while (tGraph.Count > 0)
+		{
+			// Find the item with the smallest distance.
+			MovePointBehavior node = tGraph[0];
+			for (int _i = 0; _i < tGraph.Count; _i++)
+			{
+				MovePointBehavior _node = tGraph[_i];
+
+				if (grid.ignoreList.Contains(_node))
+					continue;
+
+				if (distance[_node] < distance[node])
+				{
+					node = _node;
+					MovePointBehavior tNode = tGraph[0];
+					tGraph[0] = _node;
+					tGraph[_i] = tNode;
+				}
+			}
+
+			tGraph.RemoveAt(0);
+
+			if (distance[node] == int.MaxValue)
+				break;
+
+			foreach (MovePointBehavior neighbor in node.neighborList)
+			{
+				if (neighbor == null || grid.ignoreList.Contains(neighbor) || !graph.Contains(neighbor))
+					continue;
+
+				int alt = distance[node] + 1;
+
+				if(alt < distance[neighbor])
+				{
+					distance[neighbor] = alt;
+					previous[neighbor] = node;
+				}
+			}
+		}
+
+		List<MovePointBehavior> path = new List<MovePointBehavior>();
+		MovePointBehavior u = targetNode;
+
+		while (previous[u] != null)
+		{
+			path.Add(u);
+			u = previous[u];
+		}
+
+		path.Reverse();
+
+		return path;
+	}
+
+	/// <summary>
+	/// Enables the renderer on any nodes the unit can move to.
+	/// </summary>
+	/// <param name="actor">Actor associated with this movement attempt.</param>
+	/// <param name="grid">Grid associated with the movement.</param>
+    public void HighlightValidNodes(ActorBehavior actor, GridBehavior grid)
     {
-		renderer.enabled = false; 
-        //for(int i= 0; i < 4; i++)
-        //{
-			 
-        //    //neighborList[i] = null; 
-        //}
-		
-		theGrid = GameObject.FindGameObjectWithTag("Grid").GetComponent<GridBehavior>(); 
-		GameObject[] navNodeObjects = GameObject.FindGameObjectsWithTag("Waypoint"); 
-		
-		bool needToFillAllNodeList = false; 
-		
-		if(allNodeList.Count == 0)
-		{
-			needToFillAllNodeList = true; 
-		}
-		
-		if(navNodeObjects.Length > 0)
-		{
-			foreach(GameObject navNode in navNodeObjects)
-			{
-				MovePointBehavior navNodeComponent = navNode.GetComponent<MovePointBehavior>(); 
-				if(needToFillAllNodeList && navNodeComponent != null)
-				{
-					allNodeList.Add(navNodeComponent); 
-				}
+		int depth = 0;
 
-				//check for ordinal locations. 
-				//foreach(MovePoint mp in theGrid)
-				
-					//check to see if north,east than add to neighbor list.
-					//neighbor is full after grid runs. 
-			}
-		}
-		
-	
-	}
-	
-	
-	
-	/// <summary>
-	/// Determines whether this instance has been queried the specified whosAsking.
-	/// </summary>
-	/// <returns>
-	/// <c>true</c> if this instance has been queried the specified whosAsking; otherwise, <c>false</c>.
-	/// </returns>
-	/// <param name='whosAsking'>
-	/// If set to <c>true</c> whos asking.
-	/// </param>
-	public bool HasBeenQueried(GameObject whosAsking)
-	{
-		if (lastedVisitedBy == whosAsking && lastVisitedFrame == Time.frameCount)
+		if(actor.currentMovePoint == null)
 		{
-			return true;
-		}
-		
-		return false;
-	}
-	
-	
-	/// <summary>
-	/// Makes nodes ignore raycasts from themselves
-	/// Layers the mask that ignores me.
-	/// </summary>
-	/// <returns>
-	/// The mask that ignores me.
-	/// </returns>
-	/// <param name='me'>
-	/// 
-	/// </param>
-	public /* static */ int LayerMaskThatIgnoresMe(GameObject me)
-	{
-		int layerMask = 1<<(LayerMask.NameToLayer("Ignore Raycast")); 
-		layerMask |= 1<<me.layer; 
-		layerMask = ~layerMask; 
-		
-		return layerMask; 
-	}
-
-	public bool CanSeeObject(GameObject viewerObject, GameObject targetObject)
-	{
-		return CanSeeObject(viewerObject, targetObject, 180.0f);
-	}
-	//tried to run this again, did not fix the game crash. 
-	public /* static */ bool CanSeeObject(GameObject viewerObject, GameObject targetObject, float visionConeAngle)
-	{
-		if(!targetObject)
-			return false; 
-		
-		Vector3 vectorToObject = targetObject.transform.position - viewerObject.transform.position; 
-		float angle = Vector3.Angle(viewerObject.transform.forward, vectorToObject.normalized); 
-		if(angle <= visionConeAngle)
-		{
-			RaycastHit hitInfo;
-			int layerMask = LayerMaskThatIgnoresMe(viewerObject); 
-			if(Physics.Raycast(viewerObject.transform.position, vectorToObject.normalized, out hitInfo, vectorToObject.magnitude, layerMask))
-			{
-				return hitInfo.transform.gameObject == targetObject; 
-			}
-			else
-			{
-				return true; 
-			}
-			
-		}
-		return false; 
-	}
-	
-	public /* static */ MovePointBehavior FindClosestNavNodeToGameObject(GameObject theObject)
-	{
-		MovePointBehavior closestNode = null;
-		float closestDistance = float.MaxValue;
-		
-		foreach (MovePointBehavior navNode in allNodeList)
-		{
-			float distanceToNode = Vector3.Distance(theObject.transform.position, navNode.transform.position);
-			
-			if (distanceToNode < closestDistance)
-			{
-				//The cheap check passed, now do the expensive Line of Sight check
-				if (CanSeeObject(theObject, navNode.gameObject))
-				{
-					//CAN BE BROKEN
-					closestNode = navNode;
-					closestDistance = distanceToNode;
-				}
-			}
-		}
-		
-		return closestNode;
-	}
-	/// <summary>
-	/// This is where the algorithm adds a node to the open list
-    /// calculates cost so far and then sets the previous path nodes for dijkstras to follow. 
-	/// Adds the node to open list.
-	/// </summary>
-	/// <param name='theNode'>
-	/// The node.
-	/// </param>
-	/// <param name='costFromPreviousObject'>
-	/// Cost from previous object.
-	/// </param>
-	/// <param name='previousNode'>
-	/// Previous node.
-	/// </param>
-	public /* static */ void AddNodeToOpenList(MovePointBehavior theNode, float costFromPreviousObject, 
-		MovePointBehavior previousNode)
-	{
-		float costSoFar = costFromPreviousObject;
-		if (previousNode != null)
-		{
-			costSoFar += previousNode.costSoFar;
-		}
-		theNode.costSoFar = costSoFar;
-		theNode.previousPathNode = previousNode;
-		openList.Add(theNode);
-	}
-	
-	/// <summary>
-	/// Finds the smallest cost so far in open list.
-	/// </summary>
-	/// <returns>
-	/// The smallest cost so far in open list.
-	/// </returns>
-	public /* static */ MovePointBehavior FindSmallestCostSoFarInOpenList()
-	{
-		MovePointBehavior returnedNode = null; 
-		float smallestCostSoFar = float.MaxValue;
-		
-		foreach(MovePointBehavior navNode in openList)
-		{
-			if(navNode.costSoFar < smallestCostSoFar)
-			{
-				returnedNode = navNode;
-				smallestCostSoFar = navNode.costSoFar; 
-			}
-		}
-		
-		return returnedNode; 
-		
-	}
-	/// <summary>
-	/// Runs the dijsktras.
-	///  Dijkstras will run and select the correct path for the unit to use to find their target. 
-	/// </summary>
-	/// <returns>
-	/// The dijsktras.
-	/// </returns>
-	/// <param name='startingObject'>
-	/// Starting object.
-	/// </param>
-	/// <param name='targetObject'>
-	/// Target object.
-	/// </param>
-	public /* static */ List<MovePointBehavior> RunDijsktras(GameObject startingObject, GameObject targetObject, GridBehavior theGrid)
-	{
-		openList.Clear(); 
-		closedList.Clear(); 
-		pathToTarget.Clear(); 
-
-        //GridBehavior theGrid = GameObject.FindGameObjectWithTag("Grid").GetComponent<GridBehavior>(); 
-		/*
-		 * commented out, because rendering was ffor debugging
-		foreach(MovePointBehavior navNode in allNodeList)
-		{
-			navNode.renderer.material = navNode.baseColor; 
-		}
-		*/
-		
-		MovePointBehavior startingNode = FindClosestNavNodeToGameObject(startingObject);
-		
-		MovePointBehavior destinationNode = FindClosestNavNodeToGameObject(targetObject); 
-		
-		if(startingNode == null)
-		{
-			print("No starting node!"); 
-			return pathToTarget;
+			Debug.LogError("Current move point is null!");
+			return;
 		}
 
-		float costFromAIToStartingNode = Vector3.Distance(startingObject.transform.position, startingNode.transform.position); 
-		AddNodeToOpenList(startingNode, costFromAIToStartingNode, null); 
-		
-		MovePointBehavior currentNode = startingNode; 
-		
-		int sanity = 1000; 
-		 
-		while(currentNode != destinationNode)
-		{
-			if(currentNode == null)
-				continue;
-			
-			foreach(MovePointBehavior neighborNode in currentNode.neighborList)
-			{
-				if(!neighborNode)
-				{
-					continue; 
-				}
+		int maxDistance = 0;
+		CombatSquadBehavior csb = actor.GetComponent<CombatSquadBehavior>();
+		if (csb == null)
+			Debug.LogWarning("Attempting to move a unit that does not have a squad associated!");
 
-                bool ignored = false;
+		maxDistance = (csb == null ? 1 : csb.Squad.Speed);
 
-                for (int index = 0; index < theGrid.ignoreList.Count; index++)
-                {
-                    if (neighborNode == theGrid.ignoreList[index])
-                    {
-                        ignored = true;
-                    }
-                }
-				
-				//print(count.ToString()); 
-                if (!ignored)
-                {
-                    if (closedList.Contains(neighborNode))
-                        continue;
-                    else if (openList.Contains(neighborNode))
-                    {
-                        float costToNode = currentNode.costSoFar;
-                        float distanceToNode = Vector3.Distance(currentNode.transform.position, neighborNode.transform.position);
+		List<MovePointBehavior> moveGraph = new List<MovePointBehavior>();
 
-                        if (neighborNode.costSoFar > costToNode + distanceToNode)
-                        {
-                            neighborNode.costSoFar = costToNode + distanceToNode;
-                            neighborNode.previousPathNode = currentNode;
-                        }
-                    }
-                    else
-                    {
-                        //print(currentNode.transform.position.ToString()); 
-                        //print(neighborNode.transform.position.ToString()); 
+		actor.currentMovePoint.buildGraph(maxDistance, depth, grid, ref moveGraph);
+		moveGraph.RemoveAt(0);
 
-                        float distanceToNode = Vector3.Distance(currentNode.transform.position, neighborNode.transform.position);
-                        //print(distanceToNode.ToString()); 
-                        AddNodeToOpenList(neighborNode, distanceToNode, currentNode);
-                    }
-                    //count++; 
-                }
-			}
-			closedList.Add(currentNode); 
-			if(sanity-- < 0)
-			{
-				print("RunDijkstras Check 1 Failed"); 
-				return pathToTarget; 
-			}
-			
-			currentNode = FindSmallestCostSoFarInOpenList(); 
-			openList.Remove(currentNode);
-		}
-		
-		sanity = 1000; 
-		while(currentNode != null)
-		{
-			
-			currentNode.renderer.material = currentNode.selectedColor; 
-			
-			pathToTarget.Add(currentNode); 
-			currentNode = currentNode.previousPathNode; 
-			if(sanity-- < 0)
-			{
-				print("RunDijkstras check 2 failed"); 
-				return pathToTarget; 
-			}
-		}
-        //if (GridBehavior.preCombat)
-        //    pathToTarget.RemoveAt(0);
-
-        //pathToTarget.RemoveAt(0);
-		pathToTarget.Reverse();
-        pathToTarget.RemoveAt(0);
-        
-
-        if (GridBehavior.preCombat)
-            pathToTarget.RemoveAt(pathToTarget.Count - 1);
-        
-		return pathToTarget;
-	}
-
-    public void DepthFirstSearch(ActorBehavior actor)
-    {
-        //Need to know grid
-        //need to know where the target point is
-        //traverse its neighbors and add those to the moveable list
-        //once we ran past one neight
-        //runa gain and keep adding to the depth list. 
-
-        List<MovePointBehavior> canMoveTo = new List<MovePointBehavior>();
-        canMoveTo.Add(actor.currentMovePoint);
-        MovePointBehavior temp = actor.currentMovePoint;
-
-        canMoveTo = DFSUtil(temp);
-
-        foreach (MovePointBehavior movePoint in canMoveTo)
-        {
-            if (!movePoint)
-                continue;
-            movePoint.renderer.enabled = true; 
-        }
+		foreach (MovePointBehavior node in moveGraph)
+			node.renderer.enabled = true;
     }
-	
-	List<MovePointBehavior> DFSUtil(MovePointBehavior node)
-	{
-		List<MovePointBehavior> canMoveList = new List<MovePointBehavior>(); 
-		foreach(MovePointBehavior neighbor in node.neighborList)
-		{
-			canMoveList.Add(neighbor); 
-		}
-		
-		return canMoveList; 
-	}
 
-	// Update is called once per frame
-	void Update () {
-	
+	/// <summary>
+	/// Performs the logic behind the depth-first search.
+	/// </summary>
+	/// <param name="movePoint">Node to perform the depth-first check on.</param>
+	/// <param name="maxDepth">Maximum depth to perform checking to.</param>
+	/// <param name="currentDepth">Current depth within the search.</param>
+	/// <param name="grid">Grid </param>
+	private void buildGraph(int maxDepth, int currentDepth, GridBehavior grid, ref List<MovePointBehavior> path)
+	{
+		if (currentDepth >= maxDepth || neighborList.Length == 0)
+			return;
+
+		if (!path.Contains(this))
+			path.Add(this);
+
+		currentDepth++;
+
+		foreach (MovePointBehavior neighbor in neighborList)
+		{
+			if (neighbor == null)
+				continue;
+
+			if (grid.ignoreList != null && grid.ignoreList.Contains(neighbor))
+				continue;
+
+			//neighbor.renderer.enabled = true;
+			if (!path.Contains(neighbor))
+				path.Add(neighbor);
+
+			neighbor.buildGraph(maxDepth, currentDepth, grid, ref path);
+		}
 	}
 }
