@@ -11,6 +11,14 @@ public class MovePointBehavior : MonoBehaviour
 	public MovePointBehavior[] neighborList = new MovePointBehavior[4];
 
 	/// <summary>
+	/// Disables the renderer.
+	/// </summary>
+	public void Start()
+	{
+		renderer.enabled = false;
+	}
+
+	/// <summary>
 	/// Attempts to find a path to the target node.
 	/// </summary>
 	/// <param name="targetNode">Final node the unit should move to.</param>
