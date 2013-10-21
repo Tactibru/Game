@@ -259,7 +259,7 @@ public class GridBehavior : MonoBehaviour
 
 		//inCombat = true;
 
-		combatSystem.BeginCombat(offensiveSquadBehavior, defensiveSquadBehavior);
+		combatSystem.BeginCombat(offensiveSquadBehavior, defensiveSquadBehavior, this);
 
         //Current actor is attacker and target actor is defender.
         ignoreList.Clear();

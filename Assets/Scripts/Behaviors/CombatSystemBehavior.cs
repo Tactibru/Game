@@ -57,6 +57,11 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	private float hackTimeImpl;
 
+	/// <summary>
+	/// Internally tracks the grid combat is occurring on.
+	/// </summary>
+	private GridBehavior grid;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -225,13 +230,16 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	/// <param name="offensiveSquad">GameObject for the squad performing the attack.</param>
 	/// <param name="defensiveSquad">GameObject for the squad on defense.</param>
-	public void BeginCombat(CombatSquadBehavior offensiveSquad, CombatSquadBehavior defensiveSquad)
+	/// <param name="grid">Grid behavior on which the combat is taking place.</param>
+	public void BeginCombat(CombatSquadBehavior offensiveSquad, CombatSquadBehavior defensiveSquad, GridBehavior grid)
 	{
 		if (offensiveSquad.Squad == null || defensiveSquad.Squad == null)
 		{
 			Debug.LogError("Combat was started with either the offensive or defense squad being null!");
 			return;
 		}
+
+		this.grid = grid;
 
 		GridBehavior.inCombat = true;
 		InCombat = true;
@@ -253,6 +261,12 @@ public class CombatSystemBehavior : MonoBehaviour
 		currentAttacker = CurrentAttacker.OffensiveFront;
 	}
 	
+	/// <summary>
+	/// Creates the sub-objects that display the individual units in a squad.
+	/// </summary>
+	/// <param name="units"></param>
+	/// <param name="flipHorizontally"></param>
+	/// <param name="offset"></param>
 	private void createUnits (IEnumerable<UnitData> units, bool flipHorizontally, float offset)
 	{
 		// Create a base object
@@ -315,7 +329,13 @@ public class CombatSystemBehavior : MonoBehaviour
 		}
 		
 		if(losingSquad != null)
+		{
 			Destroy(losingSquad.gameObject);
+
+			ActorBehavior actor = losingSquad.GetComponent<ActorBehavior>();
+			if (actor != null && grid.ignoreList.Contains(actor.currentMovePoint))
+				grid.ignoreList.Remove(actor.currentMovePoint);
+		}
 
 		foreach (NodeSkeletonBehavior node in unitPrefabs)
 			DestroyImmediate(node.gameObject);
