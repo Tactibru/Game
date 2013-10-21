@@ -143,10 +143,15 @@ public class GridBehavior : MonoBehaviour
                     }
                     else if (hitInfo.transform.GetComponent<ActorBehavior>())
                     {
-                        if (hitInfo.transform.GetComponent<ActorBehavior>().theSide != currentActor.GetComponent<ActorBehavior>().theSide)
+						if (hitInfo.transform.GetComponent<ActorBehavior>().theSide != currentActor.GetComponent<ActorBehavior>().theSide)
+							targetActor = hitInfo.transform.gameObject;
+						else if (hitInfo.transform.GetComponent<ActorBehavior>() == currentActor.GetComponent<ActorBehavior>())
 						{
-                            targetActor = hitInfo.transform.gameObject;
-							Debug.Log(targetActor);
+							currentActor = null;
+
+							foreach (MovePointBehavior movePoint in theMap)
+								if (movePoint && movePoint.renderer.enabled == true)
+									movePoint.renderer.enabled = false;
 						}
                     }
                 }
