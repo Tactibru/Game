@@ -55,6 +55,9 @@ public class CameraBehavior : MonoBehaviour
 	/// </summary>
 	public void Update()
 	{
+		if (Camera.current != null && Camera.current != this.camera)
+			return;
+
 		float movementAmount = MovementRate * Time.deltaTime;
 		
 		// Horizontal - Right Edge
