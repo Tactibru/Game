@@ -44,6 +44,16 @@ public class CombatSquadBehavior : MonoBehaviour {
 	public GameObject selectionNode;
 
 	/// <summary>
+	/// Color for the unit base.
+	/// </summary>
+	private Color baseColor;
+
+	/// <summary>
+	/// Stores a local copy of the instantiated selection node.
+	/// </summary>
+	private GameObject selNode;
+
+	/// <summary>
 	/// Instantiates the squad prefab into the internally-held squad to avoid damaging the asset file.
 	/// </summary>
 	public void Start()
@@ -71,6 +81,12 @@ public class CombatSquadBehavior : MonoBehaviour {
 	{
 		if(unitCount != squad.Units.Count)
 			updateSquadVisuals();
+
+		ActorBehavior actor = GetComponent<ActorBehavior>();
+		if (actor == null)
+			return;
+
+		selNode.renderer.material.color = (actor.actorHasMovedThisTurn ? Color.gray : baseColor);
 	}
 	/// <summary>
 	/// Updates the overworld visuals for the squad.
@@ -79,6 +95,9 @@ public class CombatSquadBehavior : MonoBehaviour {
 	{
 		// Retrieve the actor to determine whether or not to flip the object.
 		ActorBehavior actor = GetComponent<ActorBehavior>();
+		if (actor == null)
+			return;
+
 		bool flippedHorizontally = (actor == null ? false : actor.theSide == GameControllerBehaviour.UnitSide.player);
 		
 		// Hide any mesh renderer on this object.
@@ -100,6 +119,10 @@ public class CombatSquadBehavior : MonoBehaviour {
 		GameObject selNode = (GameObject)Instantiate(selectionNode);
 		selNode.transform.parent = transform;
 		selNode.transform.localPosition = Vector3.zero;
+		this.selNode = selNode;
+
+		// Determine the side of the material based on its Actor component.
+		baseColor = (actor.theSide == GameControllerBehaviour.UnitSide.player ? Color.blue : Color.red);
 		
 		// Create the new sub-units.
 		unitCount = squad.Units.Count;
