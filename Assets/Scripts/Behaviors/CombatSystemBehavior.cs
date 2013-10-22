@@ -11,8 +11,14 @@ using NodeSkeletonSystem;
 /// </summary>
 public class CombatSystemBehavior : MonoBehaviour 
 {
-	public bool InCombat;
+	/// <summary>
+	/// Internally tracks the primary scene camera, used in the tactical view.
+	/// </summary>
 	public Camera mainCamera;
+
+	/// <summary>
+	/// Internally tracks the camera used to display the combat window.
+	/// </summary>
 	public Camera combatCamera;
 
 	/// <summary>
@@ -20,10 +26,29 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	public enum CurrentAttacker
 	{
+		/// <summary>
+		/// Default, blanket value that shouldn't be set.
+		/// </summary>
 		None,
+
+		/// <summary>
+		/// Marks the offensive side's front row as the current attacker.
+		/// </summary>
 		OffensiveFront,
+
+		/// <summary>
+		/// Marks the defensive side's front row as the current attacker.
+		/// </summary>
 		DefensiveFront,
+
+		/// <summary>
+		/// Marks the offensive side's back row as the current attacker.
+		/// </summary>
 		OffensiveBack,
+
+		/// <summary>
+		/// Marks the defensive side's back row as the current attacker.
+		/// </summary>
 		DefensiveBack
 	}
 
@@ -57,10 +82,14 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	private float hackTimeImpl;
 
+	/// <summary>
+	/// Internally tracks the grid combat is occurring on.
+	/// </summary>
+	private GridBehavior grid;
+
 	// Use this for initialization
 	void Start () 
 	{
-		InCombat = false;
 		mainCamera.enabled = true;
 		combatCamera.enabled = false;
 	}
@@ -71,12 +100,12 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	void Update () 
 	{
-		if (InCombat && !combatCamera.enabled)
+		if (GridBehavior.inCombat && !combatCamera.enabled)
 			combatCamera.enabled = true;
-		else if (!InCombat && combatCamera.enabled)
+		else if (!GridBehavior.inCombat && combatCamera.enabled)
 			combatCamera.enabled = false;
 
-		if (!InCombat)
+		if (!GridBehavior.inCombat)
 			return;
 
 		// TODO: REPLACE HACK, CRAP CODE.
@@ -225,7 +254,8 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	/// <param name="offensiveSquad">GameObject for the squad performing the attack.</param>
 	/// <param name="defensiveSquad">GameObject for the squad on defense.</param>
-	public void BeginCombat(CombatSquadBehavior offensiveSquad, CombatSquadBehavior defensiveSquad)
+	/// <param name="grid">Grid behavior on which the combat is taking place.</param>
+	public void BeginCombat(CombatSquadBehavior offensiveSquad, CombatSquadBehavior defensiveSquad, GridBehavior grid)
 	{
 		if (offensiveSquad.Squad == null || defensiveSquad.Squad == null)
 		{
@@ -233,8 +263,9 @@ public class CombatSystemBehavior : MonoBehaviour
 			return;
 		}
 
+		this.grid = grid;
+
 		GridBehavior.inCombat = true;
-		InCombat = true;
 
 		this.offensiveSquad = offensiveSquad;
 		this.defensiveSquad = defensiveSquad;
@@ -253,6 +284,12 @@ public class CombatSystemBehavior : MonoBehaviour
 		currentAttacker = CurrentAttacker.OffensiveFront;
 	}
 	
+	/// <summary>
+	/// Creates the sub-objects that display the individual units in a squad.
+	/// </summary>
+	/// <param name="units"></param>
+	/// <param name="flipHorizontally"></param>
+	/// <param name="offset"></param>
 	private void createUnits (IEnumerable<UnitData> units, bool flipHorizontally, float offset)
 	{
 		// Create a base object
@@ -315,7 +352,13 @@ public class CombatSystemBehavior : MonoBehaviour
 		}
 		
 		if(losingSquad != null)
+		{
 			Destroy(losingSquad.gameObject);
+
+			ActorBehavior actor = losingSquad.GetComponent<ActorBehavior>();
+			if (actor != null && grid.ignoreList.Contains(actor.currentMovePoint))
+				grid.ignoreList.Remove(actor.currentMovePoint);
+		}
 
 		foreach (NodeSkeletonBehavior node in unitPrefabs)
 			DestroyImmediate(node.gameObject);
@@ -325,6 +368,5 @@ public class CombatSystemBehavior : MonoBehaviour
 
 		GridBehavior.preCombat = false;
 		GridBehavior.inCombat = false;
-		InCombat = false;
 	}
 }
