@@ -306,7 +306,7 @@ public class CombatSystemBehavior : MonoBehaviour
 			Debug.LogWarning("Font material is not set on the Combat System Behavior! Ensure you are using the prefab to create the combat system!");
 
 		// Create a base object
-		GameObject unitBase = (GameObject)Instantiate(new GameObject());
+		GameObject unitBase = new GameObject();
 		unitBase.name = "__UNITBASE__";
 		unitBase.transform.parent = transform;
 		unitBase.transform.localPosition = Vector3.zero;
@@ -320,7 +320,7 @@ public class CombatSystemBehavior : MonoBehaviour
 
 			NodeSkeletonBehavior skele = (NodeSkeletonBehavior)Instantiate(unitSkeleton);
 
-			GameObject obj = (GameObject)Instantiate(new GameObject());
+			GameObject obj = new GameObject();
 			obj.AddComponent<MeshRenderer>();
 			obj.transform.parent = skele.transform;
 			
