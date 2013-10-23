@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Units;
+using NodeSkeletonSystem;
 
 /// <summary>
 /// Script that switches between the main camera and the combat when the InCombat boolean is true
@@ -10,8 +11,14 @@ using Units;
 /// </summary>
 public class CombatSystemBehavior : MonoBehaviour 
 {
-	public bool InCombat;
+	/// <summary>
+	/// Internally tracks the primary scene camera, used in the tactical view.
+	/// </summary>
 	public Camera mainCamera;
+
+	/// <summary>
+	/// Internally tracks the camera used to display the combat window.
+	/// </summary>
 	public Camera combatCamera;
 
 	/// <summary>
@@ -19,49 +26,103 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	public enum CurrentAttacker
 	{
+		/// <summary>
+		/// Default, blanket value that shouldn't be set.
+		/// </summary>
 		None,
+
+		/// <summary>
+		/// Marks the offensive side's front row as the current attacker.
+		/// </summary>
 		OffensiveFront,
+
+		/// <summary>
+		/// Marks the defensive side's front row as the current attacker.
+		/// </summary>
 		DefensiveFront,
+
+		/// <summary>
+		/// Marks the offensive side's back row as the current attacker.
+		/// </summary>
 		OffensiveBack,
+
+		/// <summary>
+		/// Marks the defensive side's back row as the current attacker.
+		/// </summary>
 		DefensiveBack
 	}
 
 	/// <summary>
-	/// Indiciates which attacker is next in the combat sequence.
+	/// Indicates the prefab to be used for the Node Skeleton that units will be built from.
+	/// </summary>
+	public NodeSkeletonBehavior unitSkeleton;
+
+	/// <summary>
+	/// Material used to handle font rendering (set on <see cref="CombatSystemUnitBehavior"/> instances).
+	/// </summary>
+	public Material fontMaterial;
+
+	/// <summary>
+	/// Font used for unit text rendering.
+	/// </summary>
+	public Font font;
+
+	/// <summary>
+	/// Indicates which attacker is next in the combat sequence.
 	/// </summary>
 	private CurrentAttacker currentAttacker;
 
 	/// <summary>
 	/// Represents the offensive squad in this combat.
 	/// </summary>
-	private CombatSquadBehavior offensiveSquad;
+	public CombatSquadBehavior offensiveSquad { get; set; }
 
 	/// <summary>
 	/// Represents the defensive squad in this combat.
 	/// </summary>
-	private CombatSquadBehavior defensiveSquad;
+	public CombatSquadBehavior defensiveSquad { get; set; }
+
+	/// <summary>
+	/// A list of NodeSkeletonBehavior instances used to render the combat units for the combat screen.
+	/// </summary>
+	private List<NodeSkeletonBehavior> unitPrefabs;
+
+	/// <summary>
+	/// HACK: Temporarily pads the combat scene out.
+	/// </summary>
+	private float hackTimeImpl;
+
+	/// <summary>
+	/// Internally tracks the grid combat is occurring on.
+	/// </summary>
+	private GridBehavior grid;
 
 	// Use this for initialization
 	void Start () 
 	{
-		InCombat = false;
 		mainCamera.enabled = true;
 		combatCamera.enabled = false;
 	}
 	
 	// Update is called once per frame
 	/// <summary>
-	/// Function that checks whether your in combat aand enambles the proper camera. 
+	/// Function that checks whether your in combat and enables the proper camera. 
 	/// </summary>
 	void Update () 
 	{
-		if (InCombat && !combatCamera.enabled)
+		if (GridBehavior.inCombat && !combatCamera.enabled)
 			combatCamera.enabled = true;
-		else if (!InCombat && combatCamera.enabled)
+		else if (!GridBehavior.inCombat && combatCamera.enabled)
 			combatCamera.enabled = false;
 
-		if (!InCombat)
+		if (!GridBehavior.inCombat)
 			return;
+
+		// TODO: REPLACE HACK, CRAP CODE.
+		hackTimeImpl += Time.deltaTime;
+		if (hackTimeImpl <= 1.0f)
+			return;
+		hackTimeImpl = 0.0f;
 
 		// Perform combat logic.
 		IEnumerable<CombatUnit> offFirstRow = offensiveSquad.Squad.Units.Where(l => l.Position.Row == 0).Select(l => l.Unit);
@@ -83,17 +144,15 @@ public class CombatSystemBehavior : MonoBehaviour
 					if (offFirstRow.Count() > 0)
 					{
 						int totalStrength = offFirstRow.Sum(l => l.Strength);
-						int totalToughness = (defFirstRow.Count() > 0 ? defFirstRow.Sum(l => l.Toughness) : defSecondRow.Sum(l => l.Toughness));
-						int damage = Mathf.Max(totalStrength - totalToughness, 0);
 
-						int damagePerUnit = damage / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
+						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
 						{
-							unit.Health -= damagePerUnit;
+							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
 
-							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", defensiveSquad.ToString(), unit.Name, damagePerUnit, unit.Health));
+							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", defensiveSquad.ToString(), unit.Name, damagePerUnit, unit.CurrentHealth));
 
-							if (unit.Health <= 0)
+							if (unit.CurrentHealth <= 0)
 								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, defensiveSquad.Squad.Units.Count));
 						}
 
@@ -108,17 +167,15 @@ public class CombatSystemBehavior : MonoBehaviour
 					if (defFirstRow.Count() > 0)
 					{
 						int totalStrength = defFirstRow.Sum(l => l.Strength);
-						int totalToughness = (offFirstRow.Count() > 0 ? offFirstRow.Sum(l => l.Toughness) : offSecondRow.Sum(l => l.Toughness));
-						int damage = Mathf.Max(totalStrength - totalToughness, 0);
 
-						int damagePerUnit = damage / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
+						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
 						{
-							unit.Health -= damagePerUnit;
+							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
 
-							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", offensiveSquad.ToString(), unit.Name, damagePerUnit, unit.Health));
+							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", offensiveSquad.ToString(), unit.Name, damagePerUnit, unit.CurrentHealth));
 
-							if (unit.Health <= 0)
+							if (unit.CurrentHealth <= 0)
 								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, offensiveSquad.Squad.Units.Count));
 						}
 
@@ -133,17 +190,15 @@ public class CombatSystemBehavior : MonoBehaviour
 					if (offSecondRow.Count() > 0)
 					{
 						int totalStrength = offSecondRow.Sum(l => l.Strength);
-						int totalToughness = (defFirstRow.Count() > 0 ? defFirstRow.Sum(l => l.Toughness) : defSecondRow.Sum(l => l.Toughness));
-						int damage = Mathf.Max(totalStrength - totalToughness, 0);
 
-						int damagePerUnit = damage / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
+						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
 						{
-							unit.Health -= damagePerUnit;
+							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
 
-							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", defensiveSquad.ToString(), unit.Name, damagePerUnit, unit.Health));
+							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", defensiveSquad.ToString(), unit.Name, damagePerUnit, unit.CurrentHealth));
 
-							if (unit.Health <= 0)
+							if (unit.CurrentHealth <= 0)
 								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, defensiveSquad.Squad.Units.Count));
 						}
 
@@ -158,17 +213,15 @@ public class CombatSystemBehavior : MonoBehaviour
 					if (defSecondRow.Count() > 0)
 					{
 						int totalStrength = defSecondRow.Sum(l => l.Strength);
-						int totalToughness = (offFirstRow.Count() > 0 ? offFirstRow.Sum(l => l.Toughness) : offSecondRow.Sum(l => l.Toughness));
-						int damage = Mathf.Max(totalStrength - totalToughness, 0);
 
-						int damagePerUnit = damage / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
+						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
 						{
-							unit.Health -= damagePerUnit;
+							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
 
-							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", offensiveSquad.ToString(), unit.Name, damagePerUnit, unit.Health));
+							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", offensiveSquad.ToString(), unit.Name, damagePerUnit, unit.CurrentHealth));
 
-							if (unit.Health <= 0)
+							if (unit.CurrentHealth <= 0)
 								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, offensiveSquad.Squad.Units.Count));
 						}
 
@@ -191,7 +244,7 @@ public class CombatSystemBehavior : MonoBehaviour
 	{
 		if (offensiveSquad != null)
 		{
-			offensiveSquad.Squad.Units.RemoveAll(l => l.Unit.Health <= 0);
+			offensiveSquad.Squad.Units.RemoveAll(l => l.Unit.CurrentHealth <= 0);
 
 			if (offensiveSquad.Squad.Units.Count == 0)
 				endCombat(offensiveSquad);
@@ -199,7 +252,7 @@ public class CombatSystemBehavior : MonoBehaviour
 
 		if (defensiveSquad != null)
 		{
-			defensiveSquad.Squad.Units.RemoveAll(l => l.Unit.Health <= 0);
+			defensiveSquad.Squad.Units.RemoveAll(l => l.Unit.CurrentHealth <= 0);
 
 			if (defensiveSquad.Squad.Units.Count == 0)
 				endCombat(defensiveSquad);
@@ -211,7 +264,8 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	/// <param name="offensiveSquad">GameObject for the squad performing the attack.</param>
 	/// <param name="defensiveSquad">GameObject for the squad on defense.</param>
-	public void BeginCombat(CombatSquadBehavior offensiveSquad, CombatSquadBehavior defensiveSquad)
+	/// <param name="grid">Grid behavior on which the combat is taking place.</param>
+	public void BeginCombat(CombatSquadBehavior offensiveSquad, CombatSquadBehavior defensiveSquad, GridBehavior grid)
 	{
 		if (offensiveSquad.Squad == null || defensiveSquad.Squad == null)
 		{
@@ -219,8 +273,9 @@ public class CombatSystemBehavior : MonoBehaviour
 			return;
 		}
 
+		this.grid = grid;
+
 		GridBehavior.inCombat = true;
-		InCombat = true;
 
 		this.offensiveSquad = offensiveSquad;
 		this.defensiveSquad = defensiveSquad;
@@ -230,7 +285,84 @@ public class CombatSystemBehavior : MonoBehaviour
 		Debug.Log("Offensive size: " + offensiveSquad.Squad.Units.Count);
 		Debug.Log("Defensive size: " + defensiveSquad.Squad.Units.Count);
 
+		int unitCount = offensiveSquad.Squad.Units.Count + defensiveSquad.Squad.Units.Count;
+		unitPrefabs = new List<NodeSkeletonBehavior>(unitCount);
+
+		createUnits(offensiveSquad.Squad.Units, true, 0.0f);
+		createUnits (defensiveSquad.Squad.Units, false, 1.0f);
+
 		currentAttacker = CurrentAttacker.OffensiveFront;
+	}
+	
+	/// <summary>
+	/// Creates the sub-objects that display the individual units in a squad.
+	/// </summary>
+	/// <param name="units"></param>
+	/// <param name="flipHorizontally"></param>
+	/// <param name="offset"></param>
+	private void createUnits (IEnumerable<UnitData> units, bool flipHorizontally, float offset)
+	{
+		if (fontMaterial == null || font == null)
+			Debug.LogWarning("Font material is not set on the Combat System Behavior! Ensure you are using the prefab to create the combat system!");
+
+		// Create a base object
+		GameObject unitBase = new GameObject();
+		unitBase.name = "__UNITBASE__";
+		unitBase.transform.parent = transform;
+		unitBase.transform.localPosition = Vector3.zero;
+		unitBase.AddComponent<MonoBehaviour>();
+		
+		foreach(UnitData data in units)
+		{
+			float x = (flipHorizontally ? (-1.0f + (0.33f * data.Position.Row)) : 1.0f - (0.33f * data.Position.Row));
+			float y = 0.7f - (0.33f * data.Position.Column);
+			float z = 0.9f - (0.05f * data.Position.Column);
+
+			NodeSkeletonBehavior skele = (NodeSkeletonBehavior)Instantiate(unitSkeleton);
+
+			GameObject obj = new GameObject();
+			obj.AddComponent<MeshRenderer>();
+			obj.transform.parent = skele.transform;
+			
+			CombatSystemUnitBehavior unitBehavior = obj.gameObject.AddComponent<CombatSystemUnitBehavior>();
+			unitBehavior.unit = data.Unit;
+			unitBehavior.transform.localPosition = Vector3.zero;
+			unitBehavior.transform.localScale = Vector3.one / 5.0f;
+			if (font != null)
+				unitBehavior.SetFont(font);
+
+			if(fontMaterial != null)
+				unitBehavior.renderer.material = fontMaterial;
+
+			// Load body parts for the unit.
+			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
+			{
+				GameObject prefab = (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/{1}", node.Name, data.Unit.Name));
+				prefab = (prefab ?? (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/001", node.Name)));
+				
+				if(prefab == null)
+				{
+					Debug.LogWarning(string.Format ("Could not find prefab for 'Prefabs/UnitParts/{0}/001'", node.Name));
+					continue;
+				}
+				
+				skele.AttachToNode(node.Name, prefab);
+			}
+
+			skele.transform.parent = unitBase.transform;
+			Vector3 scale = (Vector3.one / 2.0f);
+			if(flipHorizontally)
+			{
+				scale.x *= -1.0f;
+				Vector3 lScale = unitBehavior.transform.localScale;
+				lScale.x *= -1.0f;
+				unitBehavior.transform.localScale = lScale;
+			}
+			skele.transform.localScale = scale;
+			skele.transform.localPosition = Vector3.zero;
+
+			skele.transform.Translate(x, y, z);
+		}
 	}
 
 	/// <summary>
@@ -243,13 +375,29 @@ public class CombatSystemBehavior : MonoBehaviour
 	{
 		Debug.Log("Combat between " + offensiveSquad.ToString() + " and " + defensiveSquad.ToString() + " end.");
 		
+		MonoBehaviour[] objects = GetComponentsInChildren<MonoBehaviour>();
+		for(int _i = (objects.Count() - 1); _i >= 0; _i--)
+		{
+			if(objects[_i].name == "__UNITBASE__")
+				DestroyImmediate(objects[_i].gameObject);
+		}
+		
 		if(losingSquad != null)
+		{
 			Destroy(losingSquad.gameObject);
+
+			ActorBehavior actor = losingSquad.GetComponent<ActorBehavior>();
+			if (actor != null && grid.ignoreList.Contains(actor.currentMovePoint))
+				grid.ignoreList.Remove(actor.currentMovePoint);
+		}
+
+		foreach (NodeSkeletonBehavior node in unitPrefabs)
+			DestroyImmediate(node.gameObject);
 
 		this.offensiveSquad = null;
 		this.defensiveSquad = null;
 
+		GridBehavior.preCombat = false;
 		GridBehavior.inCombat = false;
-		InCombat = false;
 	}
 }

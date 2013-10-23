@@ -31,8 +31,8 @@ public class AudioBehavior : MonoBehaviour
     private float audio2Volume;
     private float audio1Pitch;
     private float audio2Pitch;
-    private float volume;
-    private float pitch;
+    private float volume = 0.0f;
+    private float pitch = 0.0f;
     private bool track1Playing;
     private bool track2Playing;
 

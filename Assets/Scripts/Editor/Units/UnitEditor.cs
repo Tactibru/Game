@@ -71,6 +71,7 @@ namespace Editor.Units
 			// Set the target as dirty if the GUI values have changed.
 			if (GUI.changed)
 			{
+				Target.CurrentHealth = Target.Health;
 				EditorUtility.SetDirty(Target);
 				Debug.Log("Unit saved.");
 			}
