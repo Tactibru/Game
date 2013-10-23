@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Collections.Generic;
 
 /// <summary>
 /// Level Selector
@@ -10,6 +10,40 @@ using System.Collections;
 /// </summary>
 public class LevelSelector : ButtonManagerBehavior
 {
+	public GameObject scene;
+	public List<GameObject> scenes = new List<GameObject>();
+	public int displayIndex = 0;
+	public int sceneIndex;
+	
+	
+	
+	public void MoveListDown ()
+	{	
+		if(displayIndex <= 0)
+			displayIndex = 0;
+		else
+			displayIndex--;
+		Debug.Log(displayIndex);
+	}
+	
+	public void MoveListUp()
+	{
+		if (displayIndex >= 10)
+			displayIndex = 10;
+		else
+			displayIndex++;
+		
+		Debug.Log(displayIndex);
+	}
+	
+	public void FillList()
+	{
+//		if(scene.tag.Contains("ButtonLevel")
+//		
+//		for(sceneIndex = 0; sceneIndex < 11; sceneIndex++)
+			
+	}
+	
 	/// <summary>
 	/// Activate the button that will be pressed.
 	/// </summary>
@@ -21,6 +55,13 @@ public class LevelSelector : ButtonManagerBehavior
 		/// Switch statement that loads the approiate level based on the level name passed in.
 		switch(buttonName)
 		{
+		case "Down Button":
+			MoveListUp();
+			break;
+			
+		case "Up Button":
+			MoveListDown();
+			break;
 			/// Load level03 scene
 		case "level3Button":
 			Application.LoadLevel("level03");
@@ -44,4 +85,6 @@ public class LevelSelector : ButtonManagerBehavior
 		}
 
 	}
+	
+	
 }
