@@ -4,11 +4,11 @@ using Units;
 using NodeSkeletonSystem;
 
 /// <summary>
-/// Denotes a Game Object that posseses a <see cref="Units.CombatSquad"/>
+/// Denotes a Game Object that possesses a <see cref="Units.CombatSquad"/>
 /// </summary>
 public class CombatSquadBehavior : MonoBehaviour {
 	/// <summary>
-	/// Squad posessed by this game object.
+	/// Squad possessed by this game object.
 	/// </summary>
 	public CombatSquad Squad
 	{
@@ -67,7 +67,7 @@ public class CombatSquadBehavior : MonoBehaviour {
 		squad = (CombatSquad)Instantiate(SquadPrefab);
 
 		// Iterate over and instantiate each of the squad's units.
-		for (int _i = 0; _i < squad.Units.Count; _i++ )
+		for (int _i = 0; _i < squad.Units.Count; _i++)
 			squad.Units[_i].Unit = (CombatUnit)Instantiate(squad.Units[_i].Unit);
 			
 		unitCount = squad.Units.Count;
@@ -117,6 +117,7 @@ public class CombatSquadBehavior : MonoBehaviour {
 		
 		// Add the selector
 		GameObject selNode = (GameObject)Instantiate(selectionNode);
+		selNode.name = "Selection Node";
 		selNode.transform.parent = transform;
 		selNode.transform.localPosition = Vector3.zero;
 		this.selNode = selNode;
