@@ -28,6 +28,7 @@ public class ButtonManagerBehavior : MonoBehaviour
 				GameObject manager = GameObject.Find("Button Manager") as GameObject;
 				if (manager != null)
 					instance = manager.GetComponent<ButtonManagerBehavior>();
+				
 			}
 			if (instance == null)
 			{
