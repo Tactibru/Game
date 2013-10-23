@@ -34,6 +34,11 @@ namespace Units
 		/// Unit's total health value.
 		/// </summary>
 		public int Health = 10;
+
+		/// <summary>
+		/// Tracks the unit's current health value.
+		/// </summary>
+		public int CurrentHealth = 10;
 		
 		/// <summary>
 		/// Unit Attack Strength.

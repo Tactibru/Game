@@ -58,19 +58,29 @@ public class CombatSystemBehavior : MonoBehaviour
 	public NodeSkeletonBehavior unitSkeleton;
 
 	/// <summary>
-	/// Indiciates which attacker is next in the combat sequence.
+	/// Material used to handle font rendering (set on <see cref="CombatSystemUnitBehavior"/> instances).
+	/// </summary>
+	public Material fontMaterial;
+
+	/// <summary>
+	/// Font used for unit text rendering.
+	/// </summary>
+	public Font font;
+
+	/// <summary>
+	/// Indicates which attacker is next in the combat sequence.
 	/// </summary>
 	private CurrentAttacker currentAttacker;
 
 	/// <summary>
 	/// Represents the offensive squad in this combat.
 	/// </summary>
-	private CombatSquadBehavior offensiveSquad;
+	public CombatSquadBehavior offensiveSquad { get; set; }
 
 	/// <summary>
 	/// Represents the defensive squad in this combat.
 	/// </summary>
-	private CombatSquadBehavior defensiveSquad;
+	public CombatSquadBehavior defensiveSquad { get; set; }
 
 	/// <summary>
 	/// A list of NodeSkeletonBehavior instances used to render the combat units for the combat screen.
@@ -96,7 +106,7 @@ public class CombatSystemBehavior : MonoBehaviour
 	
 	// Update is called once per frame
 	/// <summary>
-	/// Function that checks whether your in combat aand enambles the proper camera. 
+	/// Function that checks whether your in combat and enables the proper camera. 
 	/// </summary>
 	void Update () 
 	{
@@ -138,11 +148,11 @@ public class CombatSystemBehavior : MonoBehaviour
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
 						{
-							unit.Health -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
 
-							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", defensiveSquad.ToString(), unit.Name, damagePerUnit, unit.Health));
+							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", defensiveSquad.ToString(), unit.Name, damagePerUnit, unit.CurrentHealth));
 
-							if (unit.Health <= 0)
+							if (unit.CurrentHealth <= 0)
 								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, defensiveSquad.Squad.Units.Count));
 						}
 
@@ -161,11 +171,11 @@ public class CombatSystemBehavior : MonoBehaviour
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
 						{
-							unit.Health -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
 
-							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", offensiveSquad.ToString(), unit.Name, damagePerUnit, unit.Health));
+							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", offensiveSquad.ToString(), unit.Name, damagePerUnit, unit.CurrentHealth));
 
-							if (unit.Health <= 0)
+							if (unit.CurrentHealth <= 0)
 								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, offensiveSquad.Squad.Units.Count));
 						}
 
@@ -184,11 +194,11 @@ public class CombatSystemBehavior : MonoBehaviour
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
 						{
-							unit.Health -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
 
-							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", defensiveSquad.ToString(), unit.Name, damagePerUnit, unit.Health));
+							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", defensiveSquad.ToString(), unit.Name, damagePerUnit, unit.CurrentHealth));
 
-							if (unit.Health <= 0)
+							if (unit.CurrentHealth <= 0)
 								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, defensiveSquad.Squad.Units.Count));
 						}
 
@@ -207,11 +217,11 @@ public class CombatSystemBehavior : MonoBehaviour
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
 						{
-							unit.Health -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
 
-							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", offensiveSquad.ToString(), unit.Name, damagePerUnit, unit.Health));
+							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", offensiveSquad.ToString(), unit.Name, damagePerUnit, unit.CurrentHealth));
 
-							if (unit.Health <= 0)
+							if (unit.CurrentHealth <= 0)
 								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, offensiveSquad.Squad.Units.Count));
 						}
 
@@ -234,7 +244,7 @@ public class CombatSystemBehavior : MonoBehaviour
 	{
 		if (offensiveSquad != null)
 		{
-			offensiveSquad.Squad.Units.RemoveAll(l => l.Unit.Health <= 0);
+			offensiveSquad.Squad.Units.RemoveAll(l => l.Unit.CurrentHealth <= 0);
 
 			if (offensiveSquad.Squad.Units.Count == 0)
 				endCombat(offensiveSquad);
@@ -242,7 +252,7 @@ public class CombatSystemBehavior : MonoBehaviour
 
 		if (defensiveSquad != null)
 		{
-			defensiveSquad.Squad.Units.RemoveAll(l => l.Unit.Health <= 0);
+			defensiveSquad.Squad.Units.RemoveAll(l => l.Unit.CurrentHealth <= 0);
 
 			if (defensiveSquad.Squad.Units.Count == 0)
 				endCombat(defensiveSquad);
@@ -292,8 +302,11 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// <param name="offset"></param>
 	private void createUnits (IEnumerable<UnitData> units, bool flipHorizontally, float offset)
 	{
+		if (fontMaterial == null || font == null)
+			Debug.LogWarning("Font material is not set on the Combat System Behavior! Ensure you are using the prefab to create the combat system!");
+
 		// Create a base object
-		GameObject unitBase = (GameObject)Instantiate(new GameObject());
+		GameObject unitBase = new GameObject();
 		unitBase.name = "__UNITBASE__";
 		unitBase.transform.parent = transform;
 		unitBase.transform.localPosition = Vector3.zero;
@@ -306,6 +319,20 @@ public class CombatSystemBehavior : MonoBehaviour
 			float z = 0.9f - (0.05f * data.Position.Column);
 
 			NodeSkeletonBehavior skele = (NodeSkeletonBehavior)Instantiate(unitSkeleton);
+
+			GameObject obj = new GameObject();
+			obj.AddComponent<MeshRenderer>();
+			obj.transform.parent = skele.transform;
+			
+			CombatSystemUnitBehavior unitBehavior = obj.gameObject.AddComponent<CombatSystemUnitBehavior>();
+			unitBehavior.unit = data.Unit;
+			unitBehavior.transform.localPosition = Vector3.zero;
+			unitBehavior.transform.localScale = Vector3.one / 5.0f;
+			if (font != null)
+				unitBehavior.SetFont(font);
+
+			if(fontMaterial != null)
+				unitBehavior.renderer.material = fontMaterial;
 
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
@@ -325,7 +352,12 @@ public class CombatSystemBehavior : MonoBehaviour
 			skele.transform.parent = unitBase.transform;
 			Vector3 scale = (Vector3.one / 2.0f);
 			if(flipHorizontally)
+			{
 				scale.x *= -1.0f;
+				Vector3 lScale = unitBehavior.transform.localScale;
+				lScale.x *= -1.0f;
+				unitBehavior.transform.localScale = lScale;
+			}
 			skele.transform.localScale = scale;
 			skele.transform.localPosition = Vector3.zero;
 
@@ -343,7 +375,6 @@ public class CombatSystemBehavior : MonoBehaviour
 	{
 		Debug.Log("Combat between " + offensiveSquad.ToString() + " and " + defensiveSquad.ToString() + " end.");
 		
-		//foreach(GameObject obj in transform.GetComponentsInChildren<MonoBehaviour>())
 		MonoBehaviour[] objects = GetComponentsInChildren<MonoBehaviour>();
 		for(int _i = (objects.Count() - 1); _i >= 0; _i--)
 		{

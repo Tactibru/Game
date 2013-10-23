@@ -334,10 +334,10 @@ public class GridBehavior : MonoBehaviour
             for (int z = 0; z < theMapWidth; z++)
             {
                 MovePointBehavior newMovePoint = null;
-                if((z + x) % 2 == 0)
-                    newMovePoint = (MovePointBehavior)Instantiate(theMovePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition), Quaternion.identity);
-                else
-                    newMovePoint = (MovePointBehavior)Instantiate(theAltMovePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition), Quaternion.identity);
+				if ((z + x) % 2 == 0)
+					newMovePoint = (MovePointBehavior)Instantiate(theMovePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition), Quaternion.identity);
+				else
+					newMovePoint = (MovePointBehavior)Instantiate(theAltMovePointPrehab, new Vector3(currentXPosition, 1.0f, currentYPosition), Quaternion.identity);
                 newMovePoint.transform.parent = transform;
                 newMovePoint.name = abc[z].ToString() + x.ToString();
                 theMap[z + (x * theMapWidth)] = newMovePoint;
