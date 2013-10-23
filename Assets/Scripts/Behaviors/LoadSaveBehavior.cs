@@ -34,7 +34,7 @@ public class LoadSaveBehavior : MonoBehaviour
         fileLocation = Application.dataPath;
         fileName = "SaveData.xml";
 
-        // we need soemthing to store the information into 
+        // we need something to store the information into 
         myData = new UserData();
     }
 
@@ -42,10 +42,7 @@ public class LoadSaveBehavior : MonoBehaviour
 
     void OnGUI()
     {
-
-        //*************************************************** 
-        // Loading The Player... 
-        // **************************************************       
+  
         if (GUI.Button(load, "Load"))
         {
 
@@ -54,29 +51,20 @@ public class LoadSaveBehavior : MonoBehaviour
             LoadXML();
             if (data.ToString() != "")
             {
-                // notice how I use a reference to type (UserData) here, you need this 
-                // so that the returned object is converted into the correct type 
                 myData = (UserData)DeserializeObject(data);
                 // set the players position to the data we loaded 
-                VPosition = new Vector3(myData._iUser.x, myData._iUser.y, myData._iUser.z);
+                VPosition = new Vector3(myData.iUser.x, myData.iUser.y, myData.iUser.z);
                 Player.transform.position = VPosition;
                 // just a way to show that we loaded in ok 
-                Debug.Log(myData._iUser.name);
+                //Debug.Log(myData.iUser.name);
             }
 
         }
 
-        //*************************************************** 
-        // Saving The Player... 
-        // **************************************************    
         if (GUI.Button(save, "Save"))
         {
 
             GUI.Label(saveMSG, "Saving to: " + fileLocation);
-            myData._iUser.x = Player.transform.position.x;
-            myData._iUser.y = Player.transform.position.y;
-            myData._iUser.z = Player.transform.position.z;
-            myData._iUser.name = playerName;
 
             // Time to creat our XML! 
             data = SerializeObject(myData);
@@ -84,8 +72,6 @@ public class LoadSaveBehavior : MonoBehaviour
             CreateXML();
             Debug.Log(data);
         }
-
-
     }
 
     /* The following metods came from the referenced URL */
@@ -152,6 +138,28 @@ public class LoadSaveBehavior : MonoBehaviour
         data = _info;
         Debug.Log("File Read");
     }
+
+    void FindAllEntities()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] friendlies = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (GameObject enemy in enemies)
+        {
+            myData.iUser.x = enemy.transform.position.x;
+            myData.iUser.y = enemy.transform.position.y;
+            myData.iUser.z = enemy.transform.position.z;
+            //myData.iUser.health = enemy.GetComponent<"WhereHealthIsLocation">();
+        }
+
+        foreach (GameObject friend in friendlies)
+        {
+            myData.iUser.x = friend.transform.position.x;
+            myData.iUser.y = friend.transform.position.y;
+            myData.iUser.z = friend.transform.position.z;
+            //myData.iUser.health = friend.GetComponent<"WhereHealthIsLocation">();
+        }
+    }
 }
 
 public class UserData
@@ -160,7 +168,7 @@ public class UserData
     public UserData iUser;
     // Default constructor doesn't really do anything at the moment 
     public UserData() { }
-
+    
     //For now saves player coords and name
     //need to add in squads etc.
     public struct UserData
@@ -168,6 +176,6 @@ public class UserData
         public float x;
         public float y;
         public float z;
-        public string name;
+        public float health;
     }
 }
