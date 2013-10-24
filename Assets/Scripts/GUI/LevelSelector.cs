@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 
@@ -18,26 +19,29 @@ public class LevelSelector : ButtonManagerBehavior
 	/// <summary>
 	/// The Game Levels directory path.
 	/// </summary>
+	/// <remarks>
+	/// Change this if the location of where the playable levels changes
+	/// Otherwise, do not change, it is used in code below
+	/// </remarks>
 	public static string gameLevelsPath = assetPath + "\\Scenes\\Game Levels\\";
 	/// <summary>
-	/// Number of levels in the Game Levels folder
+	/// List that holds the unity levels from Game Levels folder.
 	/// </summary>
-	public static int levelCount = 0;
- 
-	/// <summary>
-	/// Array that holds the levels from GameLevels
-	/// Currently a work in progress. 
-	/// Set to a size of 20, but only until I know how many levels are actually in the Game Levels folder.
-	/// </summary>
-	public GameScene[] levelArray = new GameScene[levelCount];
+	public List<string> gameLevelsList = new List<string>();
 	
 	/// <summary>
 	/// Start this instance.
 	/// </summary>
 	public void Start()
 	{
-		CheckIfDirectoryExists_TEST();
-		scanDirectoryForFiles(gameLevelsPath);
+		/// Add all levels found in Game Levels to gameLevelsPath list
+		addLevelsFromDirToList(gameLevelsPath);
+		
+		/// DEBUGGING: Use this to see what is in the gameLevelsList
+//		foreach(string item in gameLevelsList)
+//		{
+//			Debug.Log(item);
+//		}
 	}
 	
 	/// <summary>
@@ -48,8 +52,6 @@ public class LevelSelector : ButtonManagerBehavior
 	/// </param>
 	public override void ButtonPressed (string buttonName)
 	{
-		
-		
 		/// Switch statement that loads the approiate level based on the level name passed in.
 		switch(buttonName)
 		{
@@ -110,13 +112,17 @@ public class LevelSelector : ButtonManagerBehavior
 	/// <param name='dirPath'>
 	/// Directory path we want to scan for files
 	/// </param>
-	private void scanDirectoryForFiles(string dirPath)
+	private void addLevelsFromDirToList(string dirPath)
 	{
-		string[] fileArray = Directory.GetFiles(dirPath);
+		/// Creates an array for all the files found in the directory passed in.
+		/// Only adds files that end in ".unity", ignores ".unity.meta" or anything else
+		string[] fileArray = Directory.GetFiles(dirPath, "*.unity");
 		
-		foreach(string fileName in fileArray)
+		/// Foreach file in the fileArray, add each file to the gameLevelsList
+		foreach(string file in fileArray)
 		{
-			Debug.Log(fileName);
+			/// Adds each file in the fileArray to the gameLevelsList, grabs only the file name, not the path or extension
+			gameLevelsList.Add(Path.GetFileNameWithoutExtension(file));
 		}
 	}
 }
