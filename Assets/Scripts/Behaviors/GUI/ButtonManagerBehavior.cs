@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+
 /// <summary>
 /// Script that creates one instance of a button manager that holds all the buttons for an individual scene.
 /// 
