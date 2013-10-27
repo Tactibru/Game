@@ -130,10 +130,10 @@ public class LevelSelector : ButtonManagerBehavior
 	public void upButtonPressed()
 	{
 		/// Check to make sure we don't go out of bounds.
-		if(startIndex - 3 > -3)
+		if(startIndex - 1 >= 0)
 		{
 			/// Decrease the startIndex to move up the list by one
-			startIndex -= 1;
+			startIndex--;
 			/// Update the button's text to show the correct level names
 			updateButtonText();
 		}
@@ -147,7 +147,7 @@ public class LevelSelector : ButtonManagerBehavior
 		if(startIndex + 3 < gameLevelsList.Count)
 		{
 			/// Increase the startIndex to move down the list by one
-			startIndex += 1;
+			startIndex++;
 			/// Update the button's text to show the correct level names
 			updateButtonText();
 		}
