@@ -25,22 +25,30 @@ public class AudioBehavior : MonoBehaviour
     public AudioSource audioSource;
     //Future audio support: public List<AudioClip> movementAudio;
 
-    //variables used to control volume and pitch of two different audio clips
-    //while fading in and out of the 2 audio clips
+    /// <summary>
+    /// Audio sources volume and pitch 
+    /// Bools used to check if one or another track is playing and ensure
+    /// proper transition
+    /// </summary>
     private float audio1Volume;
-    private float audio2Volume;
     private float audio1Pitch;
-    private float audio2Pitch;
     private float volume = 0.0f;
     private float pitch = 0.0f;
     private bool track1Playing;
     private bool track2Playing;
 
-    //Used to check if audio plays at once or one at a time
+    /// <summary>
+    /// If checked in editor it only plays one sound at a time
+    /// instead of running over each other
+    /// </summary>
     public bool playOneAtATime;
 
-    //variables used for volume to fade in out with
-    //not used yet
+    /// <summary>
+    /// Not used: sets up four float to transition between 0 - 100% volume level
+    /// value 1 = 0 , value 2 = 25, value 3 = 75, value 100% 
+    /// Used to turn down one track from 100 to 0
+    /// while turning the other track up from 0 to 100
+    /// </summary>
     public float value1;
     public float value2;
     public float value3;
@@ -59,6 +67,8 @@ public class AudioBehavior : MonoBehaviour
 
     /// <summary>
     /// TESTING PURPOSES: R=Game Music T= Combat Music Y= Combat Sounds
+    /// Test the list of sounds selected in the editor by the designers
+    /// For Debug and testing purposes to make sure audio works as intended
     /// </summary>
     void Update()
     {
@@ -174,6 +184,10 @@ public class AudioBehavior : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Checked to make sure audio isn't currently playing
+    /// once the previous audio isn't playing then the audio plays
+    /// </summary>
     void PlayingAudioClip()
     {
         if (!audio.isPlaying)

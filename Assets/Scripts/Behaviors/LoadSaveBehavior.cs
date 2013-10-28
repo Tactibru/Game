@@ -5,6 +5,8 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Text;
 
+
+
 public class LoadSaveBehavior : MonoBehaviour
 {
     private Rect save;
@@ -55,7 +57,6 @@ public class LoadSaveBehavior : MonoBehaviour
                 // set the players position to the data we loaded 
                 VPosition = new Vector3(myData.iUser.x, myData.iUser.y, myData.iUser.z);
                 Player.transform.position = VPosition;
-                // just a way to show that we loaded in ok 
                 //Debug.Log(myData.iUser.name);
             }
 
