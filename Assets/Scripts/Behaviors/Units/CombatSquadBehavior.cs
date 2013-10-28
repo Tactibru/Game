@@ -129,10 +129,12 @@ public class CombatSquadBehavior : MonoBehaviour {
 		unitCount = squad.Units.Count;
 		
 		foreach(UnitData data in squad.Units)
+		//for (int _i = 0; _i < squad.Units.Count; _i++ )
 		{
-			float x = (0.1f * data.Position.Row);
+			//UnitData data = squad.Units[_i];
+			float x = -0.1f + (0.2f * data.Position.Row) + (data.Position.Column % 2 == 0 ? 0.05f : 0.0f);
 			float z = 0.25f - (0.1f * data.Position.Column);
-			float y = 0.25f;
+			float y = 0.5f;
 			//float y = 0.9f - (0.05f * data.Position.Column);
 
 			NodeSkeletonBehavior skele = (NodeSkeletonBehavior)Instantiate(unitSkeleton);
@@ -140,21 +142,21 @@ public class CombatSquadBehavior : MonoBehaviour {
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
 			{
-				GameObject prefab = (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/{1}", node.Name, data.Unit.Name));
-				prefab = (prefab ?? (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/001", node.Name)));
-				
-				if(prefab == null)
+				GameObject prefab = (GameObject)Resources.Load(string.Format("Prefabs/UnitParts/{0}/{1}", node.Name, data.Unit.Name));
+				prefab = (prefab ?? (GameObject)Resources.Load(string.Format("Prefabs/UnitParts/{0}/001", node.Name)));
+
+				if (prefab == null)
 				{
-					Debug.LogWarning(string.Format ("Could not find prefab for 'Prefabs/UnitParts/{0}/001'", node.Name));
+					Debug.LogWarning(string.Format("Could not find prefab for 'Prefabs/UnitParts/{0}/001'", node.Name));
 					continue;
 				}
-				
+
 				skele.AttachToNode(node.Name, prefab);
 			}
 
 			skele.transform.parent = transform;
 			Vector3 scale = Vector3.one;
-			if(flippedHorizontally)
+			if (flippedHorizontally)
 				scale.x = -1.0f;
 			scale.y = 0.5f;
 			skele.transform.localScale = scale;
