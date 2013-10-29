@@ -69,27 +69,52 @@ public class GameControllerBehaviour : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) || leftToMoveThis == 0)
         {
-            for (int index = 0; index < playerTeam.Count; index++)
-                playerTeam[index].actorHasMovedThisTurn = false;
 
-            for (int index = 0; index < enemyTeam.Count; index++)
-                enemyTeam[index].actorHasMovedThisTurn = false;
+            EndTurn();
+    //        for (int index = 0; index < playerTeam.Count; index++)
+    //            playerTeam[index].actorHasMovedThisTurn = false;
 
-            for (int index = 0; index < nuetrals.Count; index++)
-                nuetrals[index].actorHasMovedThisTurn = false;
+    //        for (int index = 0; index < enemyTeam.Count; index++)
+    //            enemyTeam[index].actorHasMovedThisTurn = false;
 
-            if (currentTurn == UnitSide.player)
-            {
-                currentTurn = UnitSide.enemy;
-                leftToMoveThis = enemyTeamTotal;
-            }
-            else
-            {
-                currentTurn = UnitSide.player;
-                leftToMoveThis = playerTeamTotal;
-            }
+    //        for (int index = 0; index < nuetrals.Count; index++)
+    //            nuetrals[index].actorHasMovedThisTurn = false;
+
+    //        if (currentTurn == UnitSide.player)
+    //        {
+    //            currentTurn = UnitSide.enemy;
+    //            leftToMoveThis = enemyTeamTotal;
+    //        }
+    //        else
+    //        {
+    //            currentTurn = UnitSide.player;
+    //            leftToMoveThis = playerTeamTotal;
+    //        }
         }
-	}
+    }
+
+    public void EndTurn()
+    {
+        for (int index = 0; index < playerTeam.Count; index++)
+            playerTeam[index].actorHasMovedThisTurn = false;
+
+        for (int index = 0; index < enemyTeam.Count; index++)
+            enemyTeam[index].actorHasMovedThisTurn = false;
+
+        for (int index = 0; index < nuetrals.Count; index++)
+            nuetrals[index].actorHasMovedThisTurn = false;
+
+        if (currentTurn == UnitSide.player)
+        {
+            currentTurn = UnitSide.enemy;
+            leftToMoveThis = enemyTeamTotal;
+        }
+        else
+        {
+            currentTurn = UnitSide.player;
+            leftToMoveThis = playerTeamTotal;
+        }
+    }
 
     /// <summary>
     /// Used to tell what turn it is, to the player.
