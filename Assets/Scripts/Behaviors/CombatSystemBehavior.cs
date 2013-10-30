@@ -147,14 +147,7 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
-						{
 							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
-
-							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", defensiveSquad.ToString(), unit.Name, damagePerUnit, unit.CurrentHealth));
-
-							if (unit.CurrentHealth <= 0)
-								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, defensiveSquad.Squad.Units.Count));
-						}
 
 						removeDeadUnits();
 					}
@@ -170,14 +163,7 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
-						{
 							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
-
-							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", offensiveSquad.ToString(), unit.Name, damagePerUnit, unit.CurrentHealth));
-
-							if (unit.CurrentHealth <= 0)
-								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, offensiveSquad.Squad.Units.Count));
-						}
 
 						removeDeadUnits();
 					}
@@ -193,14 +179,7 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
-						{
 							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
-
-							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", defensiveSquad.ToString(), unit.Name, damagePerUnit, unit.CurrentHealth));
-
-							if (unit.CurrentHealth <= 0)
-								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, defensiveSquad.Squad.Units.Count));
-						}
 
 						removeDeadUnits();
 					}
@@ -216,14 +195,7 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
-						{
 							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
-
-							Debug.Log(string.Format("{0}:{1} took {2} damage, {3} remaining.", offensiveSquad.ToString(), unit.Name, damagePerUnit, unit.CurrentHealth));
-
-							if (unit.CurrentHealth <= 0)
-								Debug.Log(string.Format("{0} was destroyed! {1} units remaining in squad.", unit.Name, offensiveSquad.Squad.Units.Count));
-						}
 
 						removeDeadUnits();
 					}
