@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// This is the overall manager, for the typewriters.
@@ -65,7 +66,10 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
     /// <summary>
     /// Test at the moment but could have uses.
     /// </summary>
-    public TalkingEvent[] talkingEvents = new TalkingEvent[4];  
+    public List<TalkingEvent> talkingEvents = new List<TalkingEvent>();
+
+    public Material testActorLeft;
+    public Material testActorRight;
 
 	/// <summary>
 	/// This is to tell the textboxes where they are.
@@ -78,11 +82,19 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
         //talkers[0].transform.position = screenPosition;
        
         //test
-        TalkingEvent newTalkingEvent = new TalkingEvent();
-        newTalkingEvent.normalText = "Testing Testing Testing Testing Testing Testing 456 Testing Testing Testing 789 Testing Testing.";
-        newTalkingEvent.annoyText = "Yup It works.";
-        newTalkingEvent.selectedPanel = Panels.LowerLeft;
-        talkingEvents[0] = newTalkingEvent;
+        TalkingEvent newTalkingEvent0 = new TalkingEvent();
+        newTalkingEvent0.normalText = "Testing Testing Testing Testing Testing Testing 456 Testing Testing Testing 789 Testing Testing.";
+        newTalkingEvent0.annoyText = "Yup It works.";
+        newTalkingEvent0.selectedPanel = Panels.LowerLeft;
+        newTalkingEvent0.theTalker = testActorLeft;
+        talkingEvents.Add(newTalkingEvent0);
+
+        TalkingEvent newTalkingEvent1 = new TalkingEvent();
+        newTalkingEvent1.normalText = "Testing Testing Testing 123 Testing 456 Testing Testing Testing 789 Testing Testing.";
+        //newTalkingEvent1.annoyText = "Up Top.";
+        newTalkingEvent1.selectedPanel = Panels.UpperRight;
+        newTalkingEvent1.theTalker = testActorRight;
+        talkingEvents.Add(newTalkingEvent1);
 
         textBox[0].posOfBox = TypeWriterBoxBehaviour.PositionOfTheTextBox.bottom;
         textBox[1].posOfBox = TypeWriterBoxBehaviour.PositionOfTheTextBox.top;
@@ -96,70 +108,80 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
 
 	void Update () 
     {
-        if (!activePanels && !playingEvent && Input.GetKeyDown(KeyCode.Space))
+        if (currentTalkingEvent < talkingEvents.Count || activePanels)
         {
-            if (talkingEvents[currentTalkingEvent].selectedPanel == Panels.UpperLeft)
+            
+            if (!activePanels && !playingEvent && Input.GetKeyDown(KeyCode.Space))
             {
-                textBox[1].transform.renderer.enabled = true;
-                talkers[2].transform.renderer.enabled = true;
-                activePanels = true;
-                currentPanel = Panels.UpperLeft;
-                textBox[1].startTalkingEvent(talkingEvents[currentTalkingEvent].normalText, talkingEvents[currentTalkingEvent].annoyText);
+                //Debug.Log("Hi");
+                if (talkingEvents[currentTalkingEvent].selectedPanel == Panels.UpperLeft)
+                {
+                    textBox[1].transform.renderer.enabled = true;
+                    talkers[2].transform.renderer.enabled = true;
+                    activePanels = true;
+                    currentPanel = Panels.UpperLeft;
+                    textBox[1].startTalkingEvent(talkingEvents[currentTalkingEvent].normalText, talkingEvents[currentTalkingEvent].annoyText);
+                    talkers[2].SetTalker(talkingEvents[currentTalkingEvent].theTalker);
+                }
+                else if (talkingEvents[currentTalkingEvent].selectedPanel == Panels.UpperRight)
+                {
+                    textBox[1].transform.renderer.enabled = true;
+                    talkers[3].transform.renderer.enabled = true;
+                    activePanels = true;
+                    currentPanel = Panels.UpperRight;
+                    textBox[1].startTalkingEvent(talkingEvents[currentTalkingEvent].normalText, talkingEvents[currentTalkingEvent].annoyText);
+                    talkers[3].SetTalker(talkingEvents[currentTalkingEvent].theTalker);
+                }
+                else if (talkingEvents[currentTalkingEvent].selectedPanel == Panels.LowerLeft)
+                {
+                    
+                    textBox[0].transform.renderer.enabled = true;
+                    talkers[0].transform.renderer.enabled = true;
+                    activePanels = true;
+                    currentPanel = Panels.LowerLeft;
+                    textBox[0].startTalkingEvent(talkingEvents[currentTalkingEvent].normalText, talkingEvents[currentTalkingEvent].annoyText);
+                    talkers[0].SetTalker(talkingEvents[currentTalkingEvent].theTalker);
+                }
+                else if (talkingEvents[currentTalkingEvent].selectedPanel == Panels.LowerRight)
+                {
+                    textBox[0].transform.renderer.enabled = true;
+                    talkers[1].transform.renderer.enabled = true;
+                    activePanels = true;
+                    currentPanel = Panels.LowerRight;
+                    textBox[0].startTalkingEvent(talkingEvents[currentTalkingEvent].normalText, talkingEvents[currentTalkingEvent].annoyText);
+                    talkers[1].SetTalker(talkingEvents[currentTalkingEvent].theTalker);
+                }
+                currentTalkingEvent++;
             }
-            else if (talkingEvents[currentTalkingEvent].selectedPanel == Panels.UpperRight)
+            else if (!playingEvent)
             {
-                textBox[1].transform.renderer.enabled = true;
-                talkers[3].transform.renderer.enabled = true;
-                activePanels = true;
-                currentPanel = Panels.UpperRight;
-                textBox[1].startTalkingEvent(talkingEvents[currentTalkingEvent].normalText, talkingEvents[currentTalkingEvent].annoyText);
-            }
-            else if (talkingEvents[currentTalkingEvent].selectedPanel == Panels.LowerLeft)
-            {
-                textBox[0].transform.renderer.enabled = true;
-                talkers[0].transform.renderer.enabled = true;
-                activePanels = true;
-                currentPanel = Panels.LowerLeft;
-                textBox[0].startTalkingEvent(talkingEvents[currentTalkingEvent].normalText, talkingEvents[currentTalkingEvent].annoyText);
-            }
-            else if (talkingEvents[currentTalkingEvent].selectedPanel == Panels.LowerRight)
-            {
-                textBox[0].transform.renderer.enabled = true;
-                talkers[1].transform.renderer.enabled = true;
-                activePanels = true;
-                currentPanel = Panels.LowerRight;
-                textBox[0].startTalkingEvent(talkingEvents[currentTalkingEvent].normalText, talkingEvents[currentTalkingEvent].annoyText);
-            }
-            //playingEvent = true;
-        }
-        else if(!playingEvent)
-        {
-            switch (currentPanel)
-            {
-                case Panels.LowerLeft:
-                    textBox[0].transform.renderer.enabled = false;
-                    talkers[0].transform.renderer.enabled = false;
-                    activePanels = false;
-                    currentPanel = Panels.None;
-                    break;
-                case Panels.LowerRight:
-                    textBox[0].transform.renderer.enabled = false;
-                    talkers[1].transform.renderer.enabled = false;
-                    activePanels = false;
-                    currentPanel = Panels.None;
-                    break;
-                case Panels.UpperRight:
-                    textBox[1].transform.renderer.enabled = false;
-                    talkers[3].transform.renderer.enabled = false;
-                    activePanels = false;
-                    currentPanel = Panels.None;
-                    break;
-                case Panels.UpperLeft:
-                    textBox[1].transform.renderer.enabled = false;
-                    talkers[2].transform.renderer.enabled = false;
-                    activePanels = false;
-                    currentPanel = Panels.None;
-                    break;
+                switch (currentPanel)
+                {
+                    case Panels.LowerLeft:
+                        textBox[0].transform.renderer.enabled = false;
+                        talkers[0].transform.renderer.enabled = false;
+                        activePanels = false;
+                        currentPanel = Panels.None;
+                        break;
+                    case Panels.LowerRight:
+                        textBox[0].transform.renderer.enabled = false;
+                        talkers[1].transform.renderer.enabled = false;
+                        activePanels = false;
+                        currentPanel = Panels.None;
+                        break;
+                    case Panels.UpperRight:
+                        textBox[1].transform.renderer.enabled = false;
+                        talkers[3].transform.renderer.enabled = false;
+                        activePanels = false;
+                        currentPanel = Panels.None;
+                        break;
+                    case Panels.UpperLeft:
+                        textBox[1].transform.renderer.enabled = false;
+                        talkers[2].transform.renderer.enabled = false;
+                        activePanels = false;
+                        currentPanel = Panels.None;
+                        break;
+                }
             }
         }
 	}
@@ -171,7 +193,8 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
 
 public class TalkingEvent
 {
-    public string normalText;
-    public string annoyText;
+    public string normalText = "";
+    public string annoyText= "";
     public TalkingEventManagerBehaviour.Panels selectedPanel;
+    public Material theTalker;
 }

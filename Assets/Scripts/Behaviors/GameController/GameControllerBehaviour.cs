@@ -95,6 +95,11 @@ public class GameControllerBehaviour : MonoBehaviour
 
     public void EndTurn()
     {
+		GameObject gridObject = (GameObject)GameObject.FindGameObjectWithTag("Grid");
+		GridBehavior grid = gridObject.GetComponent<GridBehavior>();
+		if (grid != null)
+			grid.disableCurrentActor();
+
         for (int index = 0; index < playerTeam.Count; index++)
             playerTeam[index].actorHasMovedThisTurn = false;
 

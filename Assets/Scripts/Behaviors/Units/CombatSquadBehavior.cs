@@ -129,15 +129,16 @@ public class CombatSquadBehavior : MonoBehaviour {
 		unitCount = squad.Units.Count;
 		
 		foreach(UnitData data in squad.Units)
-		//for (int _i = 0; _i < squad.Units.Count; _i++ )
 		{
-			//UnitData data = squad.Units[_i];
 			float x = -0.1f + (0.2f * data.Position.Row) + (data.Position.Column % 2 == 0 ? 0.05f : 0.0f);
 			float z = 0.25f - (0.1f * data.Position.Column);
 			float y = 0.5f;
-			//float y = 0.9f - (0.05f * data.Position.Column);
 
 			NodeSkeletonBehavior skele = (NodeSkeletonBehavior)Instantiate(unitSkeleton);
+			UnitIdleAnimationBehavior idle = skele.gameObject.AddComponent<UnitIdleAnimationBehavior>();
+			idle.bobDistance = 0.1f;
+			idle.bobSpeed = 0.2f;
+			idle.Active = false;
 
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
@@ -155,13 +156,14 @@ public class CombatSquadBehavior : MonoBehaviour {
 			}
 
 			skele.transform.parent = transform;
+			
 			Vector3 scale = Vector3.one;
 			if (flippedHorizontally)
 				scale.x = -1.0f;
 			scale.y = 0.5f;
 			skele.transform.localScale = scale;
 			skele.transform.localPosition = Vector3.zero;
-
+			
 			skele.transform.Translate(x, y, z);
 		}
 	}
