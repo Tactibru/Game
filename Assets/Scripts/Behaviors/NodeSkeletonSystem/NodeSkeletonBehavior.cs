@@ -50,6 +50,7 @@ public class NodeSkeletonBehavior : MonoBehaviour
 		GameObject subObject = (GameObject)Instantiate(prefab, Vector3.zero, Quaternion.identity);
 		subObject.transform.parent = transform;
 		subObject.transform.localPosition = node.Offset;
+		subObject.transform.localRotation = Quaternion.identity;
 		//subObject.transform.localScale = Vector3.one;
 		//subObject.transform.localRotation = Quaternion.identity;
 

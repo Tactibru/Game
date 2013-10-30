@@ -319,6 +319,7 @@ public class CombatSystemBehavior : MonoBehaviour
 			float z = 0.9f - (0.05f * data.Position.Column);
 
 			NodeSkeletonBehavior skele = (NodeSkeletonBehavior)Instantiate(unitSkeleton);
+			skele.gameObject.AddComponent<UnitIdleAnimationBehavior>();
 
 			GameObject obj = new GameObject();
 			obj.AddComponent<MeshRenderer>();
