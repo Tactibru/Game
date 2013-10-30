@@ -12,6 +12,8 @@ public class HUDController : ButtonManagerBehavior
 	{
 		base.Start();
 		isEnabled = false;
+		ToggleMenuGroup();
+
 	}
 	
 	public override void ButtonPressed(string buttonName)
@@ -23,6 +25,9 @@ public class HUDController : ButtonManagerBehavior
 			break;
 		case "End Turn Button":
 			break;
+		case "Exit Button":
+			Application.LoadLevel("MainMenuGUITest");
+			break;
 		default:
 			break;
 		}
@@ -30,21 +35,27 @@ public class HUDController : ButtonManagerBehavior
 	
 	void ToggleMenuGroup()
 	{
+		if(menuButtonGroup != null)
+		{
+			menuButtonGroup.transform.GetComponent<MeshRenderer>().enabled = isEnabled;
+			// Exit button rendering
+			menuButtonGroup.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = isEnabled;
+			menuButtonGroup.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().enabled = isEnabled;
+			// Load button rendering
+			menuButtonGroup.transform.GetChild(1).GetComponent<MeshRenderer>().enabled = isEnabled;
+			menuButtonGroup.transform.GetChild(1).GetChild(0).GetComponent<MeshRenderer>().enabled = isEnabled;
+			// Save button rendering
+			menuButtonGroup.transform.GetChild(2).GetComponent<MeshRenderer>().enabled = isEnabled;
+			menuButtonGroup.transform.GetChild(2).GetChild(0).GetComponent<MeshRenderer>().enabled = isEnabled;
+		}
+		
 		if(isEnabled)
 			isEnabled = false;
 		else
 			isEnabled = true;
+
 		
-		menuButtonGroup.transform.GetComponent<MeshRenderer>().enabled = isEnabled;
-		// Exit button rendering
-		menuButtonGroup.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = isEnabled;
-		menuButtonGroup.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().enabled = isEnabled;
-		// Load button rendering
-		menuButtonGroup.transform.GetChild(1).GetComponent<MeshRenderer>().enabled = isEnabled;
-		menuButtonGroup.transform.GetChild(1).GetChild(0).GetComponent<MeshRenderer>().enabled = isEnabled;
-		// Save button rendering
-		menuButtonGroup.transform.GetChild(2).GetComponent<MeshRenderer>().enabled = isEnabled;
-		menuButtonGroup.transform.GetChild(2).GetChild(0).GetComponent<MeshRenderer>().enabled = isEnabled;
+		
 	}
 	
 	
