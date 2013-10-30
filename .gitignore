@@ -11,5 +11,7 @@ _UpgradeReport_Files/
 *.pidb
 *.userprefs
 *.suo
+
 test_Data
 /Assets/Standard Assets
+Thumbs.db

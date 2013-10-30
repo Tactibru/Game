@@ -135,6 +135,11 @@ public class CombatSquadBehavior : MonoBehaviour {
 			float y = 0.5f;
 
 			NodeSkeletonBehavior skele = (NodeSkeletonBehavior)Instantiate(unitSkeleton);
+			GameObject obj = (GameObject)Instantiate(new GameObject());
+			obj.transform.parent = transform;
+			obj.transform.localPosition = Vector3.zero;
+
+			obj.transform.Rotate(Vector3.right, 45.0f, Space.World);
 
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
