@@ -12,6 +12,9 @@ public class TalkerBehaviour : MonoBehaviour
         //transform.localScale = 
         transform.renderer.enabled = false;
 	}
-	
-	
+
+    public void SetTalker(Material theTalker)
+    {
+        transform.renderer.material = theTalker;
+    }
 }
