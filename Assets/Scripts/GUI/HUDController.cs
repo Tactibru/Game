@@ -5,6 +5,9 @@ public class HUDController : ButtonManagerBehavior
 {
 	public GameObject menuButtonGroup;
 	public bool isEnabled;
+	public GameControllerBehaviour gameController;
+	public TextMesh turnCount;
+	public TextMesh whoseTurn;
 	/// <summary>
 	/// Start this instance.
 	/// </summary>
@@ -13,6 +16,8 @@ public class HUDController : ButtonManagerBehavior
 		base.Start();
 		isEnabled = false;
 		ToggleMenuGroup();
+		gameController = GameObject.FindGameObjectWithTag("Grid").GetComponent<GameControllerBehaviour>();
+		
 
 	}
 	
@@ -24,6 +29,7 @@ public class HUDController : ButtonManagerBehavior
 			ToggleMenuGroup();
 			break;
 		case "End Turn Button":
+			gameController.EndTurn();
 			break;
 		case "Exit Button":
 			Application.LoadLevel("MainMenuGUITest");
@@ -32,6 +38,8 @@ public class HUDController : ButtonManagerBehavior
 			break;
 		}
 	}
+	
+	
 	
 	void ToggleMenuGroup()
 	{
