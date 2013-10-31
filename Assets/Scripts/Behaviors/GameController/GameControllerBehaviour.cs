@@ -57,15 +57,16 @@ public class GameControllerBehaviour : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (enemyTeamTotal == 0)
-        {
-            Application.LoadLevel("PlayerWins");
-        }
+        EndGame();
+        //if (enemyTeamTotal == 0)
+        //{
+        //    Application.LoadLevel("PlayerWins");
+        //}
 
-        if (playerTeamTotal == 0)
-        {
-            Application.LoadLevel("PlayerLosses");
-        }
+        //if (playerTeamTotal == 0)
+        //{
+        //    Application.LoadLevel("PlayerLosses");
+        //}
 
         if (Input.GetKeyDown(KeyCode.Space) || leftToMoveThis == 0)
         {
@@ -90,6 +91,19 @@ public class GameControllerBehaviour : MonoBehaviour
     //            currentTurn = UnitSide.player;
     //            leftToMoveThis = playerTeamTotal;
     //        }
+        }
+    }
+
+    public void EndGame()
+    {
+        if (enemyTeamTotal == 0)
+        {
+            Application.LoadLevel("PlayerWins");
+        }
+
+        if (playerTeamTotal == 0)
+        {
+            Application.LoadLevel("PlayerLosses");
         }
     }
 
