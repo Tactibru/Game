@@ -11,5 +11,9 @@ _UpgradeReport_Files/
 *.pidb
 *.userprefs
 *.suo
+
 test_Data
 /Assets/Standard Assets
+/Assets/Editor Default Resources/VIZIO Skins.meta
+/Assets/VIZIO/System.meta
+Thumbs.db

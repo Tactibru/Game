@@ -190,7 +190,22 @@ public class LevelSelector : ButtonManagerBehavior
 	{
 		/// Creates an array for all the files found in the directory passed in.
 		/// Only adds files that end in ".unity", ignores ".unity.meta" or anything else
-		string[] fileArray = Directory.GetFiles(dirPath, "*.unity");
+		string[] fileArray;
+
+		if (Application.isEditor)
+			fileArray = Directory.GetFiles(dirPath, "*.unity");
+		else
+		{
+			fileArray = new string[] {
+				"level03",
+				"level04",
+				"level05",
+				"level06",
+				"level07",
+				"level08",
+				"level09"
+			};
+		}
 		
 		/// Foreach file in the fileArray, add each file to the gameLevelsList
 		foreach(string file in fileArray)
