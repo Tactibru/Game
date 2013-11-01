@@ -15,6 +15,7 @@ public class LevelSelector : ButtonManagerBehavior
 	/// The Application.dataPath stored for easier use
 	/// </summary>
 	public static string assetPath;
+	
 	/// <summary>
 	/// The Game Levels directory path.
 	/// </summary>
@@ -23,14 +24,17 @@ public class LevelSelector : ButtonManagerBehavior
 	/// Otherwise, do not change, it is used in code below
 	/// </remarks>
 	public static string gameLevelsPath;
+	
 	/// <summary>
 	/// List that holds the unity levels from Game Levels folder.
 	/// </summary>
 	public List<string> gameLevelsList = new List<string>();
+	
 	/// <summary>
 	/// A list of the three textMeshes on the three level selection buttons.
 	/// </summary>
 	public List<TextMesh> levelButtons = new List<TextMesh>();
+	
 	/// <summary>
 	/// The start index of the level list displayed.
 	/// </summary>
@@ -38,18 +42,24 @@ public class LevelSelector : ButtonManagerBehavior
 	/// Used to "move" the level list up and down without going out of bounds.
 	/// </remarks>
 	int startIndex;
+	
 	/// <summary>
 	/// The top button of the three level select buttons.
 	/// </summary>
 	public TextMesh topButton;
+	
 	/// <summary>
 	/// The middle button of the three level select buttons.
 	/// </summary>
 	public TextMesh middleButton;
+	
 	/// <summary>
 	/// The bottom button of the three level select buttons.
 	/// </summary>
 	public TextMesh bottomButton;
+	
+	
+	public Object gameLevelTest;
 	
 	
 	/// <summary>
@@ -77,8 +87,12 @@ public class LevelSelector : ButtonManagerBehavior
 		/// Sets the bottomButton to the first level button's TextMesh in the levelButtons array
 		bottomButton = levelButtons[2].transform.GetComponentInChildren<TextMesh>();
 		
+
 		/// Called on Start so that the level button's text is changed from their defualt values to the approriate level names
 		updateButtonText();
+		
+		gameLevelTest = Resources.LoadAssetAtPath("level03", typeof(Object));
+		Debug.Log (gameLevelTest.ToString());
 	}
 
 	/// <summary>
