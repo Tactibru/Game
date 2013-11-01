@@ -13,6 +13,7 @@ public class GameControllerBehaviour : MonoBehaviour
     public int nuetralTotal;
     public int leftToMoveThis;
     private GUIStyle gUIStyle;
+	public int numberOfTurns = 1;
 
     public enum UnitSide
     {
@@ -23,6 +24,7 @@ public class GameControllerBehaviour : MonoBehaviour
     }
 
     public GameControllerBehaviour.UnitSide currentTurn = UnitSide.player;
+	public HUDController controller;
 
 	/// <summary>
 	/// Sets the sides up, the end condition up, and the turn counter.
@@ -48,6 +50,10 @@ public class GameControllerBehaviour : MonoBehaviour
         gUIStyle = new GUIStyle();
         gUIStyle.fontSize = 10;
         gUIStyle.normal.textColor = Color.white;
+		
+		controller = GameObject.FindGameObjectWithTag("HUD").GetComponent<HUDController>();
+		controller.whoseTurn.text = "Players Turn";
+		controller.turnCount.text = "Turn " + numberOfTurns.ToString();
 	}
 
     /// <summary>
@@ -113,11 +119,15 @@ public class GameControllerBehaviour : MonoBehaviour
         {
             currentTurn = UnitSide.enemy;
             leftToMoveThis = enemyTeamTotal;
+			controller.whoseTurn.text = "Enemy Turn";
         }
         else
         {
             currentTurn = UnitSide.player;
             leftToMoveThis = playerTeamTotal;
+			controller.whoseTurn.text = "Player Turn";
+			numberOfTurns++;
+			controller.turnCount.text = "Turn " + numberOfTurns.ToString();
         }
     }
 
