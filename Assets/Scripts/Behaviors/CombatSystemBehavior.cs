@@ -249,6 +249,7 @@ public class CombatSystemBehavior : MonoBehaviour
 		this.grid = grid;
 
 		GridBehavior.inCombat = true;
+        Debug.Log("Audio in combat");
         AudioBehavior.inCombat = true;
 
 		this.offensiveSquad = offensiveSquad;
