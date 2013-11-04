@@ -1,20 +1,19 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Script that switches between Game music and combat music.
-/// TESTING PURPOSES: R=Game Music T= Combat Music
-/// 
+/// Script that switches between Game music, combat music, and combat sounds.
+///  
 /// Primary: Darryl Sterne
 /// Secondary: 
 /// </summary>
 
-[RequireComponent(typeof(AudioSource))]
+//[RequireComponent(typeof(AudioSource))]
 public class AudioBehavior : MonoBehaviour
 {
     #region Variables
-
     /// <summary>
     /// List for game music, combat music, combat audio, and movement audio
     /// Accessable in the editor to add or delete audio clip from list
@@ -22,177 +21,85 @@ public class AudioBehavior : MonoBehaviour
     public List<AudioClip> gameMusic;
     public List<AudioClip> combatMusic;
     public List<AudioClip> combatAudio;
+
     public AudioSource audioSource;
     //Future audio support: public List<AudioClip> movementAudio;
+    
+    /// <summary>
+    /// Bools used to check if in combat, if audio has been played. Also, checks if it is
+    /// game music or combat music so that it transitions between both
+    /// </summary>
+    public static bool inCombat = true;
+    public static bool hasPlayedAudio = false;
+    public static bool isGameMusic = true;
+    public static bool isCombatMusic = false;
 
     /// <summary>
-    /// Audio sources volume and pitch 
-    /// Bools used to check if one or another track is playing and ensure
-    /// proper transition
+    /// Don't mess with this inside of the editor. It was used to
+    /// make Unity play music and sounds at the same time. -Darryl
     /// </summary>
-    private float audio1Volume;
-    private float audio1Pitch;
-    private float volume = 0.0f;
-    private float pitch = 0.0f;
-    private bool track1Playing;
-    private bool track2Playing;
+    public bool isMusic;
 
-    /// <summary>
-    /// If checked in editor it only plays one sound at a time
-    /// instead of running over each other
-    /// </summary>
-    public bool playOneAtATime;
-
-    /// <summary>
-    /// Not used: sets up four float to transition between 0 - 100% volume level
-    /// value 1 = 0 , value 2 = 25, value 3 = 75, value 100% 
-    /// Used to turn down one track from 100 to 0
-    /// while turning the other track up from 0 to 100
-    /// </summary>
-    public float value1;
-    public float value2;
-    public float value3;
-    public float value4;
     #endregion
 
     void Start()
     {
-        fadeOut(volume, pitch);
-        track2Playing = false;
-        value1 = 25f;
-        value2 = 50f;
-        value3 = 75f;
-        value4 = 99f;
+
     }
 
     /// <summary>
-    /// TESTING PURPOSES: R=Game Music T= Combat Music Y= Combat Sounds
-    /// Test the list of sounds selected in the editor by the designers
-    /// For Debug and testing purposes to make sure audio works as intended
+    /// Checks to see if incombat or out of combat and switches to the
+    /// methods accordingly
     /// </summary>
     void Update()
     {
-        fadeOut(volume, pitch);
-        //volume = handleVolume();
-        //pitch = handlePitch();
-
-        if (Input.GetKey(KeyCode.R))
+        if (inCombat)
         {
-            track2Playing = false;
-            track1Playing = true;
-            //fadeIn(volume, pitch);
-            audio.clip = gameMusic[Random.Range(0, combatAudio.Count)];
-            audio.Play();
-
-        }
-        if (Input.GetKey(KeyCode.T))
-        {
-            track1Playing = false;
-            track2Playing = true;
-            //fadeIn(volume, pitch);
-            audio.clip = combatMusic[Random.Range(0, combatAudio.Count)];
-            audio.Play();
+            InCombat();
         }
 
-        if (Input.GetKey(KeyCode.Y))
+        if (!inCombat)
         {
-            CombatAudio(combatAudio);
+            NotInCombat();
         }
-        #region unused
-        //Fade in and out for music still needs
-        //Playing Game Music
-        //if (audio2Volume <= 0.1f)
-        //{
-        //    if (track1Playing == true && track2Playing == false)
-        //    {
-        //        track1Playing = true;
-        //        fadeIn(volume, pitch);
-        //        audio.clip = gameMusic;
-        //        audio.Play();
-        //    }
-        //    else
-        //    {
-        //        fadeOut(volume, pitch);
-        //    }
-        //}
-        ////Playing Combat Music
-        //if (audio2Volume >= 0.1f)
-        //{
-        //    if (track1Playing == false && track2Playing == true)
-        //    {
-        //        track2Playing = true;
-        //        fadeIn(volume, pitch);
-        //        audio.clip = combatMusic;
-        //        audio.Play();
-        //    }
-        //    else
-        //    {
-        //        fadeOut(volume, pitch);
-        //    }
-        //}
-        #endregion
+
     }
 
     #region Methods
-    /// <summary>
-    /// Fades in from one audio source to another
-    /// </summary>
-    void fadeIn(float volume, float pitch)
+    public virtual void InCombat()
     {
-        if (audio1Volume <= volume)
-        {
-            audio1Volume += 0.1f * Time.deltaTime;
-            audio.volume = audio1Volume;
-        }
+            if (isMusic == true && isCombatMusic == true)
+            {
+                audio.clip = combatMusic[Random.Range(0, combatMusic.Count)];
+                audio.loop = true;
+                audio.Play();
+                isCombatMusic = false;
+                isGameMusic = true;
+            }
 
-        if (audio1Pitch <= pitch)
-        {
-            audio1Pitch += 0.3f * Time.deltaTime;
-            audio.pitch = audio1Pitch;
-        }
+            if (hasPlayedAudio == false && !isMusic)
+            {
+                audio.clip = combatAudio[1];
+                audio.loop = true;
+                audio.Play();
+                hasPlayedAudio = true;
+            }
     }
 
-    /// <summary>
-    /// Fades out from one audio source to another
-    /// </summary>
-    void fadeOut(float volume, float pitch)
+    public virtual void NotInCombat()
     {
-        if (track1Playing == true && volume > 0.1f)
+        if (isMusic == true && isGameMusic == true)
         {
-            audio1Volume -= 0.1f * Time.deltaTime;
-            audio.volume = audio1Volume;
-        }
-    }
-
-    /// <summary>
-    /// Plays Combat audio like attack sounds etc. Also checks if sound needs to wait or
-    /// all sounds play at same time.
-    /// Randomly selects combat sounds from the list of combat audio. 
-    /// </summary>
-    void CombatAudio(List<AudioClip> combatAudio)
-    {
-        audio.clip = combatAudio[Random.Range(0, combatAudio.Count)];
-
-        if (playOneAtATime == true)
-        {
-            PlayingAudioClip();
-        }
-        else
-        {
+            audio.clip = gameMusic[Random.Range(0, gameMusic.Count)];
+            audio.loop = false;
             audio.Play();
+            isGameMusic = false;
+            isCombatMusic = true;
         }
 
-    }
-
-    /// <summary>
-    /// Checked to make sure audio isn't currently playing
-    /// once the previous audio isn't playing then the audio plays
-    /// </summary>
-    void PlayingAudioClip()
-    {
-        if (!audio.isPlaying)
+        if (inCombat == false && !isMusic)
         {
-            audio.Play();
+            audio.loop = false;
         }
     }
     #endregion
