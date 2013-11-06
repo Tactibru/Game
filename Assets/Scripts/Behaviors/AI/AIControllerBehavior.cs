@@ -145,30 +145,69 @@ public class AIControllerBehavior : MonoBehaviour
 	public void UpdateState_DeterminingTarget()
 	{
 		MovePointBehavior movePoint = selectedActor.currentMovePoint;
-		targetPoint = movePoint.neighborList[0].neighborList[3];
 
-		// Determine if the target point has a unit in it.
-		foreach (ActorBehavior actor in gameController.playerTeam)
-			if (actor.currentMovePoint == targetPoint)
-			{
-				targetPoint = movePoint.neighborList[0];
-				GridBehavior.preCombat = true;
-				grid.currentActor = selectedActor.gameObject;
-				grid.targetActor = actor.gameObject;
-			}
+		// Get the maximum movement distance.
+		CombatSquadBehavior squadBehavior = selectedActor.GetComponent<CombatSquadBehavior>();
+		if (squadBehavior == null)
+		{
+			Debug.LogError(string.Format("AI Squad ({0}) does not have a CombatSquadBehavior!", selectedActor.transform.name));
+			selectedActor.actorHasMovedThisTurn = true;
+			State = AIState.PickingSquad;
+			return;
+		}
+		int maxDistance = squadBehavior.Squad.Speed;
 
-		List<MovePointBehavior> path = movePoint.FindPath(targetPoint, 2, grid);
+		// Retrieve a list of nodes within appropriate distance.
+		List<MovePointBehavior> graph = new List<MovePointBehavior>();
+		movePoint.BuildGraph(maxDistance, 0, grid, ref graph, true);
+
 		selectedActor.actorHasMovedThisTurn = true;
 
-		if (path != null)
+		// Iterate over the nodes to determine if any node has an actor.
+		foreach (MovePointBehavior node in graph)
 		{
+			ActorBehavior actorOnNode = gameController.GetActorOnNode(node);
+
+			if (actorOnNode == null || (actorOnNode.theSide != GameControllerBehaviour.UnitSide.player))
+				continue;
+
+			Debug.Log("Found target actor!");
+
+			grid.ignoreList.Remove(node);
+			targetPoint = node;
+			List<MovePointBehavior> path = movePoint.FindPath(targetPoint, maxDistance, grid);
+			path.RemoveAt(path.Count - 1);
+
 			selectedActor.pathList = path;
 			selectedActor.canMove = true;
 
+			GridBehavior.preCombat = true;
+			grid.currentActor = selectedActor.gameObject;
+			grid.targetActor = actorOnNode.gameObject;
+
 			State = AIState.WaitingForMove;
+
+			grid.ignoreList.Add(node);
+
+			return;
 		}
-		else
+
+		// Determine if the squad has a Defensive squad type.
+		// If so, this unit sits and does not move unless a unit enters its movement range.
+		AISquadTypeBehavior squadType = selectedActor.GetComponent<AISquadTypeBehavior>();
+		if (squadType != null && squadType.SquadType == AISquadTypeBehavior.AISquadType.Defensive)
+		{
 			State = AIState.PickingSquad;
+			return;
+		}
+
+		int randomNode = Random.Range(0, graph.Count);
+		List<MovePointBehavior> squadPath = movePoint.FindPath(graph[randomNode], maxDistance, grid);
+
+		selectedActor.pathList = squadPath;
+		selectedActor.canMove = true;
+
+		State = AIState.WaitingForMove;
 	}
 
 	/// <summary>
