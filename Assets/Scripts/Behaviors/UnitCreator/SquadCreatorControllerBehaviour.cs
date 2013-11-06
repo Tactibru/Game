@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UnitCreatorControllerBehaviour : MonoBehaviour 
+/// <summary>
+/// Will have to think about this class again, there maybe an overall.
+/// </summary>
+
+public class SquadCreatorControllerBehaviour : MonoBehaviour 
 {
     public int[] squadPosition = new int[10];
     public int squadUniqueID = 0;

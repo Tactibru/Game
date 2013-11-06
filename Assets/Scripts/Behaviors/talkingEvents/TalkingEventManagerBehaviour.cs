@@ -139,7 +139,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
                     talkers[2].transform.renderer.enabled = true;
                     activePanels = true;
                     currentPanel = Panels.UpperLeft;
-                    textBox[1].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText);
+                    textBox[1].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText, currentTalkingEventChain[currentTalkingEvent].name);
                     talkers[2].SetTalker(currentTalkingEventChain[currentTalkingEvent].theTalker);
                 }
                 else if (currentTalkingEventChain[currentTalkingEvent].selectedPanel == Panels.UpperRight)
@@ -148,7 +148,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
                     talkers[3].transform.renderer.enabled = true;
                     activePanels = true;
                     currentPanel = Panels.UpperRight;
-                    textBox[1].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText);
+                    textBox[1].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText, currentTalkingEventChain[currentTalkingEvent].name);
                     talkers[3].SetTalker(currentTalkingEventChain[currentTalkingEvent].theTalker);
                 }
                 else if (currentTalkingEventChain[currentTalkingEvent].selectedPanel == Panels.LowerLeft)
@@ -158,7 +158,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
                     talkers[0].transform.renderer.enabled = true;
                     activePanels = true;
                     currentPanel = Panels.LowerLeft;
-                    textBox[0].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText);
+                    textBox[0].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText, currentTalkingEventChain[currentTalkingEvent].name);
                     talkers[0].SetTalker(currentTalkingEventChain[currentTalkingEvent].theTalker);
                 }
                 else if (currentTalkingEventChain[currentTalkingEvent].selectedPanel == Panels.LowerRight)
@@ -167,7 +167,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
                     talkers[1].transform.renderer.enabled = true;
                     activePanels = true;
                     currentPanel = Panels.LowerRight;
-                    textBox[0].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText);
+                    textBox[0].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText, currentTalkingEventChain[currentTalkingEvent].name);
                     talkers[1].SetTalker(currentTalkingEventChain[currentTalkingEvent].theTalker);
                 }
                 currentTalkingEvent++;
@@ -216,7 +216,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
     {
         currentTalkingEvent = 0;
 
-        //I have both the soft shallow copy and deep copy, because I am not sure which one I need.
+        //I have both the shallow copy and deep copy, because I am not sure which one I need.
         currentTalkingEventChain = talkingEventChain[numberOfEvent].talkingEvents;
 
         for (int index = 0; index < talkingEventChain[numberOfEvent].talkingEvents.Count; index++)
@@ -244,6 +244,7 @@ public class TalkingEventChain
 
 public class TalkingEvent
 {
+    public string name = "";
     public string normalText = "";
     public string annoyText= "";
     public TalkingEventManagerBehaviour.Panels selectedPanel;

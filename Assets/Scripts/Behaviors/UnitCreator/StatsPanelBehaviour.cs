@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Will display stats of the currently selcted unit member.
+/// </summary>
+
 public class StatsPanelBehaviour : MonoBehaviour {
 
 	// Use this for initialization
