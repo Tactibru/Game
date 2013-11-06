@@ -6,6 +6,7 @@ using System.Collections;
 /// 
 /// Author: Ken 'Minalien' Murray
 /// </summary>
+[AddComponentMenu("Tactibru/Combat/Animations/Unit Idle Animation")]
 public class UnitIdleAnimationBehavior : MonoBehaviour
 {
 	/// <summary>

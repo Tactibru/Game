@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+[AddComponentMenu("Tactibru/Level Components/Game Controller")]
 public class GameControllerBehaviour : MonoBehaviour 
 {
     public List<ActorBehavior> playerTeam = new List<ActorBehavior>();
