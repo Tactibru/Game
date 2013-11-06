@@ -214,6 +214,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
 
     public void StarTalkingEventChain(int numberOfEvent)
     {
+        currentTalkingEventChain.Clear();
         currentTalkingEvent = 0;
 
         //I have both the shallow copy and deep copy, because I am not sure which one I need.
