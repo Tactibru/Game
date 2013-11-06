@@ -56,6 +56,18 @@ public class GameControllerBehaviour : MonoBehaviour
 		controller.turnCount.text = "Turn " + numberOfTurns.ToString();
 	}
 
+	void RemoveDeadUnits(List<ActorBehavior> list, ref int teamTotal)
+	{
+		for (int _i = 0; _i < list.Count; _i++)
+		{
+			if (list[_i] == null)
+			{
+				list.RemoveAt(_i);
+				teamTotal--;
+			}
+		}
+	}
+
     /// <summary>
     /// Checks end game conditions, and end turn conditions.
     /// 
@@ -63,7 +75,13 @@ public class GameControllerBehaviour : MonoBehaviour
     /// </summary>
     void Update()
     {
+		// Remove dead units.
+		RemoveDeadUnits(playerTeam, ref playerTeamTotal);
+		RemoveDeadUnits(enemyTeam, ref enemyTeamTotal);
+		RemoveDeadUnits(nuetrals, ref nuetralTotal);
+
         EndGame();
+
         //if (enemyTeamTotal == 0)
         //{
         //    Application.LoadLevel("PlayerWins");
@@ -143,19 +161,5 @@ public class GameControllerBehaviour : MonoBehaviour
 			numberOfTurns++;
 			controller.turnCount.text = "Turn " + numberOfTurns.ToString();
         }
-    }
-
-    /// <summary>
-    /// Used to tell what turn it is, to the player.
-    /// 
-    /// Alex Reiss
-    /// </summary>
-
-    void OnGUI()
-    {
-        if(currentTurn == UnitSide.player)
-            GUI.Label(new Rect(10, 10, 300, 60), "The Player Turn!");
-        else
-            GUI.Label(new Rect(10, 10, 300, 60), "The Enemy Turn!");
     }
 }
