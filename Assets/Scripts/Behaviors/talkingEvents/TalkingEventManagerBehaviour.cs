@@ -57,29 +57,27 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
     public bool playingEvent = false;
 
     /// <summary>
-    /// No use at the moment, but it would be used to control the conversation.
-    /// 
+    /// This is the main control vairable, if is zero then the current talking event chain starts.
+    /// It is also the index of the current current talking event, thats is playing.
+    /// When this equals the count of the current talking event chain, the chain stops.
     /// </summary>
 
     int currentTalkingEvent = 0;
 
     /// <summary>
-    /// Test at the moment but could have uses.
+    /// This is the data structure that holds all talking events, of the current level.
     /// </summary>
 
     public List<TalkingEventChain> talkingEventChain = new List<TalkingEventChain>();
 
     /// <summary>
-    /// The currently running event chain.
+    /// The currently running talking event chain.
     /// </summary>
 
     public List<TalkingEvent> currentTalkingEventChain = new List<TalkingEvent>();
 
-    //public bool triggerEvent = false;
-    
-    
     /// <summary>
-    /// These are for testing purposes only
+    /// These are for testing purposes only.
     /// </summary>
     
     public Material testActorLeft;
@@ -95,9 +93,13 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
         //talkers[0].transform.localPosition = screenPosition - Camera.main.transform.forward;
         //talkers[0].transform.position = screenPosition;
 
+        textBox[0].posOfBox = TypeWriterBoxBehaviour.PositionOfTheTextBox.bottom;
+        textBox[1].posOfBox = TypeWriterBoxBehaviour.PositionOfTheTextBox.top;
+
+        //Everything below this point is only for testing purposes.
+
         //TalkingEventChain newTalkingEventChain = new TalkingEventChain();
-       
-        ////test
+
         //TalkingEvent newTalkingEvent0 = new TalkingEvent();
         //newTalkingEvent0.normalText = "Testing Testing Testing Testing Testing Testing 456 Testing Testing Testing 789 Testing Testing.";
         //newTalkingEvent0.annoyText = "Yup It works.";
@@ -115,12 +117,6 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
         //talkingEventChain.Add(newTalkingEventChain);
 
         //StarTalkingEventChain(0);
-
-        textBox[0].posOfBox = TypeWriterBoxBehaviour.PositionOfTheTextBox.bottom;
-        textBox[1].posOfBox = TypeWriterBoxBehaviour.PositionOfTheTextBox.top;
-
-
-        
     }
 	
 	/// <summary>
@@ -134,7 +130,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
         if (currentTalkingEvent < currentTalkingEventChain.Count || activePanels)
         {
             
-            if (!activePanels && !playingEvent && Input.GetKeyDown(KeyCode.Space))
+            if (!activePanels && !playingEvent)
             {
                 //Debug.Log("Hi");
                 if (currentTalkingEventChain[currentTalkingEvent].selectedPanel == Panels.UpperLeft)
@@ -143,7 +139,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
                     talkers[2].transform.renderer.enabled = true;
                     activePanels = true;
                     currentPanel = Panels.UpperLeft;
-                    textBox[1].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText);
+                    textBox[1].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText, currentTalkingEventChain[currentTalkingEvent].name);
                     talkers[2].SetTalker(currentTalkingEventChain[currentTalkingEvent].theTalker);
                 }
                 else if (currentTalkingEventChain[currentTalkingEvent].selectedPanel == Panels.UpperRight)
@@ -152,7 +148,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
                     talkers[3].transform.renderer.enabled = true;
                     activePanels = true;
                     currentPanel = Panels.UpperRight;
-                    textBox[1].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText);
+                    textBox[1].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText, currentTalkingEventChain[currentTalkingEvent].name);
                     talkers[3].SetTalker(currentTalkingEventChain[currentTalkingEvent].theTalker);
                 }
                 else if (currentTalkingEventChain[currentTalkingEvent].selectedPanel == Panels.LowerLeft)
@@ -162,7 +158,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
                     talkers[0].transform.renderer.enabled = true;
                     activePanels = true;
                     currentPanel = Panels.LowerLeft;
-                    textBox[0].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText);
+                    textBox[0].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText, currentTalkingEventChain[currentTalkingEvent].name);
                     talkers[0].SetTalker(currentTalkingEventChain[currentTalkingEvent].theTalker);
                 }
                 else if (currentTalkingEventChain[currentTalkingEvent].selectedPanel == Panels.LowerRight)
@@ -171,7 +167,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
                     talkers[1].transform.renderer.enabled = true;
                     activePanels = true;
                     currentPanel = Panels.LowerRight;
-                    textBox[0].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText);
+                    textBox[0].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText, currentTalkingEventChain[currentTalkingEvent].name);
                     talkers[1].SetTalker(currentTalkingEventChain[currentTalkingEvent].theTalker);
                 }
                 currentTalkingEvent++;
@@ -209,8 +205,19 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
         }
 	}
 
+    /// <summary>
+    /// This starts the selected talking event. It also copies the talking events into the currently playing events and resets the main control vairable.
+    /// 
+    /// Alex Reiss
+    /// </summary>
+    /// <param name="numberOfEvent">This is the index of the selected event.</param>
+
     public void StarTalkingEventChain(int numberOfEvent)
     {
+        currentTalkingEventChain.Clear();
+        currentTalkingEvent = 0;
+
+        //I have both the shallow copy and deep copy, because I am not sure which one I need.
         currentTalkingEventChain = talkingEventChain[numberOfEvent].talkingEvents;
 
         for (int index = 0; index < talkingEventChain[numberOfEvent].talkingEvents.Count; index++)
@@ -224,7 +231,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
 }
 
 /// <summary>
-/// To handle multiple talking sessions in the scene.
+/// To handle multiple talking sessions in the level.
 /// </summary>
 
 public class TalkingEventChain
@@ -238,6 +245,7 @@ public class TalkingEventChain
 
 public class TalkingEvent
 {
+    public string name = "";
     public string normalText = "";
     public string annoyText= "";
     public TalkingEventManagerBehaviour.Panels selectedPanel;
