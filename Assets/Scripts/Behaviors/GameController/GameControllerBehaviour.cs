@@ -73,6 +73,28 @@ public class GameControllerBehaviour : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Iterates over the Player & Enemy nodes to determine if the specified node is occupied.
+	/// </summary>
+	/// <param name="node"></param>
+	/// <returns></returns>
+	public ActorBehavior GetActorOnNode(MovePointBehavior node)
+	{
+		foreach (ActorBehavior squad in playerTeam)
+			if (squad.currentMovePoint == node)
+				return squad;
+
+		foreach (ActorBehavior squad in enemyTeam)
+			if (squad.currentMovePoint == node)
+				return squad;
+
+		foreach (ActorBehavior squad in nuetrals)
+			if (squad.currentMovePoint == node)
+				return squad;
+
+		return null;
+	}
+
     /// <summary>
     /// Checks end game conditions, and end turn conditions.
     /// 

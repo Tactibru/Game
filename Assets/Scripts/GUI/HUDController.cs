@@ -29,7 +29,8 @@ public class HUDController : ButtonManagerBehavior
 			ToggleMenuGroup();
 			break;
 		case "End Turn Button":
-			gameController.EndTurn();
+			if(gameController.currentTurn == GameControllerBehaviour.UnitSide.player)
+				gameController.EndTurn();
 			break;
 		case "Exit Button":
 			Application.LoadLevel("MainMenuGUITest");
