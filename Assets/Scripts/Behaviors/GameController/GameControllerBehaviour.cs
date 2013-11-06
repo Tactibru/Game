@@ -56,7 +56,12 @@ public class GameControllerBehaviour : MonoBehaviour
 		controller.turnCount.text = "Turn " + numberOfTurns.ToString();
 	}
 
-	void RemoveDeadUnits(List<ActorBehavior> list, ref int teamTotal)
+	/// <summary>
+	/// Iterates over the list and removes dead (null) squads.
+	/// </summary>
+	/// <param name="list"></param>
+	/// <param name="teamTotal"></param>
+	void RemoveDeadSquads(List<ActorBehavior> list, ref int teamTotal)
 	{
 		for (int _i = 0; _i < list.Count; _i++)
 		{
@@ -76,46 +81,14 @@ public class GameControllerBehaviour : MonoBehaviour
     void Update()
     {
 		// Remove dead units.
-		RemoveDeadUnits(playerTeam, ref playerTeamTotal);
-		RemoveDeadUnits(enemyTeam, ref enemyTeamTotal);
-		RemoveDeadUnits(nuetrals, ref nuetralTotal);
+		RemoveDeadSquads(playerTeam, ref playerTeamTotal);
+		RemoveDeadSquads(enemyTeam, ref enemyTeamTotal);
+		RemoveDeadSquads(nuetrals, ref nuetralTotal);
 
         EndGame();
 
-        //if (enemyTeamTotal == 0)
-        //{
-        //    Application.LoadLevel("PlayerWins");
-        //}
-
-        //if (playerTeamTotal == 0)
-        //{
-        //    Application.LoadLevel("PlayerLosses");
-        //}
-
-        if (Input.GetKeyDown(KeyCode.Space) || leftToMoveThis == 0)
-        {
-
+        if (/*Input.GetKeyDown(KeyCode.Space) || */leftToMoveThis == 0)
             EndTurn();
-    //        for (int index = 0; index < playerTeam.Count; index++)
-    //            playerTeam[index].actorHasMovedThisTurn = false;
-
-    //        for (int index = 0; index < enemyTeam.Count; index++)
-    //            enemyTeam[index].actorHasMovedThisTurn = false;
-
-    //        for (int index = 0; index < nuetrals.Count; index++)
-    //            nuetrals[index].actorHasMovedThisTurn = false;
-
-    //        if (currentTurn == UnitSide.player)
-    //        {
-    //            currentTurn = UnitSide.enemy;
-    //            leftToMoveThis = enemyTeamTotal;
-    //        }
-    //        else
-    //        {
-    //            currentTurn = UnitSide.player;
-    //            leftToMoveThis = playerTeamTotal;
-    //        }
-        }
     }
 
     public void EndGame()
