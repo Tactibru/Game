@@ -7,6 +7,7 @@ using NodeSkeletonSystem;
 /// 
 /// Author: Ken Murray
 /// </summary>
+[AddComponentMenu("Tactibru/Node Skeleton System/Node Skeleton")]
 public class NodeSkeletonBehavior : MonoBehaviour
 {
 	/// <summary>

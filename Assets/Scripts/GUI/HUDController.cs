@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Tactibru/GUI/HUD Controller")]
 public class HUDController : ButtonManagerBehavior
 {
 	public GameObject menuGroup;
