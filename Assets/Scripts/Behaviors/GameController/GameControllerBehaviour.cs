@@ -16,6 +16,11 @@ public class GameControllerBehaviour : MonoBehaviour
     private GUIStyle gUIStyle;
 	public int numberOfTurns = 1;
 
+	/// <summary>
+	/// Allows the player to control enemy units.
+	/// </summary>
+	public bool AllowPlayerControlledEnemies = false;
+
     public enum UnitSide
     {
         player,
