@@ -6,6 +6,7 @@ using NodeSkeletonSystem;
 /// <summary>
 /// Denotes a Game Object that possesses a <see cref="Units.CombatSquad"/>
 /// </summary>
+[AddComponentMenu("Tactibru/Combat/Combat Squad")]
 public class CombatSquadBehavior : MonoBehaviour {
 	/// <summary>
 	/// Squad possessed by this game object.

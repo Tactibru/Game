@@ -6,6 +6,7 @@ using System.Collections;
 /// A simple credits script that displays the title of the scene and has a return to main menu button.
 /// Author: Karl John Matthews
 /// </summary>
+[AddComponentMenu("Tactibru/GUI/Scenes/Credits Scene")]
 public class CreditsScene : MonoBehaviour 
 {
     /// <summary>

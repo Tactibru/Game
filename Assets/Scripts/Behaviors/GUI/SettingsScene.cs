@@ -5,6 +5,7 @@ using System.Collections;
 /// A simple settings script that displays the title of the scene and has a return to main menu button.
 /// Author: Karl John Matthews
 /// </summary>
+[AddComponentMenu("Tactibru/GUI/Scenes/Settings Scene")]
 public class SettingsScene : MonoBehaviour 
 {
     /// <summary>

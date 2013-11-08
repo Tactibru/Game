@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [System.Serializable]
+[AddComponentMenu("Tactibru/Movement/Grid")]
 public class GridBehavior : MonoBehaviour 
 {
     public static bool inCombat = false;
@@ -134,7 +135,7 @@ public class GridBehavior : MonoBehaviour
     /// </summary>
     void Update()
     {
-		if (gameController.currentTurn != GameControllerBehaviour.UnitSide.player)
+		if (!gameController.AllowPlayerControlledEnemies && gameController.currentTurn != GameControllerBehaviour.UnitSide.player)
 			return;
 
 		if(!inCombat)

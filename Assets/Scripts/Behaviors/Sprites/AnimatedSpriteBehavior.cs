@@ -7,6 +7,7 @@ using System.Collections;
 /// Author: Ken Murray
 /// </summary>
 [ExecuteInEditMode]
+[AddComponentMenu("Tactibru/Sprites/Animated Sprite")]
 public class AnimatedSpriteBehavior : MonoBehaviour
 {
 	/// <summary>

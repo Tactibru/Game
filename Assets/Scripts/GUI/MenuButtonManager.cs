@@ -5,6 +5,7 @@ using System.Collections;
 /// 
 /// Author: Karl Matthews
 /// </summary>
+[AddComponentMenu("Tactibru/GUI/Main Menu/Menu Button Manager")]
 public class MenuButtonManager : ButtonManagerBehavior 
 {
 	public override void ButtonPressed(string buttonName)

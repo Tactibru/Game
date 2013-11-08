@@ -6,6 +6,7 @@ using Units;
 /// <summary>
 /// Represents a grid point on the map that units can move to.
 /// </summary>
+[AddComponentMenu("Tactibru/Movement/Move Point")]
 public class MovePointBehavior : MonoBehaviour 
 {
 	/// <summary>
