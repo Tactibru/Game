@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+
 /// <summary>
 /// Script that creates one instance of a button manager that holds all the buttons for an individual scene.
 /// 
 /// Author: Karl Matthews
 /// </summary>
+[AddComponentMenu("Tactibru/GUI/Button Manager")]
 public class ButtonManagerBehavior : MonoBehaviour
 {
 	/// <summary>
@@ -28,6 +30,7 @@ public class ButtonManagerBehavior : MonoBehaviour
 				GameObject manager = GameObject.Find("Button Manager") as GameObject;
 				if (manager != null)
 					instance = manager.GetComponent<ButtonManagerBehavior>();
+				
 			}
 			if (instance == null)
 			{

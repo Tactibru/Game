@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// The Typewriter itself.
 /// </summary>
-
+[AddComponentMenu("Tactibru/Dialog/Type-Writer Box")]
 public class TypeWriterBoxBehaviour : MonoBehaviour 
 {
     /// <summary>
@@ -32,6 +32,12 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
     char [] annoyText;
 
     /// <summary>
+    /// Name of the talking charactor.
+    /// </summary>
+
+    string nameOfTalking = "";
+
+    /// <summary>
     /// What is currently displayed on the screen.
     /// </summary>
 
@@ -47,7 +53,8 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
     /// The GUI style, for the text.
     /// </summary>
 
-    private GUIStyle gUIStyle;
+    private GUIStyle textStyle;
+    private GUIStyle nameStyle;
 
     /// <summary>
     ///  This can be set by the game designer. It is the time between letter.
@@ -74,10 +81,12 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
     private bool readyToContinue = false;
 
     /// <summary>
-    /// For the font to be set, currently not used.
+    /// Name font, is for charactor names.
+    /// Text font, is for the text in the text box.
     /// </summary>
 
-    public Font theFont;
+    public Font theNameFont;
+    public Font theTextFont;
 
     /// <summary>
     /// This is to tell the typewriter when to go to the next line.
@@ -121,11 +130,15 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
         talkingManager = Camera.main.transform.GetComponent<TalkingEventManagerBehaviour>();
         transform.renderer.enabled = false;
 
-        gUIStyle = new GUIStyle();
-        gUIStyle.fontSize = 20;
-        gUIStyle.normal.textColor = Color.black;
-        
+        textStyle = new GUIStyle();
+        textStyle.fontSize = 20;
+        textStyle.normal.textColor = Color.black;
+        textStyle.font = theTextFont;
 
+        nameStyle = new GUIStyle();
+        nameStyle.fontSize = 20;
+        nameStyle.normal.textColor = Color.black;
+        nameStyle.font = theNameFont;
 	}
 	
 	/// <summary>
@@ -245,16 +258,6 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
                 }
             }
         }
-
-
-
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    if (transform.renderer.enabled)
-        //        transform.renderer.enabled = false;
-        //    else
-        //        transform.renderer.enabled = true;
-        //}
 	}
 
     /// <summary>
@@ -263,9 +266,10 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
     /// Alex Reiss
     /// </summary>
 
-    public void startTalkingEvent(string newNormalText, string newAnnoyText)
+    public void startTalkingEvent(string newNormalText, string newAnnoyText, string name)
     {
         normalText = newNormalText.ToCharArray();
+        nameOfTalking = name;
 
         if (newAnnoyText.Length > 0)
         {
@@ -349,13 +353,14 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
         {
             if (posOfBox == PositionOfTheTextBox.top)
             {
-                GUI.Label(new Rect(Screen.width * 0.25f, Screen.height * 0.1f, Screen.width * 0.5f, Screen.height * 0.1f), currentlyDisplayedText, gUIStyle);
+                GUI.Label(new Rect(Screen.width * 0.25f, Screen.height * 0.05f, Screen.width * 0.5f, Screen.height * 0.1f), nameOfTalking, nameStyle);
+                GUI.Label(new Rect(Screen.width * 0.25f, Screen.height * 0.1f, Screen.width * 0.5f, Screen.height * 0.1f), currentlyDisplayedText, textStyle);
             }
             else
             {
                 //GUI.Label(new Rect(Screen.width * 0.25f, Screen.height * 0.8f, Screen.width * 0.5f, Screen.height * 0.1f), currentlyDisplayedText, gUIStyle);
-                
-                GUI.Label(new Rect(Screen.width * 0.25f, Screen.height * 0.8f, Screen.width * 0.5f, Screen.height * 0.1f), currentlyDisplayedText, gUIStyle);
+                GUI.Label(new Rect(Screen.width * 0.25f, Screen.height * 0.75f, Screen.width * 0.5f, Screen.height * 0.1f), nameOfTalking, nameStyle);
+                GUI.Label(new Rect(Screen.width * 0.25f, Screen.height * 0.8f, Screen.width * 0.5f, Screen.height * 0.1f), currentlyDisplayedText, textStyle);
 
             }
         }

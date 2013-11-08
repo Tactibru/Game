@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+
 /// <summary>
 /// Behavior handles changing the color of the text depending on whether or not the mouse is hovering over the object, clicking on the object or not clicking on the object.
 ///
 /// Author: Karl Matthews
 /// </summary>
+[AddComponentMenu("Tactibru/GUI/Texture Changer")]
 public class ChangeTextureBehavior : MonoBehaviour
 {
     /// <summary>
@@ -14,6 +16,7 @@ public class ChangeTextureBehavior : MonoBehaviour
     public TextMesh text;
     public static bool pressed = false;
 
+	
     /// <summary>
     /// Function that sets the color of the text mesh to yellow if the the button has not been pressed and the mouse is hovering over the object.
     /// </summary>

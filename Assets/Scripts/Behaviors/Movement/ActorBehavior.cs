@@ -1,6 +1,8 @@
 	using UnityEngine;
 using System.Collections;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+
+[AddComponentMenu("Tactibru/Movement/Actor")]
 public class ActorBehavior : MonoBehaviour 
 {
     public MovePointBehavior currentMovePoint;

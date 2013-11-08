@@ -9,6 +9,7 @@ using NodeSkeletonSystem;
 /// 
 /// Author: Karl John Matthews
 /// </summary>
+[AddComponentMenu("Tactibru/Core Systems/Combat System")]
 public class CombatSystemBehavior : MonoBehaviour 
 {
 	/// <summary>

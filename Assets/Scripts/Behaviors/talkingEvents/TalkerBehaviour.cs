@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Tactibru/Dialog/Speaker")]
 public class TalkerBehaviour : MonoBehaviour 
 {
     /// <summary>
@@ -12,6 +13,9 @@ public class TalkerBehaviour : MonoBehaviour
         //transform.localScale = 
         transform.renderer.enabled = false;
 	}
-	
-	
+
+    public void SetTalker(Material theTalker)
+    {
+        transform.renderer.material = theTalker;
+    }
 }

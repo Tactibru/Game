@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [System.Serializable]
+[AddComponentMenu("Tactibru/Movement/Grid")]
 public class GridBehavior : MonoBehaviour 
 {
     public static bool inCombat = false;
@@ -109,15 +110,34 @@ public class GridBehavior : MonoBehaviour
         }
     }
 
+	/// <summary>
+	/// Disables the current actor, and marks its idle animation as inactive.
+	/// </summary>
+	public void disableCurrentActor()
+	{
+		if (currentActor == null)
+			return;
+
+		UnitIdleAnimationBehavior[] idles = currentActor.GetComponentsInChildren<UnitIdleAnimationBehavior>();
+		foreach (UnitIdleAnimationBehavior idle in idles)
+			idle.Active = false;
+		currentActor = null;
+
+		foreach (MovePointBehavior movePoint in theMap)
+			if (movePoint && movePoint.renderer.enabled == true)
+				movePoint.renderer.enabled = false;
+	}
+
     /// <summary>
     /// Run Update.
     ///
     /// I do not create this function, Alex Reiss.
     /// </summary>
-
-    // Update is called once per frame
     void Update()
     {
+		if (gameController.currentTurn != GameControllerBehaviour.UnitSide.player)
+			return;
+
 		if(!inCombat)
         {
             if (Input.GetMouseButtonDown(0))
@@ -134,6 +154,10 @@ public class GridBehavior : MonoBehaviour
 							if (!hitInfo.transform.GetComponent<ActorBehavior> ().actorHasMovedThisTurn && hitInfo.transform.GetComponent<ActorBehavior> ().theSide == gameController.currentTurn)
 							{
 								currentActor = hitInfo.transform.gameObject;
+
+								UnitIdleAnimationBehavior[] idles = currentActor.GetComponentsInChildren<UnitIdleAnimationBehavior>();
+								foreach(UnitIdleAnimationBehavior idle in idles)
+									idle.Active = true;
 							}
 						}
 					}
@@ -147,11 +171,7 @@ public class GridBehavior : MonoBehaviour
 							targetActor = hitInfo.transform.gameObject;
 						else if (hitInfo.transform.GetComponent<ActorBehavior>() == currentActor.GetComponent<ActorBehavior>())
 						{
-							currentActor = null;
-
-							foreach (MovePointBehavior movePoint in theMap)
-								if (movePoint && movePoint.renderer.enabled == true)
-									movePoint.renderer.enabled = false;
+							disableCurrentActor();
 						}
                     }
                 }
@@ -213,7 +233,7 @@ public class GridBehavior : MonoBehaviour
 				}
 				else
 				{
-					currentActor = null;
+					disableCurrentActor();
 					targetNode = null;
 					targetActor = null;
 				}
@@ -222,7 +242,7 @@ public class GridBehavior : MonoBehaviour
                 {
                     ignoreList.Remove(currentActor.GetComponent<ActorBehavior>().currentMovePoint);
                     ignoreList.Add(targetNode.GetComponent<MovePointBehavior>());
-                    currentActor = null;
+					disableCurrentActor();
                     targetNode = null;
                     targetActor = null;
                 }
@@ -288,9 +308,10 @@ public class GridBehavior : MonoBehaviour
             else
                 gameController.enemyTeamTotal--;
         }
-        
+
+		disableCurrentActor();
+
         targetActor = null;
-        currentActor = null;
         preCombat = false;
     }
 
