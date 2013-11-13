@@ -41,8 +41,6 @@ public class AIOffensiveBehavior : AIUnitBehavior
 			if (actorOnNode == null || (actorOnNode.theSide != GameControllerBehaviour.UnitSide.player))
 				continue;
 
-			Debug.Log("Found target actor!");
-
 			grid.ignoreList.Remove(node);
 			List<MovePointBehavior> path = movePoint.FindPath(node, maxDistance, grid);
 			path.RemoveAt(path.Count - 1);
