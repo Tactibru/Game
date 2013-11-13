@@ -49,6 +49,9 @@ public class ActorBehavior : MonoBehaviour
     {
         if (!currentlyMoving && canMove)
         {
+			if (pathList == null)
+				pathList = new List<MovePointBehavior>();
+
             if (pathList.Count > 0)
             {
                 for (int index = 0; index < currentMovePoint.neighborList.Length; index++)
