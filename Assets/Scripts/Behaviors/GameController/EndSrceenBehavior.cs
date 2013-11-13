@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Tactibru/Screens/End Screen")]
 public class EndSrceenBehavior : MonoBehaviour 
 {
     public bool didPlayerWin;

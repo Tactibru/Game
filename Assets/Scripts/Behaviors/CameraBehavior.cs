@@ -4,6 +4,7 @@ using System.Collections;
 /// <summary>
 /// Implements camera scrolling when the mouse is at the edge of the screen.
 /// </summary>
+[AddComponentMenu("Tactibru/Core Systems/Camera")]
 public class CameraBehavior : MonoBehaviour 
 {
 	/// <summary>

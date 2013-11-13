@@ -6,6 +6,7 @@ using System.Collections;
 ///
 /// Author: Karl Matthews
 /// </summary>
+[AddComponentMenu("Tactibru/GUI/Texture Changer")]
 public class ChangeTextureBehavior : MonoBehaviour
 {
     /// <summary>
@@ -64,6 +65,5 @@ public class ChangeTextureBehavior : MonoBehaviour
 	void Pressed()
 	{
 		ButtonManagerBehavior.Instance.ButtonPressed(name);	
-		Debug.Log(name);
 	}
 }

@@ -9,6 +9,7 @@ using System.IO;
 /// 
 /// Script to handle the level selection scene's buttons presses.
 /// </summary>
+[AddComponentMenu("Tactibru/GUI/Level Selector")]
 public class LevelSelector : ButtonManagerBehavior
 {
 	/// <summary>

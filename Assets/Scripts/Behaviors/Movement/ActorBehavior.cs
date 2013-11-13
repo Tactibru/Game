@@ -1,6 +1,8 @@
 	using UnityEngine;
 using System.Collections;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+
+[AddComponentMenu("Tactibru/Movement/Actor")]
 public class ActorBehavior : MonoBehaviour 
 {
     public MovePointBehavior currentMovePoint;
@@ -47,6 +49,9 @@ public class ActorBehavior : MonoBehaviour
     {
         if (!currentlyMoving && canMove)
         {
+			if (pathList == null)
+				pathList = new List<MovePointBehavior>();
+
             if (pathList.Count > 0)
             {
                 for (int index = 0; index < currentMovePoint.neighborList.Length; index++)

@@ -5,6 +5,7 @@ using System.Collections;
 /// Mode scene script that creates four different buttons and each button changes the color of the text.
 /// Author: Karl John Matthews
 /// </summary>
+[AddComponentMenu("Tactibru/GUI/Scenes/Mode Scene")]
 public class ModeScene : MonoBehaviour 
 {
     private GUIStyle menuTitle;

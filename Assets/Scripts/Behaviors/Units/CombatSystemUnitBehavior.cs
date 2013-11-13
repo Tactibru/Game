@@ -4,6 +4,7 @@ using System.Collections;
 /// <summary>
 /// Implements custom rendering for a unit's health within the combat system.
 /// </summary>
+[AddComponentMenu("Tactibru/Combat/Combat System Unit")]
 public class CombatSystemUnitBehavior : MonoBehaviour {
 	/// <summary>
 	/// Stores the mesh that will be used to render the unit's health.

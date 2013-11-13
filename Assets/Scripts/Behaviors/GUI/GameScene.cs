@@ -5,6 +5,7 @@ using System.Collections;
 /// A simple Game Scene script that displays the title of the scene and has a return to main menu button.
 /// Author: Karl John Matthews
 /// </summary>
+[AddComponentMenu("Tactibru/GUI/Scenes/Game Scene")]
 public class GameScene : MonoBehaviour 
 {
     /// <summary>

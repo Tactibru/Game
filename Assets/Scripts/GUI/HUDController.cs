@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Tactibru/GUI/HUD Controller")]
 public class HUDController : ButtonManagerBehavior
 {
 	public GameObject menuGroup;
@@ -29,7 +30,7 @@ public class HUDController : ButtonManagerBehavior
 			ToggleMenuGroup();
 			break;
 		case "End Turn Button":
-			if(gameController.currentTurn == GameControllerBehaviour.UnitSide.player)
+			if (gameController.AllowPlayerControlledEnemies || gameController.currentTurn == GameControllerBehaviour.UnitSide.player)
 				gameController.EndTurn();
 			break;
 		case "Exit Button":
