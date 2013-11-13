@@ -4,10 +4,12 @@ using System.Collections;
 [AddComponentMenu("Tactibru/GUI/HUD Controller")]
 public class HUDController : ButtonManagerBehavior
 {
-	public GameObject menuGroup;
+	GameObject menuGroup;
 	bool isEnabled;
-	public GameControllerBehaviour gameController;
+	GameControllerBehaviour gameController;
+	[System.NonSerialized]
 	public TextMesh turnCount;
+	[System.NonSerialized]
 	public TextMesh whoseTurn;
 	/// <summary>
 	/// Start this instance.
@@ -18,8 +20,9 @@ public class HUDController : ButtonManagerBehavior
 		isEnabled = false;
 		ToggleMenuGroup();
 		gameController = GameObject.FindGameObjectWithTag("Grid").GetComponent<GameControllerBehaviour>();
-		
-
+		menuGroup = GameObject.Find("Menu Group HUD").gameObject;
+		turnCount = GameObject.Find("turnCountText").GetComponent<TextMesh>();
+		whoseTurn = GameObject.Find("whoseTurnText").GetComponent<TextMesh>();
 	}
 	
 	public override void ButtonPressed(string buttonName)

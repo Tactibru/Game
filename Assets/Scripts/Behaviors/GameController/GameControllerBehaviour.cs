@@ -57,7 +57,7 @@ public class GameControllerBehaviour : MonoBehaviour
         gUIStyle.fontSize = 10;
         gUIStyle.normal.textColor = Color.white;
 		
-		controller = GameObject.FindGameObjectWithTag("HUD").GetComponent<HUDController>();
+		controller = Camera.main.GetComponent<HUDController>();
 		controller.whoseTurn.text = "Players Turn";
 		controller.turnCount.text = "Turn " + numberOfTurns.ToString();
 	}
