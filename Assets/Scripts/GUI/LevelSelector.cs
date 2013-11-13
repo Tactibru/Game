@@ -190,7 +190,9 @@ public class LevelSelector : ButtonManagerBehavior
 				"level06",
 				"level07",
 				"level08",
-				"level09"
+				"level09",
+				"level10",
+				"level11",
 			};
 		}
 		
