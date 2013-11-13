@@ -65,6 +65,5 @@ public class ChangeTextureBehavior : MonoBehaviour
 	void Pressed()
 	{
 		ButtonManagerBehavior.Instance.ButtonPressed(name);	
-		Debug.Log(name);
 	}
 }
