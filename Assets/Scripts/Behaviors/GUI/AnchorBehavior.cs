@@ -1,6 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+/// <summary>
+/// Script that anchors the HUD to certain parts of the screen based off of anchor position.
+/// 
+/// Author: Karl Matthews
+/// </summary>
+[AddComponentMenu("Tactibru/GUI/Anchor Behavior")]
+/// <summary>
+/// Enum for all of the different Anchor positons 
+/// </summary>
 public enum AnchorPosition
 {
 	TopRight,
@@ -17,8 +25,17 @@ public enum AnchorPosition
 [ExecuteInEditMode]
 public class AnchorBehavior : MonoBehaviour 
 {
+	/// <summary>
+	/// The previous postion of the of the anchor position 
+	/// </summary>
 	AnchorPosition oldPosition;
+	/// <summary>
+	/// Variable that represents the current anchor position 
+	/// </summary>
 	public AnchorPosition anchorPosition;
+	/// <summary>
+	/// Camera object that represents the main camera
+	/// </summary>
 	static Camera hudCamera;
 	
 	void Start()
@@ -29,12 +46,14 @@ public class AnchorBehavior : MonoBehaviour
 	void Update()
 	{
 		RepositionAnchor();
-		//If allowing mide game resolution change,
-		//Check if resolution changed, call reposition
 	}
 	
+	/// <summary>
+	/// Funnctions that repositions the anchor based the postion chosen from the enum, through the screen to world point function.
+	/// </summary>
 	void RepositionAnchor()
 	{
+		// If the previous postion of the anchor is equal to the current position of the anchor, return out of the function.
 		if (oldPosition == anchorPosition)
 			return;
 		if (!hudCamera)
@@ -71,7 +90,10 @@ public class AnchorBehavior : MonoBehaviour
 		default:
 			break;		
 		}
+		// Set the name of the object to Anchor and what ever the anchor postion is.
 		name = "Anchor - " + anchorPosition.ToString();
+		// Then set old postion to the new position.
 		oldPosition = anchorPosition;
+		
 	}
 }

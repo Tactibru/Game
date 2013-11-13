@@ -253,11 +253,6 @@ public class CombatSystemBehavior : MonoBehaviour
 		this.offensiveSquad = offensiveSquad;
 		this.defensiveSquad = defensiveSquad;
 
-		Debug.Log("Combat between " + offensiveSquad.ToString() + " and " + defensiveSquad.ToString() + " begin.");
-
-		Debug.Log("Offensive size: " + offensiveSquad.Squad.Units.Count);
-		Debug.Log("Defensive size: " + defensiveSquad.Squad.Units.Count);
-
 		int unitCount = offensiveSquad.Squad.Units.Count + defensiveSquad.Squad.Units.Count;
 		unitPrefabs = new List<NodeSkeletonBehavior>(unitCount);
 
@@ -287,7 +282,7 @@ public class CombatSystemBehavior : MonoBehaviour
 		
 		foreach(UnitData data in units)
 		{
-			float x = (flipHorizontally ? (-1.0f + (0.33f * data.Position.Row)) : 1.0f - (0.33f * data.Position.Row)) + (data.Position.Column % 2 == 0 ? 0.1f : 0.0f);
+			float x = (flipHorizontally ? (-1.0f + (0.33f * (1 - data.Position.Row))) : 1.0f - (0.33f * (1 - data.Position.Row))) + (data.Position.Column % 2 == 0 ? 0.1f : 0.0f);
 			float y = 0.7f - (0.33f * data.Position.Column);
 			float z = 0.9f - (0.05f * data.Position.Column);
 
@@ -311,8 +306,8 @@ public class CombatSystemBehavior : MonoBehaviour
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
 			{
-				GameObject prefab = (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/{1}", node.Name, data.Unit.Name));
-				prefab = (prefab ?? (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/001", node.Name)));
+				GameObject prefab = (GameObject)Resources.Load(string.Format("Prefabs/UnitParts/{0}/{1}", node.Name, (node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name)));
+				prefab = (prefab ?? (GameObject)Resources.Load(string.Format("Prefabs/UnitParts/{0}/001", node.Name)));
 				
 				if(prefab == null)
 				{
@@ -347,8 +342,6 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </param>
 	private void endCombat(CombatSquadBehavior losingSquad)
 	{
-		Debug.Log("Combat between " + offensiveSquad.ToString() + " and " + defensiveSquad.ToString() + " end.");
-		
 		MonoBehaviour[] objects = GetComponentsInChildren<MonoBehaviour>();
 		for(int _i = (objects.Count() - 1); _i >= 0; _i--)
 		{

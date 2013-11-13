@@ -39,6 +39,15 @@ namespace Editor.Units
 		private UnitPosition unitPosition = new UnitPosition();
 
 		/// <summary>
+		/// Row in which the unit appears.
+		/// </summary>
+		private enum UnitRow
+		{
+			Front = 0,
+			Back = 1,
+		}
+
+		/// <summary>
 		/// 
 		/// </summary>
 		/// <returns></returns>
@@ -49,14 +58,17 @@ namespace Editor.Units
 				EditorGUILayout.BeginVertical();
 				{
 					GUILayout.Label("Column");
-					position.Column = EditorGUILayout.IntField(position.Column);
+					//position.Column = EditorGUILayout.IntField(position.Column);
+					position.Column = EditorGUILayout.IntSlider (position.Column, 0, 4);
 				}
 				EditorGUILayout.EndVertical();
 
 				EditorGUILayout.BeginVertical();
 				{
+					UnitRow row = (UnitRow)position.Row;
 					GUILayout.Label("Row");
-					position.Row = EditorGUILayout.IntField(position.Row);
+					position.Row = (int)((UnitRow)EditorGUILayout.EnumPopup(row));
+
 				}
 				EditorGUILayout.EndVertical();
 			}

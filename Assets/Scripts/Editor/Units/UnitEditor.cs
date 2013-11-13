@@ -54,6 +54,7 @@ namespace Editor.Units
 				labeledIntField("Upkeep Cost", ref Target.Cost);
 				Target.UnitSize = EditorGUILayout.IntSlider (new GUIContent("Unit Size", "Number of 'slots' this unit occupies in a squad."), Target.UnitSize, 1, CombatSquad.MAX_UNITS_PER_SQUAD);
 				Target.Space = (CombatUnit.UnitSpace)EditorGUILayout.EnumPopup(new GUIContent("Unit Space", "Amount of space on the 5x2 Grid occupied by this unit."), Target.Space);
+				Target.Weapon = (CombatUnit.UnitWeapon)EditorGUILayout.EnumPopup (new GUIContent("Weapon", "Weapon the unit wields in combat."), Target.Weapon);
 			}
 			
 			// [Stats] -> Unit Statistics.
@@ -73,7 +74,6 @@ namespace Editor.Units
 			{
 				Target.CurrentHealth = Target.Health;
 				EditorUtility.SetDirty(Target);
-				Debug.Log("Unit saved.");
 			}
 		}
 		
