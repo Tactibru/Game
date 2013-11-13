@@ -6,6 +6,7 @@ using Units;
 /// <summary>
 /// Represents a grid point on the map that units can move to.
 /// </summary>
+[AddComponentMenu("Tactibru/Movement/Move Point")]
 public class MovePointBehavior : MonoBehaviour 
 {
 	/// <summary>
@@ -34,7 +35,7 @@ public class MovePointBehavior : MonoBehaviour
 		List<MovePointBehavior> graph = new List<MovePointBehavior>();
 		List<MovePointBehavior> tGraph = new List<MovePointBehavior>();
 		
-		buildGraph(maxDistance, 0, grid, ref graph);
+		BuildGraph(maxDistance, 0, grid, ref graph);
 
 		if (!graph.Contains(targetNode))
 			return null;
@@ -131,7 +132,7 @@ public class MovePointBehavior : MonoBehaviour
 
 		List<MovePointBehavior> moveGraph = new List<MovePointBehavior>();
 
-		actor.currentMovePoint.buildGraph(maxDistance, depth, grid, ref moveGraph);
+		actor.currentMovePoint.BuildGraph(maxDistance, depth, grid, ref moveGraph);
 		moveGraph.RemoveAt(0);
 
 		foreach (MovePointBehavior node in moveGraph)
@@ -145,7 +146,20 @@ public class MovePointBehavior : MonoBehaviour
 	/// <param name="currentDepth">Current depth within the search.</param>
 	/// <param name="grid">Grid the graph is being built on.</param>
 	/// <param name="path">List of move points representing the constructed path.</param>
-	private void buildGraph(int maxDepth, int currentDepth, GridBehavior grid, ref List<MovePointBehavior> path)
+	public void BuildGraph(int maxDepth, int currentDepth, GridBehavior grid, ref List<MovePointBehavior> path)
+	{
+		BuildGraph(maxDepth, currentDepth, grid, ref path, false);
+	}
+
+	/// <summary>
+	/// Performs the logic behind the depth-first search.
+	/// </summary>
+	/// <param name="maxDepth">Maximum depth to perform checking to.</param>
+	/// <param name="currentDepth">Current depth within the search.</param>
+	/// <param name="grid">Grid the graph is being built on.</param>
+	/// <param name="path">List of move points representing the constructed path.</param>
+	/// <param name="skipIgnoreList">Whether or not the ignore list check should be skipped.</param>
+	public void BuildGraph(int maxDepth, int currentDepth, GridBehavior grid, ref List<MovePointBehavior> path, bool skipIgnoreList)
 	{
 		if (currentDepth >= maxDepth || neighborList.Length == 0)
 			return;
@@ -160,14 +174,14 @@ public class MovePointBehavior : MonoBehaviour
 			if (neighbor == null)
 				continue;
 
-			if (grid.ignoreList != null && grid.ignoreList.Contains(neighbor))
+			if (!skipIgnoreList && grid.ignoreList != null && grid.ignoreList.Contains(neighbor))
 				continue;
 
 			//neighbor.renderer.enabled = true;
 			if (!path.Contains(neighbor))
 				path.Add(neighbor);
 
-			neighbor.buildGraph(maxDepth, currentDepth, grid, ref path);
+			neighbor.BuildGraph(maxDepth, currentDepth, grid, ref path, skipIgnoreList);
 		}
 	}
 }

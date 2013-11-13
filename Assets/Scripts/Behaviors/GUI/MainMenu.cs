@@ -6,6 +6,7 @@ using System.Collections;
 /// Also allows you to exit the game.
 /// Author: Karl John Matthews
 /// </summary>
+[AddComponentMenu("Tactibru/GUI/Scenes/Main Menu")]
 public class MainMenu : MonoBehaviour 
 {
     private GUIStyle menuTitle;

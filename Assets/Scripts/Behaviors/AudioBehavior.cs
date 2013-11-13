@@ -9,7 +9,7 @@ using System.Collections.Generic;
 /// Primary: Darryl Sterne
 /// Secondary: 
 /// </summary>
-
+[AddComponentMenu("Tactibru/Core Systems/Audio Manager")]
 [RequireComponent(typeof(AudioSource))]
 public class AudioBehavior : MonoBehaviour
 {

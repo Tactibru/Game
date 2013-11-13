@@ -6,6 +6,7 @@ using System.Collections;
 /// 
 /// Author: Karl Matthews
 /// </summary>
+[AddComponentMenu("Tactibru/GUI/Button Manager")]
 public class ButtonManagerBehavior : MonoBehaviour
 {
 	/// <summary>

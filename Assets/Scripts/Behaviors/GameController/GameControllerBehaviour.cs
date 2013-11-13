@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+[AddComponentMenu("Tactibru/Level Components/Game Controller")]
 public class GameControllerBehaviour : MonoBehaviour 
 {
     public List<ActorBehavior> playerTeam = new List<ActorBehavior>();
@@ -14,6 +15,11 @@ public class GameControllerBehaviour : MonoBehaviour
     public int leftToMoveThis;
     private GUIStyle gUIStyle;
 	public int numberOfTurns = 1;
+
+	/// <summary>
+	/// Allows the player to control enemy units.
+	/// </summary>
+	public bool AllowPlayerControlledEnemies = false;
 
     public enum UnitSide
     {
@@ -56,6 +62,45 @@ public class GameControllerBehaviour : MonoBehaviour
 		controller.turnCount.text = "Turn " + numberOfTurns.ToString();
 	}
 
+	/// <summary>
+	/// Iterates over the list and removes dead (null) squads.
+	/// </summary>
+	/// <param name="list"></param>
+	/// <param name="teamTotal"></param>
+	void RemoveDeadSquads(List<ActorBehavior> list, ref int teamTotal)
+	{
+		for (int _i = 0; _i < list.Count; _i++)
+		{
+			if (list[_i] == null)
+			{
+				list.RemoveAt(_i);
+				teamTotal--;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Iterates over the Player & Enemy nodes to determine if the specified node is occupied.
+	/// </summary>
+	/// <param name="node"></param>
+	/// <returns></returns>
+	public ActorBehavior GetActorOnNode(MovePointBehavior node)
+	{
+		foreach (ActorBehavior squad in playerTeam)
+			if (squad.currentMovePoint == node)
+				return squad;
+
+		foreach (ActorBehavior squad in enemyTeam)
+			if (squad.currentMovePoint == node)
+				return squad;
+
+		foreach (ActorBehavior squad in nuetrals)
+			if (squad.currentMovePoint == node)
+				return squad;
+
+		return null;
+	}
+
     /// <summary>
     /// Checks end game conditions, and end turn conditions.
     /// 
@@ -63,41 +108,15 @@ public class GameControllerBehaviour : MonoBehaviour
     /// </summary>
     void Update()
     {
+		// Remove dead units.
+		RemoveDeadSquads(playerTeam, ref playerTeamTotal);
+		RemoveDeadSquads(enemyTeam, ref enemyTeamTotal);
+		RemoveDeadSquads(nuetrals, ref nuetralTotal);
+
         EndGame();
-        //if (enemyTeamTotal == 0)
-        //{
-        //    Application.LoadLevel("PlayerWins");
-        //}
 
-        //if (playerTeamTotal == 0)
-        //{
-        //    Application.LoadLevel("PlayerLosses");
-        //}
-
-        if (Input.GetKeyDown(KeyCode.Space) || leftToMoveThis == 0)
-        {
-
+        if (/*Input.GetKeyDown(KeyCode.Space) || */leftToMoveThis == 0)
             EndTurn();
-    //        for (int index = 0; index < playerTeam.Count; index++)
-    //            playerTeam[index].actorHasMovedThisTurn = false;
-
-    //        for (int index = 0; index < enemyTeam.Count; index++)
-    //            enemyTeam[index].actorHasMovedThisTurn = false;
-
-    //        for (int index = 0; index < nuetrals.Count; index++)
-    //            nuetrals[index].actorHasMovedThisTurn = false;
-
-    //        if (currentTurn == UnitSide.player)
-    //        {
-    //            currentTurn = UnitSide.enemy;
-    //            leftToMoveThis = enemyTeamTotal;
-    //        }
-    //        else
-    //        {
-    //            currentTurn = UnitSide.player;
-    //            leftToMoveThis = playerTeamTotal;
-    //        }
-        }
     }
 
     public void EndGame()
@@ -143,19 +162,5 @@ public class GameControllerBehaviour : MonoBehaviour
 			numberOfTurns++;
 			controller.turnCount.text = "Turn " + numberOfTurns.ToString();
         }
-    }
-
-    /// <summary>
-    /// Used to tell what turn it is, to the player.
-    /// 
-    /// Alex Reiss
-    /// </summary>
-
-    void OnGUI()
-    {
-        if(currentTurn == UnitSide.player)
-            GUI.Label(new Rect(10, 10, 300, 60), "The Player Turn!");
-        else
-            GUI.Label(new Rect(10, 10, 300, 60), "The Enemy Turn!");
     }
 }
