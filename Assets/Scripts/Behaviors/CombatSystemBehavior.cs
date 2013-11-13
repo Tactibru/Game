@@ -282,7 +282,7 @@ public class CombatSystemBehavior : MonoBehaviour
 		
 		foreach(UnitData data in units)
 		{
-			float x = (flipHorizontally ? (-1.0f + (0.33f * data.Position.Row)) : 1.0f - (0.33f * data.Position.Row)) + (data.Position.Column % 2 == 0 ? 0.1f : 0.0f);
+			float x = (flipHorizontally ? (-1.0f + (0.33f * (1 - data.Position.Row))) : 1.0f - (0.33f * (1 - data.Position.Row))) + (data.Position.Column % 2 == 0 ? 0.1f : 0.0f);
 			float y = 0.7f - (0.33f * data.Position.Column);
 			float z = 0.9f - (0.05f * data.Position.Column);
 
