@@ -131,7 +131,7 @@ public class CombatSquadBehavior : MonoBehaviour {
 		
 		foreach(UnitData data in squad.Units)
 		{
-			float x = -0.1f + (0.2f * data.Position.Row) + (data.Position.Column % 2 == 0 ? 0.05f : 0.0f);
+			float x = -0.1f + (0.2f * (1 - data.Position.Row)) + (data.Position.Column % 2 == 0 ? 0.05f : 0.0f);
 			float z = 0.25f - (0.1f * data.Position.Column);
 			float y = 0.5f;
 
