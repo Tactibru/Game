@@ -10,6 +10,11 @@ using System.Collections.Generic;
 public class AIControllerBehavior : MonoBehaviour
 {
 	/// <summary>
+	/// Tag that the main camera is marked as.
+	/// </summary>
+	private const string CAMERA_TAG = "MainCamera";
+
+	/// <summary>
 	/// Stores the current State.
 	/// </summary>
 	private AIState State = AIState.WaitingForPlayer;
@@ -30,6 +35,11 @@ public class AIControllerBehavior : MonoBehaviour
 	private ActorBehavior selectedActor = null;
 
 	/// <summary>
+	/// Stores the camera object so that tracking objects can be set.
+	/// </summary>
+	private CameraBehavior camera = null;
+
+	/// <summary>
 	/// Captures an instance of the game controller behavior from the game object.
 	/// </summary>
 	/// <remarks>
@@ -40,6 +50,11 @@ public class AIControllerBehavior : MonoBehaviour
 	{
 		gameController = GetComponent<GameControllerBehaviour>();
 		grid = GetComponent<GridBehavior>();
+
+		// Locate a CameraBehavior if one is set.
+		GameObject cameraObject = GameObject.FindGameObjectWithTag(CAMERA_TAG);
+		if(cameraObject)
+			camera = cameraObject.GetComponent<CameraBehavior>();
 	}
 
 	/// <summary>
@@ -92,12 +107,28 @@ public class AIControllerBehavior : MonoBehaviour
 			{
 				selectedActor = actor;
 				State = AIState.DeterminingTarget;
+
+				setCameraTarget(selectedActor.gameObject);
+
 				return;
 			}
 		}
 
 		State = AIState.WaitingForPlayer;
+		setCameraTarget(null);
 		gameController.EndTurn();
+	}
+
+	/// <summary>
+	/// Sets the camera target.
+	/// </summary>
+	/// <param name="actor">Actor that will serve as the camera target.</param>
+	private void setCameraTarget(GameObject actor)
+	{
+		if(camera == null)
+			return;
+
+		camera.trackingObject = actor;
 	}
 
 	/// <summary>

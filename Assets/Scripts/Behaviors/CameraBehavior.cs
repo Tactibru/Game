@@ -28,10 +28,22 @@ public class CameraBehavior : MonoBehaviour
 	Vector3 maximumPosition = Vector3.zero;
 
 	/// <summary>
+	/// Initial camera offset.
+	/// </summary>
+	Vector3 cameraOffset = Vector3.zero;
+
+	/// <summary>
+	/// Allows the camera to track an object.
+	/// </summary>
+	public GameObject trackingObject = null;
+
+	/// <summary>
 	/// Iterates over all scene objects with the appropriate Screen Bounds tag, and determines the minimum and maximum coordinates.
 	/// </summary>
 	public void Start()
 	{
+		cameraOffset = transform.position;
+
 		GameObject[] sceneBounds = GameObject.FindGameObjectsWithTag(SCREEN_BOUNDS_TAG);
 
 		foreach (GameObject obj in sceneBounds)
@@ -58,6 +70,16 @@ public class CameraBehavior : MonoBehaviour
 	{
 		if (Camera.current != null && Camera.current != this.camera)
 			return;
+
+		// Perform tracking if the camera is set to track an object.
+		if (trackingObject != null)
+		{
+			transform.position = trackingObject.transform.position + cameraOffset;
+
+			ConstrainCamera();
+
+			return;
+		}
 
 		float movementAmount = MovementRate * Time.deltaTime;
 		
