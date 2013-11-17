@@ -64,7 +64,14 @@ namespace Editor.Units
 			{
 				labeledIntField("Health", ref Target.Health);
 				labeledIntField("Strength", ref Target.Strength);
-				labeledIntField("Toughness", ref Target.Toughness);
+
+				GUILayout.BeginHorizontal();
+				{
+					GUILayout.Label ("Toughness");
+					Target.Toughness = EditorGUILayout.IntSlider (Target.Toughness, 0, 100);
+					GUILayout.Label ("%");
+				}
+				GUILayout.EndHorizontal();
 				labeledIntField("Speed", ref Target.Speed);
 				labeledIntField("Range", ref Target.Range);
 			}
