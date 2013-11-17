@@ -149,7 +149,7 @@ public class CombatSystemBehavior : MonoBehaviour
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
 						{
-							int damageReceived = (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness));
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness)) : damagePerUnit);
 							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
 						}
 
@@ -168,7 +168,7 @@ public class CombatSystemBehavior : MonoBehaviour
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
 						{
-							int damageReceived = (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness));
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness)) : damagePerUnit);
 							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
 						}
 
@@ -187,7 +187,7 @@ public class CombatSystemBehavior : MonoBehaviour
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
 						{
-							int damageReceived = (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness));
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness)) : damagePerUnit);
 							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
 						}
 
@@ -206,7 +206,7 @@ public class CombatSystemBehavior : MonoBehaviour
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
 						{
-							int damageReceived = (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness));
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness)) : damagePerUnit);
 							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
 						}
 
