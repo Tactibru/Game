@@ -10,7 +10,7 @@ namespace Editor.UnitGeneration
 	/// <summary>
 	/// Provides utility methods for interacting with the unit asset repository.
 	/// </summary>
-	public static class UnitAssetRepositoryUtility
+	public static class UnitAssetRepositoryWindow
 	{
 		/// <summary>
 		/// Resource file used to save unit asset repository information.
