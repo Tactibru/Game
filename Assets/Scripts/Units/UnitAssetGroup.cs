@@ -48,9 +48,9 @@ namespace Units
 				return null;
 			}
 
-			UnitAssetBehavior[] assets = prefabs.Where (l => l.Name == name);
+			IEnumerable<UnitAssetBehavior> assets = prefabs.Where (l => l.Name == name);
 
-			if(assets.Count == 0)
+			if(assets.Count() == 0)
 			{
 				Debug.LogWarning (string.Format ("No asset in '{0}' found matching '{1}'!", Name, name));
 				return null;
