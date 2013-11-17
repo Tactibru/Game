@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Units
@@ -7,7 +7,7 @@ namespace Units
 	/// <summary>
 	/// Represents a group from which assets can be retrieved (e.g. "Heads")
 	/// </summary>
-	[Serializable]
+	[System.Serializable]
 	public class UnitAssetGroup
 	{
 		/// <summary>
@@ -26,13 +26,37 @@ namespace Units
 		/// <returns>The random prefab.</returns>
 		public UnitAssetBehavior getRandomPrefab()
 		{
-			if(prefabs == null)
+			if(prefabs.Count == 0)
 			{
 				Debug.LogError ("Attempted to retrieve a prefab from an empty asset group!");
 				return null;
 			}
 
-			return null;
+			return prefabs[Random.Range (0, prefabs.Count)];
+		}
+
+		/// <summary>
+		/// Retrieves a prefab from the list of prefabs in the group, matching a specific name.
+		/// </summary>
+		/// <returns>The prefab by name.</returns>
+		/// <param name="name">Name.</param>
+		public UnitAssetBehavior getPrefabByName(string name)
+		{
+			if(prefabs.Count == 0)
+			{
+				Debug.LogError ("Attempted to retrieve a prefab from an empty asset group!");
+				return null;
+			}
+
+			IEnumerable<UnitAssetBehavior> assets = prefabs.Where (l => l.Name == name);
+
+			if(assets.Count() == 0)
+			{
+				Debug.LogWarning (string.Format ("No asset in '{0}' found matching '{1}'!", Name, name));
+				return null;
+			}
+
+			return assets.First ();
 		}
 	}
 }
