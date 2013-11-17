@@ -148,7 +148,10 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
-							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+						{
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness)) : damagePerUnit);
+							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+						}
 
 						removeDeadUnits();
 					}
@@ -164,7 +167,10 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
-							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+						{
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness)) : damagePerUnit);
+							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+						}
 
 						removeDeadUnits();
 					}
@@ -180,7 +186,10 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
-							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+						{
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness)) : damagePerUnit);
+							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+						}
 
 						removeDeadUnits();
 					}
@@ -196,7 +205,10 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
-							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+						{
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness)) : damagePerUnit);
+							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+						}
 
 						removeDeadUnits();
 					}
