@@ -21,6 +21,15 @@ namespace Units
 		public List<UnitAssetBehavior> prefabs = new List<UnitAssetBehavior>();
 
 		/// <summary>
+		/// Stores the asset group.
+		/// </summary>
+		/// <param name="name">Name.</param>
+		public UnitAssetGroup(string name)
+		{
+			Name = name;
+		}
+
+		/// <summary>
 		/// Retrieves a random prefab from the list of prefabs in the group.
 		/// </summary>
 		/// <returns>The random prefab.</returns>
@@ -49,6 +58,9 @@ namespace Units
 			}
 
 			IEnumerable<UnitAssetBehavior> assets = prefabs.Where (l => l.Name == name);
+
+			if(assets.Count () == 0)
+				assets = prefabs.Where (l => l.Name == "Default");
 
 			if(assets.Count() == 0)
 			{

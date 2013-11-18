@@ -144,10 +144,7 @@ public class CombatSquadBehavior : MonoBehaviour {
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
 			{
-				GameObject prefab = null;
-
-				prefab = (GameObject)Resources.Load(string.Format("Prefabs/UnitParts/{0}/{1}", node.Name, (node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name)));
-				prefab = (prefab ?? (GameObject)Resources.Load(string.Format("Prefabs/UnitParts/{0}/001", node.Name)));
+				UnitAssetBehavior prefab = UnitAssetRepository.Instance.getAssetGroupByName(node.Name).getPrefabByName(node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name);
 
 				if (prefab == null)
 				{
@@ -155,7 +152,7 @@ public class CombatSquadBehavior : MonoBehaviour {
 					continue;
 				}
 
-				skele.AttachToNode(node.Name, prefab);
+				skele.AttachToNode(node.Name, prefab.gameObject);
 			}
 
 			skele.transform.parent = transform;
