@@ -21,6 +21,7 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// Internally tracks the camera used to display the combat window.
 	/// </summary>
 	public Camera combatCamera;
+    public static bool inCombat;
 
 	/// <summary>
 	/// Marks which row in the combat sequence is the next active attacker.
@@ -261,6 +262,8 @@ public class CombatSystemBehavior : MonoBehaviour
 		this.grid = grid;
 
 		GridBehavior.inCombat = true;
+        Debug.Log("Audio in combat");
+        AudioBehavior.inCombat = true;
 
 		this.offensiveSquad = offensiveSquad;
 		this.defensiveSquad = defensiveSquad;
@@ -377,5 +380,6 @@ public class CombatSystemBehavior : MonoBehaviour
 
 		GridBehavior.preCombat = false;
 		GridBehavior.inCombat = false;
+        AudioBehavior.inCombat = false;
 	}
 }
