@@ -10,6 +10,9 @@ using System.Collections.Generic;
 [AddComponentMenu("Tactibru/AI/Squad Behaviors/Offensive Hunter Behavior")]
 public class AIOffensiveHunterBehavior : AIUnitBehavior
 {
+    /// The player's actor we plan to move towards
+    MovePointBehavior selectedActor = null;
+
     /// <summary>
     /// Determines the target for this squad.
     /// </summary>
@@ -60,13 +63,29 @@ public class AIOffensiveHunterBehavior : AIUnitBehavior
             
             return AIState.WaitingForCombat;
         }
+
+        /// If we don't have a selected actor, find a new one
+        if(selectedActor == null)
+            selectedActor = ChooseRandomActorFromPlayerTeam();
+
         
-        int randomNode = Random.Range(0, graph.Count);
-        List<MovePointBehavior> squadPath = movePoint.FindPath(graph[randomNode], maxDistance, grid);
+        /// set the squads path to the random actor with have selected.
+        List<MovePointBehavior> squadPath = movePoint.FindPath(selectedActor, maxDistance, grid);
         
         Actor.pathList = squadPath;
         Actor.canMove = true;
         
         return AIState.WaitingForMove;
+    }
+
+    /// <summary>
+    /// Chooses a random actor from the player's team.
+    /// </summary>
+    /// <returns>Returns a MovePointBehvior of the actor we selected</returns>
+    public MovePointBehavior ChooseRandomActorFromPlayerTeam()
+    {
+        /// Pick a random actor on the player's team.
+        MovePointBehavior randomlySelectedActor = gameController.playerTeam[Random.Range(0, gameController.playerTeam.Count)].theGrid.targetNode;
+        return randomlySelectedActor;
     }
 }
