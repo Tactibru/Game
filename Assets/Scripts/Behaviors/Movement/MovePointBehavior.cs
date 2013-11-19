@@ -9,6 +9,8 @@ using Units;
 [AddComponentMenu("Tactibru/Movement/Move Point")]
 public class MovePointBehavior : MonoBehaviour 
 {
+
+    public int index;
 	/// <summary>
 	/// Stores a list of nodes that this move point is connected to.
 	/// </summary>

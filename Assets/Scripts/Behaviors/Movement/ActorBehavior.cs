@@ -49,6 +49,9 @@ public class ActorBehavior : MonoBehaviour
     {
         if (!currentlyMoving && canMove)
         {
+			if (pathList == null)
+				pathList = new List<MovePointBehavior>();
+
             if (pathList.Count > 0)
             {
                 for (int index = 0; index < currentMovePoint.neighborList.Length; index++)
@@ -57,6 +60,7 @@ public class ActorBehavior : MonoBehaviour
                     {
                         pointToMoveTo = currentMovePoint.neighborList[index];
                         currentlyMoving = true;
+                        AudioBehavior.isMoving = true;
                         currentMovementTime = timeToMoveToPoint;
                     }
                 }
@@ -112,6 +116,7 @@ public class ActorBehavior : MonoBehaviour
                 currentMovementTime = 0.0f;
                 transform.position = currentMovePoint.transform.position;
                 currentlyMoving = false;
+                AudioBehavior.isMoving = false;
                 pointToMoveTo = null;
                 pathList.RemoveAt(0);
             }

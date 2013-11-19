@@ -21,6 +21,18 @@ namespace Units
 		}
 
 		/// <summary>
+		/// Weapon used by the unit.
+		/// </summary>
+		public enum UnitWeapon
+		{
+			HandCannon,
+			Katana,
+			Shuriken,
+			Spear,
+			Staff
+		}
+
+		/// <summary>
 		/// Represents the <see cref="NodeSkeletonSystem.NodeSkeletonStructure"/> that will be used for this unit.
 		/// </summary>
 		public NodeSkeletonStructure Skeleton;
@@ -29,6 +41,11 @@ namespace Units
 		/// Unit name.
 		/// </summary>
 		public string Name = "Ruffian";
+
+		/// <summary>
+		/// Weapon wielded by the unit.
+		/// </summary>
+		public UnitWeapon Weapon = UnitWeapon.Staff;
 		
 		/// <summary>
 		/// Unit's total health value.

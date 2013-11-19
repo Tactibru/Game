@@ -21,6 +21,7 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// Internally tracks the camera used to display the combat window.
 	/// </summary>
 	public Camera combatCamera;
+    public static bool inCombat;
 
 	/// <summary>
 	/// Marks which row in the combat sequence is the next active attacker.
@@ -148,7 +149,10 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
-							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+						{
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
+							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+						}
 
 						removeDeadUnits();
 					}
@@ -164,7 +168,10 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
-							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+						{
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
+							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+						}
 
 						removeDeadUnits();
 					}
@@ -180,7 +187,10 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
-							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+						{
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
+							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+						}
 
 						removeDeadUnits();
 					}
@@ -196,7 +206,10 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
-							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+						{
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
+							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+						}
 
 						removeDeadUnits();
 					}
@@ -249,14 +262,11 @@ public class CombatSystemBehavior : MonoBehaviour
 		this.grid = grid;
 
 		GridBehavior.inCombat = true;
+        Debug.Log("Audio in combat");
+        AudioBehavior.inCombat = true;
 
 		this.offensiveSquad = offensiveSquad;
 		this.defensiveSquad = defensiveSquad;
-
-		Debug.Log("Combat between " + offensiveSquad.ToString() + " and " + defensiveSquad.ToString() + " begin.");
-
-		Debug.Log("Offensive size: " + offensiveSquad.Squad.Units.Count);
-		Debug.Log("Defensive size: " + defensiveSquad.Squad.Units.Count);
 
 		int unitCount = offensiveSquad.Squad.Units.Count + defensiveSquad.Squad.Units.Count;
 		unitPrefabs = new List<NodeSkeletonBehavior>(unitCount);
@@ -287,7 +297,7 @@ public class CombatSystemBehavior : MonoBehaviour
 		
 		foreach(UnitData data in units)
 		{
-			float x = (flipHorizontally ? (-1.0f + (0.33f * data.Position.Row)) : 1.0f - (0.33f * data.Position.Row)) + (data.Position.Column % 2 == 0 ? 0.1f : 0.0f);
+			float x = (flipHorizontally ? (-1.0f + (0.33f * (1 - data.Position.Row))) : 1.0f - (0.33f * (1 - data.Position.Row))) + (data.Position.Column % 2 == 0 ? 0.1f : 0.0f);
 			float y = 0.7f - (0.33f * data.Position.Column);
 			float z = 0.9f - (0.05f * data.Position.Column);
 
@@ -311,8 +321,7 @@ public class CombatSystemBehavior : MonoBehaviour
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
 			{
-				GameObject prefab = (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/{1}", node.Name, data.Unit.Name));
-				prefab = (prefab ?? (GameObject)Resources.Load (string.Format ("Prefabs/UnitParts/{0}/001", node.Name)));
+				UnitAssetBehavior prefab = UnitAssetRepository.Instance.getAssetGroupByName(node.Name).getPrefabByName(node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name);
 				
 				if(prefab == null)
 				{
@@ -320,7 +329,7 @@ public class CombatSystemBehavior : MonoBehaviour
 					continue;
 				}
 				
-				skele.AttachToNode(node.Name, prefab);
+				skele.AttachToNode(node.Name, prefab.gameObject);
 			}
 
 			skele.transform.parent = unitBase.transform;
@@ -347,8 +356,6 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </param>
 	private void endCombat(CombatSquadBehavior losingSquad)
 	{
-		Debug.Log("Combat between " + offensiveSquad.ToString() + " and " + defensiveSquad.ToString() + " end.");
-		
 		MonoBehaviour[] objects = GetComponentsInChildren<MonoBehaviour>();
 		for(int _i = (objects.Count() - 1); _i >= 0; _i--)
 		{
@@ -373,5 +380,6 @@ public class CombatSystemBehavior : MonoBehaviour
 
 		GridBehavior.preCombat = false;
 		GridBehavior.inCombat = false;
+        AudioBehavior.inCombat = false;
 	}
 }
