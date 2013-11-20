@@ -34,7 +34,7 @@ public static class PostBuildTrigger
 	/// <param name='path'>
 	/// Path.
 	/// </param>
-	[PostProcessBuild]
+	//[PostProcessBuild]
 	public static void OnPostProcessBuild(BuildTarget target, string path)
 	{
 		Debug.Log("Post Processing Build"); 
