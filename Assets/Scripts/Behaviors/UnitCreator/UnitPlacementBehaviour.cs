@@ -24,4 +24,12 @@ public class UnitPlacementBehaviour : MonoBehaviour
     {
 	
 	}
+
+    public void ShowUnitHolder()
+    {
+        for (int index = 0; index < thePositions.Length; index++)
+        {
+            thePositions[index].transform.renderer.enabled = true;
+        }
+    }
 }

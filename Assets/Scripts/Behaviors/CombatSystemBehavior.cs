@@ -21,6 +21,7 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// Internally tracks the camera used to display the combat window.
 	/// </summary>
 	public Camera combatCamera;
+    public static bool inCombat;
 
 	/// <summary>
 	/// Marks which row in the combat sequence is the next active attacker.
@@ -149,7 +150,7 @@ public class CombatSystemBehavior : MonoBehaviour
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
 						{
-							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness)) : damagePerUnit);
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
 							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
 						}
 
@@ -168,7 +169,7 @@ public class CombatSystemBehavior : MonoBehaviour
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
 						{
-							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness)) : damagePerUnit);
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
 							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
 						}
 
@@ -187,7 +188,7 @@ public class CombatSystemBehavior : MonoBehaviour
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
 						{
-							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness)) : damagePerUnit);
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
 							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
 						}
 
@@ -206,7 +207,7 @@ public class CombatSystemBehavior : MonoBehaviour
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
 						{
-							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Floor(damagePerUnit * (1.0f / (float)unit.Toughness)) : damagePerUnit);
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
 							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
 						}
 
@@ -261,6 +262,8 @@ public class CombatSystemBehavior : MonoBehaviour
 		this.grid = grid;
 
 		GridBehavior.inCombat = true;
+        Debug.Log("Audio in combat");
+        AudioBehavior.inCombat = true;
 
 		this.offensiveSquad = offensiveSquad;
 		this.defensiveSquad = defensiveSquad;
@@ -318,8 +321,7 @@ public class CombatSystemBehavior : MonoBehaviour
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
 			{
-				GameObject prefab = (GameObject)Resources.Load(string.Format("Prefabs/UnitParts/{0}/{1}", node.Name, (node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name)));
-				prefab = (prefab ?? (GameObject)Resources.Load(string.Format("Prefabs/UnitParts/{0}/001", node.Name)));
+				UnitAssetBehavior prefab = UnitAssetRepository.Instance.getAssetGroupByName(node.Name).getPrefabByName(node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name);
 				
 				if(prefab == null)
 				{
@@ -327,7 +329,7 @@ public class CombatSystemBehavior : MonoBehaviour
 					continue;
 				}
 				
-				skele.AttachToNode(node.Name, prefab);
+				skele.AttachToNode(node.Name, prefab.gameObject);
 			}
 
 			skele.transform.parent = unitBase.transform;
@@ -378,5 +380,6 @@ public class CombatSystemBehavior : MonoBehaviour
 
 		GridBehavior.preCombat = false;
 		GridBehavior.inCombat = false;
+        AudioBehavior.inCombat = false;
 	}
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Represents a group from which assets can be retrieved (e.g. "Heads")
 /// </summary>
+[AddComponentMenu("Tactibru/Assets/Unit Asset")]
 public class UnitAssetBehavior : MonoBehaviour
 {
 	/// <summary>
