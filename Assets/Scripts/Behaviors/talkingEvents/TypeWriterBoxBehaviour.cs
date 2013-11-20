@@ -14,6 +14,7 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
     {
         top, 
         bottom,
+        none,
         NUM_POSITIONS
     }
     public PositionOfTheTextBox posOfBox;
@@ -92,7 +93,7 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
     /// This is to tell the typewriter when to go to the next line.
     /// </summary>
 
-    private int textBoxSize = 40;
+    private int textBoxSize = 66;
 
     /// <summary>
     /// This the count up to tell the ype writer to go to the next line.
@@ -131,12 +132,12 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
         transform.renderer.enabled = false;
 
         textStyle = new GUIStyle();
-        textStyle.fontSize = 20;
+        textStyle.fontSize = 26;
         textStyle.normal.textColor = Color.black;
         textStyle.font = theTextFont;
 
         nameStyle = new GUIStyle();
-        nameStyle.fontSize = 20;
+        nameStyle.fontSize = 40;
         nameStyle.normal.textColor = Color.black;
         nameStyle.font = theNameFont;
 	}
@@ -166,14 +167,17 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
                 //}
 
                 currentlyDisplayedText += normalText[currentIndex].ToString();
-                
-                if (currentIndex == normalSpaceLocations[currentSpace] && currentSpace < normalSpaceLocations.Length - 1)
+
+                if (normalSpaceLocations.Length > 0)
                 {
-                    currentSpace++;
-                    if (currentNumberCharsInLine + (normalSpaceLocations[currentSpace] - currentIndex) > textBoxSize)
+                    if (currentIndex == normalSpaceLocations[currentSpace] && currentSpace < normalSpaceLocations.Length - 1)
                     {
-                        currentlyDisplayedText += "\n";
-                        currentNumberCharsInLine = 0;
+                        currentSpace++;
+                        if (currentNumberCharsInLine + (normalSpaceLocations[currentSpace] - currentIndex) > textBoxSize)
+                        {
+                            currentlyDisplayedText += "\n";
+                            currentNumberCharsInLine = 0;
+                        }
                     }
                 }
                 
@@ -221,13 +225,16 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
                     {
                         currentlyDisplayedText += annoyText[currentIndex].ToString();
 
-                        if (currentIndex == annoySpaceLocations[currentSpace] && currentSpace < annoySpaceLocations.Length - 1)
+                        if (annoySpaceLocations.Length > 0)
                         {
-                            currentSpace++;
-                            if (currentNumberCharsInLine + (annoySpaceLocations[currentSpace] - currentIndex) > textBoxSize)
+                            if (currentIndex == annoySpaceLocations[currentSpace] && currentSpace < annoySpaceLocations.Length - 1)
                             {
-                                currentlyDisplayedText += "\n";
-                                currentNumberCharsInLine = 0;
+                                currentSpace++;
+                                if (currentNumberCharsInLine + (annoySpaceLocations[currentSpace] - currentIndex) > textBoxSize)
+                                {
+                                    currentlyDisplayedText += "\n";
+                                    currentNumberCharsInLine = 0;
+                                }
                             }
                         }
 
@@ -241,14 +248,16 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
                     while (currentIndex < normalText.Length)
                     {
                         currentlyDisplayedText += normalText[currentIndex].ToString();
-
-                        if (currentIndex == normalSpaceLocations[currentSpace] && currentSpace < normalSpaceLocations.Length - 1)
+                        if (normalSpaceLocations.Length > 0)
                         {
-                            currentSpace++;
-                            if (currentNumberCharsInLine + (normalSpaceLocations[currentSpace] - currentIndex) > textBoxSize)
+                            if (currentIndex == normalSpaceLocations[currentSpace] && currentSpace < normalSpaceLocations.Length - 1)
                             {
-                                currentlyDisplayedText += "\n";
-                                currentNumberCharsInLine = 0;
+                                currentSpace++;
+                                if (currentNumberCharsInLine + (normalSpaceLocations[currentSpace] - currentIndex) > textBoxSize)
+                                {
+                                    currentlyDisplayedText += "\n";
+                                    currentNumberCharsInLine = 0;
+                                }
                             }
                         }
 
@@ -359,8 +368,8 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
             else
             {
                 //GUI.Label(new Rect(Screen.width * 0.25f, Screen.height * 0.8f, Screen.width * 0.5f, Screen.height * 0.1f), currentlyDisplayedText, gUIStyle);
-                GUI.Label(new Rect(Screen.width * 0.25f, Screen.height * 0.75f, Screen.width * 0.5f, Screen.height * 0.1f), nameOfTalking, nameStyle);
-                GUI.Label(new Rect(Screen.width * 0.25f, Screen.height * 0.8f, Screen.width * 0.5f, Screen.height * 0.1f), currentlyDisplayedText, textStyle);
+                GUI.Label(new Rect(Screen.width * 0.20f, Screen.height * 0.62f, Screen.width * 0.5f, Screen.height * 0.1f), nameOfTalking, nameStyle);
+                GUI.Label(new Rect(Screen.width * 0.21f, Screen.height * 0.7f, Screen.width * 0.5f, Screen.height * 0.1f), currentlyDisplayedText, textStyle);
 
             }
         }
