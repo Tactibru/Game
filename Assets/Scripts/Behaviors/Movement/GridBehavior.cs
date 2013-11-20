@@ -42,7 +42,7 @@ public class GridBehavior : MonoBehaviour
 
     void Start()
     {
-       
+        
         gameController = GameObject.FindGameObjectWithTag("Grid").GetComponent<GameControllerBehaviour>();
         //Debug.Log(theMapLength.ToString());
         //Debug.Log(theMapWidth.ToString());
