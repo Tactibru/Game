@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// The Typewriter itself.
 /// </summary>
-
+[AddComponentMenu("Tactibru/Dialog/Type-Writer Box")]
 public class TypeWriterBoxBehaviour : MonoBehaviour 
 {
     /// <summary>

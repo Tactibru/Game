@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Tactibru/Dialog/Speaker")]
 public class TalkerBehaviour : MonoBehaviour 
 {
     /// <summary>

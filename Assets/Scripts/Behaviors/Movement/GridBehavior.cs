@@ -1,8 +1,10 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 [System.Serializable]
+[AddComponentMenu("Tactibru/Movement/Grid")]
 public class GridBehavior : MonoBehaviour 
 {
     public static bool inCombat = false;
@@ -42,7 +44,8 @@ public class GridBehavior : MonoBehaviour
 
     void Start()
     {
-        
+        int currentIndex = 0;
+       
         gameController = GameObject.FindGameObjectWithTag("Grid").GetComponent<GameControllerBehaviour>();
         //Debug.Log(theMapLength.ToString());
         //Debug.Log(theMapWidth.ToString());
@@ -61,7 +64,13 @@ public class GridBehavior : MonoBehaviour
         {
             for (int width = 0; width < theMapWidth; width++)
             {
-               
+
+                if (theMap[width + (length * theMapWidth)])
+                {
+                    theMap[width + (length * theMapWidth)].index = currentIndex;
+                }
+
+
                 if (length < theMapLength - 1)
                 {
                     //Debug.Log((width + (length * theMapWidth)).ToString());
@@ -104,7 +113,9 @@ public class GridBehavior : MonoBehaviour
                             theMap[width + 1 + (length * theMapWidth)].neighborList[3] = theMap[width + (length * theMapWidth)];
                         }
                     }
-                } 
+                }
+
+                currentIndex++;
             }
         }
     }
@@ -134,14 +145,21 @@ public class GridBehavior : MonoBehaviour
     /// </summary>
     void Update()
     {
+		if (!gameController.AllowPlayerControlledEnemies && gameController.currentTurn != GameControllerBehaviour.UnitSide.player)
+			return;
+
 		if(!inCombat)
         {
             if (Input.GetMouseButtonDown(0))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hitInfo;
 
-                if (Physics.Raycast(ray, out hitInfo))
+                //RaycastHit hitInfo;
+				List<RaycastHit> hits = new List<RaycastHit>();
+				hits.AddRange(Physics.RaycastAll (ray));
+
+                //if (Physics.Raycast(ray, out hitInfo))
+				foreach(RaycastHit hitInfo in hits.OrderBy (l => l.distance))
                 {
 					if (!currentActor)
 					{
@@ -154,20 +172,28 @@ public class GridBehavior : MonoBehaviour
 								UnitIdleAnimationBehavior[] idles = currentActor.GetComponentsInChildren<UnitIdleAnimationBehavior>();
 								foreach(UnitIdleAnimationBehavior idle in idles)
 									idle.Active = true;
+
+								break;
 							}
 						}
 					}
 					else if (hitInfo.transform.GetComponent<MovePointBehavior>() && hitInfo.transform.GetComponent<MovePointBehavior>().renderer.isVisible)
                     {
                         targetNode = hitInfo.transform.GetComponent<MovePointBehavior>();
+
+						break;
                     }
                     else if (hitInfo.transform.GetComponent<ActorBehavior>())
                     {
 						if (hitInfo.transform.GetComponent<ActorBehavior>().theSide != currentActor.GetComponent<ActorBehavior>().theSide)
+						{
 							targetActor = hitInfo.transform.gameObject;
+							break;
+						}
 						else if (hitInfo.transform.GetComponent<ActorBehavior>() == currentActor.GetComponent<ActorBehavior>())
 						{
 							disableCurrentActor();
+							break;
 						}
                     }
                 }

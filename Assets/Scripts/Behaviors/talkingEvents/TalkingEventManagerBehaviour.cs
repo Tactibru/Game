@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// 
 /// Alex Reiss
 /// </summary>
-
+[AddComponentMenu("Tactibru/Dialog/Talking Event Manager")]
 public class TalkingEventManagerBehaviour : MonoBehaviour 
 {
     /// <summary>

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Tactibru/Movement/Grid Outline")]
 public class GridOutLineBehaviour : MonoBehaviour
 {
 
