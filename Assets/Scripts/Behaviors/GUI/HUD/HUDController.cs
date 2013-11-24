@@ -11,6 +11,7 @@ public class HUDController : ButtonManagerBehavior
 	public TextMesh turnCount;
 	[System.NonSerialized]
 	public TextMesh whoseTurn;
+
 	/// <summary>
 	/// Start this instance.
 	/// </summary>

@@ -37,7 +37,7 @@ public class AIControllerBehavior : MonoBehaviour
 	/// <summary>
 	/// Stores the camera object so that tracking objects can be set.
 	/// </summary>
-	private CameraBehavior camera = null;
+	new private CameraBehavior camera = null;
 
 	/// <summary>
 	/// Captures an instance of the game controller behavior from the game object.

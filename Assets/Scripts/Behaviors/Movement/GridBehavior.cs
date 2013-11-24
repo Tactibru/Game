@@ -5,6 +5,7 @@ using System.Linq;
 
 [System.Serializable]
 [AddComponentMenu("Tactibru/Movement/Grid")]
+[RequireComponent(typeof(GameControllerBehaviour))]
 public class GridBehavior : MonoBehaviour 
 {
     public static bool inCombat = false;
@@ -12,10 +13,6 @@ public class GridBehavior : MonoBehaviour
     public GameControllerBehaviour gameController;
     public List<MovePointBehavior> ignoreList;
 
-    //public MovePointBehavior[] theMap;
-    //public FenceBehavour[] theVerticalFence;
-    //public FenceBehavour[] theHorizontalFence;
-	
 	public MovePointBehavior targetNode; 
 	public GameObject currentActor;
     public GameObject targetActor;
@@ -41,17 +38,11 @@ public class GridBehavior : MonoBehaviour
     /// 
     /// Alex Reiss
     /// </summary>
-
     void Start()
     {
         int currentIndex = 0;
        
-        gameController = GameObject.FindGameObjectWithTag("Grid").GetComponent<GameControllerBehaviour>();
-        //Debug.Log(theMapLength.ToString());
-        //Debug.Log(theMapWidth.ToString());
-        //Debug.Log(theVerticalFence.Length.ToString());
-        //Debug.Log(theHorizontalFence.Length.ToString());
-        //Debug.Log(theMap.Length.ToString());
+        gameController = GetComponent<GameControllerBehaviour>();
 
         for (int index = 0; index < gameController.enemyTeam.Count; index++)
             ignoreList.Add(gameController.enemyTeam[index].currentMovePoint);
@@ -66,15 +57,11 @@ public class GridBehavior : MonoBehaviour
             {
 
                 if (theMap[width + (length * theMapWidth)])
-                {
                     theMap[width + (length * theMapWidth)].index = currentIndex;
-                }
 
 
                 if (length < theMapLength - 1)
                 {
-                    //Debug.Log((width + (length * theMapWidth)).ToString());
-                    
                     if (isFenced)
                     {
                         if (theMap[width + (length * theMapWidth)] && theMap[width + ((length + 1) * theMapWidth)] && theVerticalFence[width + (length * theMapWidth)])
@@ -97,10 +84,8 @@ public class GridBehavior : MonoBehaviour
                 {
                     if (isFenced)
                     {
-                        //Debug.Log("Hi 1");
                         if (theMap[width + (length * theMapWidth)] && theMap[width + 1 + (length * theMapWidth)] && theHorizontalFence[width + (length * theMapWidth)])
                         {
-                            //Debug.Log("Hi 2");
                             theMap[width + (length * theMapWidth)].neighborList[1] = theMap[width + 1 + (length * theMapWidth)];
                             theMap[width + 1 + (length * theMapWidth)].neighborList[3] = theMap[width + (length * theMapWidth)];
                         }
@@ -202,31 +187,16 @@ public class GridBehavior : MonoBehaviour
         
 		//After choosing a unit, show movepoints they can go to
         if (currentActor && (!targetNode && !targetActor))
-        {
 			currentActor.GetComponent<ActorBehavior>().currentMovePoint.HighlightValidNodes(currentActor.GetComponent<ActorBehavior>(), this); 
-        }
 
 		if(currentActor && (targetNode || targetActor))
 		{
-            //if you can't see the point, you can't move to it. 
-            //if(targetNode && !targetNode.renderer.enabled)
-            //{
-                /*if(targetNode && !targetNode.renderer.enabled)
-                {
-                    ableToMoveHere = false; 
-                    currentActor = null; 
-                    targetNode = null; 
-                    targetActor = null; 
-                }*/
-                foreach(MovePointBehavior movePoint in theMap)
-                {
-                    //change visiblilty of nodes. 
-                    if(movePoint && movePoint.renderer.enabled == true)
-                        movePoint.renderer.enabled = false; 
-                }
-
-            //}
-
+	        foreach(MovePointBehavior movePoint in theMap)
+	        {
+	            //change visiblilty of nodes. 
+	            if(movePoint && movePoint.renderer.enabled == true)
+	                movePoint.renderer.enabled = false; 
+	        }
 
 			ActorBehavior actor = currentActor.GetComponent<ActorBehavior>();
             if (!preCombat && ableToMoveHere == true && !actor.currentlyMoving)
@@ -363,12 +333,6 @@ public class GridBehavior : MonoBehaviour
         float yPositionOffset = -(theMapLength / 2);
         float currentXPosition = 0.0f;
         float currentYPosition = 0.0f;
-
-        //Debug.Log(theMapLength.ToString());
-        //Debug.Log(theMapWidth.ToString());
-        //Debug.Log(theVerticalFence.Length.ToString());
-        //Debug.Log(theHorizontalFence.Length.ToString());
-        //Debug.Log(theMap.Length.ToString());
 
         for (int x = 0; x < theMapLength; x++)
         {
