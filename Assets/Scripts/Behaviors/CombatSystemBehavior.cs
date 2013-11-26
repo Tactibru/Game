@@ -21,7 +21,6 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// Internally tracks the camera used to display the combat window.
 	/// </summary>
 	public Camera combatCamera;
-    public static bool inCombat;
 
 	/// <summary>
 	/// Marks which row in the combat sequence is the next active attacker.
@@ -152,6 +151,11 @@ public class CombatSystemBehavior : MonoBehaviour
 						{
 							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
 							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+                            if (unit.CurrentHealth <= 0)
+                            {
+                                HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.offensiveHonor++;
+                            }
 						}
 
 						removeDeadUnits();
@@ -171,6 +175,12 @@ public class CombatSystemBehavior : MonoBehaviour
 						{
 							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
 							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+
+                            if (unit.CurrentHealth <= 0)
+                            {
+                                HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.defensiveHonor++;
+                            }
 						}
 
 						removeDeadUnits();
@@ -190,6 +200,11 @@ public class CombatSystemBehavior : MonoBehaviour
 						{
 							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
 							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+                            if (unit.CurrentHealth <= 0)
+                            {
+                                HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.offensiveHonor++;
+                            }
 						}
 
 						removeDeadUnits();
@@ -209,6 +224,11 @@ public class CombatSystemBehavior : MonoBehaviour
 						{
 							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
 							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+                            if (unit.CurrentHealth <= 0)
+                            {
+                                HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.defensiveHonor++;
+                            }
 						}
 
 						removeDeadUnits();
@@ -262,7 +282,6 @@ public class CombatSystemBehavior : MonoBehaviour
 		this.grid = grid;
 
 		GridBehavior.inCombat = true;
-        Debug.Log("Audio in combat");
         AudioBehavior.inCombat = true;
 
 		this.offensiveSquad = offensiveSquad;
@@ -379,6 +398,7 @@ public class CombatSystemBehavior : MonoBehaviour
 		this.defensiveSquad = null;
 
 		GridBehavior.preCombat = false;
+        HonorSystemBehavior.inCombat = true;
 		GridBehavior.inCombat = false;
         AudioBehavior.inCombat = false;
 	}
