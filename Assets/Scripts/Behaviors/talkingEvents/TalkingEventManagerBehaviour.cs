@@ -25,6 +25,28 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
         NUM_PANELS
     }
 
+	public enum ConversationName
+	{
+		None,
+		RicePatty,
+		RicePattyQuip1,
+		RicePattyQuip2,
+		RicePattyVictory,
+		RicePattyDefeat,
+		SeaportShowdown,
+		SeaportShowdownQuip1,
+		SeaportShowdownQuip2,
+		SeaportShowdownQuip3,
+		SeaportShowdownWictory,
+		SeaportShowdownDefeat,
+		OpenPlains,
+		OpenPlainsQuip1,
+		OpenPlainsQuip2,
+		OpenPlainsVictory,
+		OpenPlainsDefeat,
+		Example,
+	}
+
     public TalkerBehaviour prehabTalker;
     public TypeWriterBoxBehaviour prehabTextBox;
     
@@ -71,7 +93,8 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
     /// This is the data structure that holds all talking events, of the current level.
     /// </summary>
 
-    public List<TalkingEventChain> talkingEventChain = new List<TalkingEventChain>();
+//    public List<TalkingEventChain> talkingEventChain = new List<TalkingEventChain>();
+	public Dictionary<ConversationName, TalkingEventChain> talkingEventChainDictionary = new Dictionary<ConversationName, TalkingEventChain> ();
 
     /// <summary>
     /// The currently running talking event chain.
@@ -85,6 +108,8 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
     
     public Material testActorLeft;
     public Material testActorRight;
+
+	public ConversationName startingConversationID;
 
 	/// <summary>
 	/// This is to tell the textboxes where they are.
@@ -134,78 +159,162 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
         talkers[3].transform.localPosition = new Vector3(((xOfRatio / 2) - xPositionOfTalker), 1.0f, 1.0f);
         talkers[3].transform.localScale = new Vector3(xScaleOfTalker, talkers[3].transform.localScale.y, talkers[3].transform.localScale.z);
 
-        //Everything below this point is only for testing purposes.
-
+        
+		#region Level 1
         TalkingEventChain newTalkingEventChain = new TalkingEventChain();
 
-        TalkingEvent newTalkingEvent0 = new TalkingEvent();
-        newTalkingEvent0.name = "Hoshi Hoshi Hoshi";
-        newTalkingEvent0.normalText = "Hoshi is willing to make deal with the most dishonorable Hiro. Leave now and Hoshi Hoshi Hoshi shall forgive you transgress..transg...transg... Hoshi will let you live! Hoshi believes this is the kindest deal Hoshi could ever possibly offer.";
-        //newTalkingEvent0.annoyText = "Yup It works.";
-        newTalkingEvent0.selectedPanel = Panels.LowerLeft;
-        newTalkingEvent0.theTalker = testActorLeft;
-        newTalkingEventChain.talkingEvents.Add(newTalkingEvent0);
+		newTalkingEventChain.talkingEvents.Add(new TalkingEvent("First-san",
+		                                                        "Father, that crazy homeless man is out in the field shouting again.",
+		                                                        Panels.LowerLeft,
+		                                                        testActorLeft));
 
-        TalkingEvent newTalkingEvent1 = new TalkingEvent();
-        newTalkingEvent1.name = "Hiro";
-        newTalkingEvent1.normalText = "No I do believe I am going to deal with you now and take what few things you have left.";
-        //newTalkingEvent1.annoyText = "Up Top.";
-        newTalkingEvent1.selectedPanel = Panels.LowerRight;
-        newTalkingEvent1.theTalker = testActorRight;
-        newTalkingEventChain.talkingEvents.Add(newTalkingEvent1);
+		newTalkingEventChain.talkingEvents.Add(new TalkingEvent("Yoshiro",
+		                                                        "Keep him off of my beautiful lawn!",
+		                                                        Panels.LowerLeft,
+		                                                        testActorLeft));
 
-        TalkingEvent newTalkingEvent2 = new TalkingEvent();
-        newTalkingEvent2.name = "Hoshi Hoshi Hoshi";
-        newTalkingEvent2.normalText = "Nonsence, you have taken nothing from the great Hoshi Hoshi Hoshi, son of Hoshi Yoshi Toshi, descenda-";
-        newTalkingEvent2.selectedPanel = Panels.LowerLeft;
-        newTalkingEvent2.theTalker = testActorLeft;
-        newTalkingEventChain.talkingEvents.Add(newTalkingEvent2);
+		newTalkingEventChain.talkingEvents.Add(new TalkingEvent("Second-san",
+		                                                        "Yes, father. I will shoo him away.",
+		                                                        Panels.LowerLeft,
+		                                                        testActorLeft));
 
-        TalkingEvent newTalkingEvent3 = new TalkingEvent();
-        newTalkingEvent3.name = "Hiro";
-        newTalkingEvent3.normalText = "I have taken 2/3rds of your land.";
-        newTalkingEvent3.selectedPanel = Panels.LowerRight;
-        newTalkingEvent3.theTalker = testActorRight;
-        newTalkingEventChain.talkingEvents.Add(newTalkingEvent3);
+		newTalkingEventChain.talkingEvents.Add(new TalkingEvent("Hiro",
+		                                                        "Mighty Daimyo, I challenge you for rule over these great lands!",
+		                                                        Panels.LowerRight,
+		                                                        testActorRight));
 
-        TalkingEvent newTalkingEvent4 = new TalkingEvent();
-        newTalkingEvent4.name = "Hoshi Hoshi Hoshi";
-        newTalkingEvent4.normalText = "................";
-        newTalkingEvent4.selectedPanel = Panels.LowerLeft;
-        newTalkingEvent4.theTalker = testActorLeft;
-        newTalkingEventChain.talkingEvents.Add(newTalkingEvent4);
+		newTalkingEventChain.talkingEvents.Add(new TalkingEvent("Yoshiro",
+		                                                        "You stay off-a my lawn, crazy man!",
+		                                                        Panels.LowerLeft,
+		                                                        testActorLeft));
 
-        TalkingEvent newTalkingEvent5 = new TalkingEvent();
-        newTalkingEvent5.name = "Hiro";
-        newTalkingEvent5.normalText = "...............";
-        newTalkingEvent5.selectedPanel = Panels.LowerRight;
-        newTalkingEvent5.theTalker = testActorRight;
-        newTalkingEventChain.talkingEvents.Add(newTalkingEvent5);
+		newTalkingEventChain.talkingEvents.Add(new TalkingEvent("Hiro",
+		                                                        "Ha! So you accept?! The tale of our great battle shall be told for eternity!",
+		                                                        Panels.LowerRight,
+		                                                        testActorRight));
 
-        TalkingEvent newTalkingEvent6 = new TalkingEvent();
-        newTalkingEvent6.name = "Hoshi Hoshi Hoshi";
-        newTalkingEvent6.normalText = "You're making that up.";
-        newTalkingEvent6.selectedPanel = Panels.LowerLeft;
-        newTalkingEvent6.theTalker = testActorLeft;
-        newTalkingEventChain.talkingEvents.Add(newTalkingEvent6);
+		#endregion
 
-        TalkingEvent newTalkingEvent7 = new TalkingEvent();
-        newTalkingEvent7.name = "Hiro";
-        newTalkingEvent7.normalText = "Wait I'm wha-";
-        newTalkingEvent7.selectedPanel = Panels.LowerRight;
-        newTalkingEvent7.theTalker = testActorRight;
-        newTalkingEventChain.talkingEvents.Add(newTalkingEvent7);
 
-        TalkingEvent newTalkingEvent8 = new TalkingEvent();
-        newTalkingEvent8.name = "Hoshi Hoshi Hoshi";
-        newTalkingEvent8.normalText = "Honorable lackeys, defend Hoshi Hoshi Hoshi with your lives!";
-        newTalkingEvent8.selectedPanel = Panels.LowerLeft;
-        newTalkingEvent8.theTalker = testActorLeft;
-        newTalkingEventChain.talkingEvents.Add(newTalkingEvent8);
+		//Save the conversation, and give it a name
+		talkingEventChainDictionary[ConversationName.RicePatty] = newTalkingEventChain; 
+      
 
-        talkingEventChain.Add(newTalkingEventChain);
 
-        StarTalkingEventChain(0);
+		newTalkingEventChain = new TalkingEventChain();
+		
+		newTalkingEventChain.talkingEvents.Add(new TalkingEvent("Karl-san",
+		                                                        "This is coded poorly, sensei.",
+		                                                        Panels.LowerLeft,
+		                                                        testActorLeft));
+		
+		newTalkingEventChain.talkingEvents.Add(new TalkingEvent("Alex",
+		                                                        "I know Karl, I know..",
+		                                                        Panels.LowerLeft,
+		                                                        testActorLeft));
+
+
+		talkingEventChainDictionary[ConversationName.Example] = newTalkingEventChain;
+
+		newTalkingEventChain = new TalkingEventChain ();
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Hiro",
+		                                                          "You there! I have conquered as far as the eye can see-",
+		                                                        Panels.LowerLeft,
+		                                                        testActorLeft));
+
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Peasent",
+		                                                          "Psst, milord. You are literally looking at something that you haven't conquered.",
+		                                                          Panels.LowerLeft,
+		                                                          testActorLeft));
+
+
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Hiro",
+		                                                          "Silence, lowly peasant!",
+		                                                          Panels.LowerLeft,
+		                                                          testActorLeft));
+
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Hiro",
+		                                                          "As I was saying, I have conquered-",
+		                                                          Panels.LowerLeft,
+		                                                          testActorLeft));
+
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Bukodan",
+		                                                          "Ha! So you are the mighty conqueror. Now you stand before a REAL samurai Daiymo.",
+		                                                          Panels.LowerRight,
+		                                                          testActorRight));
+
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Peasent",
+		                                                          "Hey, Bukodan! It's me, Benji; we worked together at the stables.",
+		                                                          Panels.LowerLeft,
+		                                                          testActorLeft));
+
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Bukodan",
+		                                                          "Silence, lowly peasant!",
+		                                                          Panels.LowerRight,
+		                                                          testActorRight));
+
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Peasent",
+		                                                          "Alright, this is just getting rude.",
+		                                                          Panels.LowerLeft,
+		                                                          testActorLeft));
+
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Hiro",
+		                                                          "Peasant, STOP TALKING! Now, I was trying to say that I will be needing your ships, Bukodan. It is an honor to do battle with a real samurai Daiymo that is totally legit, totally. Prepare to die.",
+		                                                          Panels.LowerLeft,
+		                                                          testActorLeft));
+
+		talkingEventChainDictionary[ConversationName.SeaportShowdown] = newTalkingEventChain;
+
+		newTalkingEventChain = new TalkingEventChain();
+
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Bukodan",
+		                                                          "My archers shall rain sheets of arrows down upon you like the great monsoons!",
+		                                                          Panels.LowerLeft,
+		                                                          testActorLeft));
+
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Archers",
+		                                                          "*Misfires* Mulligan, I call a mulligan.",
+		                                                          Panels.LowerRight,
+		                                                          testActorRight));
+
+
+
+		talkingEventChainDictionary[ConversationName.SeaportShowdownQuip1] = newTalkingEventChain;
+
+
+		newTalkingEventChain = new TalkingEventChain();
+
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Bukodan",
+		                                                          "How does it feel to face a real samurai on the field of battle?",
+		                                                          Panels.LowerRight,
+		                                                          testActorRight));
+		
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Hiro",
+		                                                          " You are as much a samurai as your mother's sushi is, fresh",
+		                                                          Panels.LowerLeft,
+		                                                          testActorLeft));
+		
+		
+		talkingEventChainDictionary[ConversationName.SeaportShowdownQuip2] = newTalkingEventChain;
+
+		newTalkingEventChain = new TalkingEventChain();
+
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Bukodan",
+		                                                          "My archers shall rain sheets of arrows down upon you like the great monsoons!",
+		                                                          Panels.LowerLeft,
+		                                                          testActorLeft));
+		
+		newTalkingEventChain.talkingEvents.Add (new TalkingEvent ("Archers",
+		                                                          "*Misfires* Mulligan, I call a mulligan.",
+		                                                          Panels.LowerRight,
+		                                                          testActorRight));
+
+		
+		talkingEventChainDictionary[ConversationName.SeaportShowdownQuip3] = newTalkingEventChain;
+////
+
+//		if (startingConversationID != ConversationName.None)
+//			StartTalkingEventChain(startingConversationID); //An example of how you call a conversation. Call from anywhere you want to start a conversation.
 
         //float xOfRatio = 6 * (Screen.width / Screen.height);
         //float xPositionOfTalker = xOfRatio * .10f;
@@ -214,7 +323,34 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
         Debug.Log(Screen.height.ToString());
         //Debug.Log(xPositionOfTalker);
     }
+
+	/// <summary>
+	/// This starts the selected talking event. It also copies the talking events into the currently playing events and resets the main control vairable.
+	/// 
+	/// Alex Reiss
+	/// </summary>
+	/// <param name="numberOfEvent">This is the index of the selected event.</param>
 	
+	public void StartTalkingEventChain(ConversationName conversationID)
+	{
+		if (conversationID == ConversationName.None)
+			return;
+		currentTalkingEventChain.Clear();
+		currentTalkingEvent = 0;
+		
+		//I have both the shallow copy and deep copy, because I am not sure which one I need.
+		currentTalkingEventChain = talkingEventChainDictionary [conversationID].talkingEvents;
+		
+//		for (int index = 0; index < talkingEventChain[numberOfEvent].talkingEvents.Count; index++)
+//		{
+//			currentTalkingEventChain[index].name = talkingEventChain[numberOfEvent].talkingEvents[index].name;
+//			currentTalkingEventChain[index].annoyText = talkingEventChain[numberOfEvent].talkingEvents[index].annoyText;
+//			currentTalkingEventChain[index].normalText = talkingEventChain[numberOfEvent].talkingEvents[index].normalText;
+//			currentTalkingEventChain[index].selectedPanel = talkingEventChain[numberOfEvent].talkingEvents[index].selectedPanel;
+//			currentTalkingEventChain[index].theTalker = talkingEventChain[numberOfEvent].talkingEvents[index].theTalker;
+//		}
+	}
+
 	/// <summary>
 	/// This is for test at the moment, acting as the test trigger.
     /// 
@@ -300,31 +436,6 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
             }
         }
 	}
-
-    /// <summary>
-    /// This starts the selected talking event. It also copies the talking events into the currently playing events and resets the main control vairable.
-    /// 
-    /// Alex Reiss
-    /// </summary>
-    /// <param name="numberOfEvent">This is the index of the selected event.</param>
-
-    public void StarTalkingEventChain(int numberOfEvent)
-    {
-        currentTalkingEventChain.Clear();
-        currentTalkingEvent = 0;
-
-        //I have both the shallow copy and deep copy, because I am not sure which one I need.
-        currentTalkingEventChain = talkingEventChain[numberOfEvent].talkingEvents;
-
-        for (int index = 0; index < talkingEventChain[numberOfEvent].talkingEvents.Count; index++)
-        {
-            currentTalkingEventChain[index].name = talkingEventChain[numberOfEvent].talkingEvents[index].name;
-            currentTalkingEventChain[index].annoyText = talkingEventChain[numberOfEvent].talkingEvents[index].annoyText;
-            currentTalkingEventChain[index].normalText = talkingEventChain[numberOfEvent].talkingEvents[index].normalText;
-            currentTalkingEventChain[index].selectedPanel = talkingEventChain[numberOfEvent].talkingEvents[index].selectedPanel;
-            currentTalkingEventChain[index].theTalker = talkingEventChain[numberOfEvent].talkingEvents[index].theTalker;
-        }
-    }
 }
 
 /// <summary>
@@ -347,4 +458,13 @@ public class TalkingEvent
     public string annoyText= "";
     public TalkingEventManagerBehaviour.Panels selectedPanel;
     public Material theTalker;
+
+	public TalkingEvent(){}
+	public TalkingEvent(string name, string normalText, TalkingEventManagerBehaviour.Panels panel, Material talker)
+	{
+		this.name = name;
+		this.normalText = normalText;
+		this.selectedPanel = panel;
+		this.theTalker = talker;
+	}
 }

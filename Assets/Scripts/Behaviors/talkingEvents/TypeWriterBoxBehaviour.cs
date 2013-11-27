@@ -47,15 +47,15 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
     /// <summary>
     /// This is neccessary to tell the talking manager when the event is going and it ends.
     /// </summary>
-
+	[System.NonSerialized]
     public TalkingEventManagerBehaviour talkingManager;
 
     /// <summary>
     /// The GUI style, for the text.
     /// </summary>
 
-    private GUIStyle textStyle;
-    private GUIStyle nameStyle;
+    public GUIStyle textStyle;
+    public GUIStyle nameStyle;
 
     /// <summary>
     ///  This can be set by the game designer. It is the time between letter.
@@ -80,14 +80,6 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
     /// </summary>
 
     private bool readyToContinue = false;
-
-    /// <summary>
-    /// Name font, is for charactor names.
-    /// Text font, is for the text in the text box.
-    /// </summary>
-
-    public Font theNameFont;
-    public Font theTextFont;
 
     /// <summary>
     /// This is to tell the typewriter when to go to the next line.
@@ -130,16 +122,6 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
     {
         talkingManager = Camera.main.transform.GetComponent<TalkingEventManagerBehaviour>();
         transform.renderer.enabled = false;
-
-        textStyle = new GUIStyle();
-        textStyle.fontSize = 26;
-        textStyle.normal.textColor = Color.black;
-        textStyle.font = theTextFont;
-
-        nameStyle = new GUIStyle();
-        nameStyle.fontSize = 40;
-        nameStyle.normal.textColor = Color.black;
-        nameStyle.font = theNameFont;
 	}
 	
 	/// <summary>
