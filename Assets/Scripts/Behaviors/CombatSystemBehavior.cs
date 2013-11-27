@@ -154,6 +154,7 @@ public class CombatSystemBehavior : MonoBehaviour
                             if (unit.CurrentHealth <= 0)
                             {
                                 HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.honorPenalty = unit.HonorMod;
                                 HonorSystemBehavior.offensiveHonor++;
                             }
 						}
@@ -179,6 +180,7 @@ public class CombatSystemBehavior : MonoBehaviour
                             if (unit.CurrentHealth <= 0)
                             {
                                 HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.honorPenalty = unit.HonorMod;
                                 HonorSystemBehavior.defensiveHonor++;
                             }
 						}
@@ -203,6 +205,7 @@ public class CombatSystemBehavior : MonoBehaviour
                             if (unit.CurrentHealth <= 0)
                             {
                                 HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.honorPenalty = unit.HonorMod;
                                 HonorSystemBehavior.offensiveHonor++;
                             }
 						}
@@ -227,6 +230,7 @@ public class CombatSystemBehavior : MonoBehaviour
                             if (unit.CurrentHealth <= 0)
                             {
                                 HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.honorPenalty = unit.HonorMod;
                                 HonorSystemBehavior.defensiveHonor++;
                             }
 						}
@@ -340,8 +344,8 @@ public class CombatSystemBehavior : MonoBehaviour
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
 			{
-				UnitAssetBehavior prefab = UnitAssetRepository.Instance.getAssetGroupByName(node.Name).getPrefabByName(node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name);
-				
+				UnitAssetBehavior prefab = (UnitAssetRepository.Instance.getAssetGroupByName(node.Name).getPrefabByName(node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name));
+
 				if(prefab == null)
 				{
 					Debug.LogWarning(string.Format ("Could not find prefab for 'Prefabs/UnitParts/{0}/001'", node.Name));

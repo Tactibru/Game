@@ -168,7 +168,8 @@ public class GameControllerBehaviour : MonoBehaviour
 
 //			if (numberOfTurns % 3 == 0 && SceneConversationBehavior.instance.battleQuips.Length > numberOfTurns / 3 - 1)
 //				Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.battleQuips[numberOfTurns / 3 - 1]);
-			Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.battleQuips[numberOfTurns - 1]);
+			if (SceneConversationBehavior.instance.battleQuips.Length >= numberOfTurns)
+				Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.battleQuips[numberOfTurns - 1]);
         }
     }
 }
