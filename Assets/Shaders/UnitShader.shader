@@ -5,8 +5,8 @@
 		_BaseColor("Base Color", Color) = (0, 1, 0, 1)
 		//_ShadeColor("Shade Color", Color) = (0, 0, 1, 1)
 		
-		_TargetHighlightColor("Target Highlight Color", Color) = (0, 1, 0, 1)
-		_TargetBaseColor("Target Base Color", Color) = (0, 0, 1, 1)
+		_TargetHighlightColor("Target Highlight Color", Color) = (1, 0, 0, 1)
+		_TargetBaseColor("Target Base Color", Color) = (1, 0, 0, 1)
 		_TargetShadeColor("Target Shade Color", Color) = (1, 0, 0, 1)
 	}
 	
@@ -22,12 +22,13 @@
 		ZTest Less
 		ColorMask RGBA
 		Blend SrcAlpha OneMinusSrcAlpha
+		Lighting Off
 		
 		Pass {
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-				
+			
 			#include "UnityCG.cginc"
 			
 			sampler2D _MainTex;
@@ -64,9 +65,9 @@
 				if(float3_equal(fragColor.rgb, _TargetBaseColor.rgb))
 					fragColor.rgb = _BaseColor.rgb;
 				else if(float3_equal(fragColor.rgb, _TargetShadeColor.rgb))
-					fragColor.rgb = (_BaseColor.rgb - float3(0.05f, 0.05f, 0.05f));
+					fragColor.rgb = (_BaseColor.rgb - float3(0.25f, 0.25f, 0.25f));
 				else if(float3_equal(fragColor.rgb, _TargetHighlightColor.rgb))
-					fragColor.rgb = (_BaseColor.rgb + float3(0.05f, 0.05f, 0.05f));
+					fragColor.rgb = (_BaseColor.rgb + float3(0.25f, 0.25f, 0.25f));
 				
 				return fragColor;
 			}
