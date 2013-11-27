@@ -61,7 +61,9 @@ public class GameControllerBehaviour : MonoBehaviour
 		controller.whoseTurn.text = "Players Turn";
 		controller.turnCount.text = "Turn " + numberOfTurns.ToString();
 
-		Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.introConversation);
+		TalkingEventManagerBehaviour talkingManager = Camera.main.GetComponent<TalkingEventManagerBehaviour> ();
+		if(talkingManager != null)
+			talkingManager.StartTalkingEventChain(SceneConversationBehavior.instance.introConversation);
 	}
 
 	/// <summary>
