@@ -60,6 +60,8 @@ public class GameControllerBehaviour : MonoBehaviour
 		controller = Camera.main.GetComponent<HUDController>();
 		controller.whoseTurn.text = "Players Turn";
 		controller.turnCount.text = "Turn " + numberOfTurns.ToString();
+
+		Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.introConversation);
 	}
 
 	/// <summary>
@@ -123,11 +125,13 @@ public class GameControllerBehaviour : MonoBehaviour
     {
         if (enemyTeamTotal == 0)
         {
+			Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.victoryConversation);
             Application.LoadLevel("PlayerWins");
         }
 
         if (playerTeamTotal == 0)
         {
+			Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.defeatConversation);
             Application.LoadLevel("PlayerLosses");
         }
     }
@@ -161,6 +165,11 @@ public class GameControllerBehaviour : MonoBehaviour
 			controller.whoseTurn.text = "Player Turn";
 			numberOfTurns++;
 			controller.turnCount.text = "Turn " + numberOfTurns.ToString();
+
+//			if (numberOfTurns % 3 == 0 && SceneConversationBehavior.instance.battleQuips.Length > numberOfTurns / 3 - 1)
+//				Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.battleQuips[numberOfTurns / 3 - 1]);
+			if (SceneConversationBehavior.instance.battleQuips.Length >= numberOfTurns)
+				Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.battleQuips[numberOfTurns - 1]);
         }
     }
 }
