@@ -341,6 +341,7 @@ public class CombatSystemBehavior : MonoBehaviour
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
 			{
 				UnitAssetBehavior prefab = (UnitAssetRepository.Instance.getAssetGroupByName(node.Name).getPrefabByName(node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name));
+				prefab.renderer.material = (Material)Instantiate (prefab.renderer.material);
 
 				if(prefab == null)
 				{

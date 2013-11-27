@@ -52,7 +52,7 @@ public class NodeSkeletonBehavior : MonoBehaviour
 		subObject.transform.parent = transform;
 		subObject.transform.localPosition = node.Offset;
 		subObject.transform.localRotation = Quaternion.identity;
-		
+
 		return true;
 	}
 }

@@ -65,9 +65,9 @@
 				if(float3_equal(fragColor.rgb, _TargetBaseColor.rgb))
 					fragColor.rgb = _BaseColor.rgb;
 				else if(float3_equal(fragColor.rgb, _TargetShadeColor.rgb))
-					fragColor.rgb = (_BaseColor.rgb - float3(0.1f, 0.1f, 0.1f));
+					fragColor.rgb = (_BaseColor.rgb - float3(0.25f, 0.25f, 0.25f));
 				else if(float3_equal(fragColor.rgb, _TargetHighlightColor.rgb))
-					fragColor.rgb = (_BaseColor.rgb + float3(0.1f, 0.1f, 0.1f));
+					fragColor.rgb = (_BaseColor.rgb + float3(0.25f, 0.25f, 0.25f));
 				
 				return fragColor;
 			}
