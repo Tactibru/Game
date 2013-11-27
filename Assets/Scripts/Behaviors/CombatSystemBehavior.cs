@@ -154,6 +154,7 @@ public class CombatSystemBehavior : MonoBehaviour
                             if (unit.CurrentHealth <= 0)
                             {
                                 HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.honorPenalty = unit.HonorMod;
                                 HonorSystemBehavior.offensiveHonor++;
                             }
 						}
@@ -179,6 +180,7 @@ public class CombatSystemBehavior : MonoBehaviour
                             if (unit.CurrentHealth <= 0)
                             {
                                 HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.honorPenalty = unit.HonorMod;
                                 HonorSystemBehavior.defensiveHonor++;
                             }
 						}
@@ -203,6 +205,7 @@ public class CombatSystemBehavior : MonoBehaviour
                             if (unit.CurrentHealth <= 0)
                             {
                                 HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.honorPenalty = unit.HonorMod;
                                 HonorSystemBehavior.offensiveHonor++;
                             }
 						}
@@ -227,6 +230,7 @@ public class CombatSystemBehavior : MonoBehaviour
                             if (unit.CurrentHealth <= 0)
                             {
                                 HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.honorPenalty = unit.HonorMod;
                                 HonorSystemBehavior.defensiveHonor++;
                             }
 						}
