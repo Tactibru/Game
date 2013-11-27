@@ -205,7 +205,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
 
         talkingEventChain.Add(newTalkingEventChain);
 
-        StarTalkingEventChain(0);
+        StartTalkingEventChain(0);
 
         //float xOfRatio = 6 * (Screen.width / Screen.height);
         //float xPositionOfTalker = xOfRatio * .10f;
@@ -308,7 +308,7 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
     /// </summary>
     /// <param name="numberOfEvent">This is the index of the selected event.</param>
 
-    public void StarTalkingEventChain(int numberOfEvent)
+    public void StartTalkingEventChain(int numberOfEvent)
     {
         currentTalkingEventChain.Clear();
         currentTalkingEvent = 0;

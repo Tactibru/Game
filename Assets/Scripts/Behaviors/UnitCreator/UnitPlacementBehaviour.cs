@@ -25,6 +25,17 @@ public class UnitPlacementBehaviour : MonoBehaviour
 	
 	}
 
+    public bool LookForMember(MemberBehaviour theMemberToLookFor)
+    {
+        bool isSet = false;
+        int coveredByMember = 0;
+
+        //for
+        
+
+        return isSet;
+    }
+
     public void ShowUnitHolder()
     {
         for (int index = 0; index < thePositions.Length; index++)
