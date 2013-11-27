@@ -13,6 +13,7 @@ public class PositionBehaviour : MonoBehaviour
     /// 0 is unoccupied, if anything else, the n it is the unique ID of the occupant.
     /// </summary>
     public int currentOccupant = 0;
+    public int rank = 0;
 	
     /// <summary>
     /// This sets the renderer off, since, at the start of the scene a unit, will not be currently in the editing process.
@@ -24,6 +25,9 @@ public class PositionBehaviour : MonoBehaviour
     {
         renderer.enabled = false;
 	}
-	
 
+    public void SetMemberPosition(MemberBehaviour memberToBeAdded)
+    {
+ 
+    }
 }
