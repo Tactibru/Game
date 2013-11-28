@@ -7,11 +7,17 @@ public class SaveTestBehavior : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		// Test Saving
-		SaveData saveData = SaveEngine.Load ("testSave01");
+		// Saving Data
+		SaveData saveData = new SaveData();
+		saveData.testString = testString;
+
+		SaveEngine.Save ("testSave01", saveData);
+
+		// Loading Data
+		/*SaveData saveData = SaveEngine.Load ("testSave01");
 
 		testString = saveData.testString;
 
-		Debug.Log (testString);
+		Debug.Log (testString);*/
 	}
 }
