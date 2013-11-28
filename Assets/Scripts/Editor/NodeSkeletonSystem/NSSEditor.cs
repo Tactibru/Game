@@ -2,10 +2,10 @@
 using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
-using Editor.Util;
+using Tactibru.Editor.Util;
 using NodeSkeletonSystem;
 
-namespace Editor.NodeSkeletonSystem
+namespace Tactibru.Editor.NodeSkeletonSystem
 {
 	/// <summary>
 	/// Unity editor that allows for the modification of Node Skeleton Structure (NSS) files.

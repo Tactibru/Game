@@ -3,7 +3,7 @@ using System.Collections;
 using UEd = UnityEditor.Editor;
 using UnityEditor;
 
-namespace Editor
+namespace Tactibru.Editor
 {
 	public static class TactibruUtils
 	{

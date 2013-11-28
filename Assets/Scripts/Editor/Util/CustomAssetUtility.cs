@@ -2,7 +2,7 @@
 using UnityEditor;
 using System.IO;
 
-namespace Editor.Util
+namespace Tactibru.Editor.Util
 {
 	/// <summary>
 	/// Utility class related to implementing custom assets, such as the <see cref="NodeSkeletonSystem.NodeSkeletonStructure" />
