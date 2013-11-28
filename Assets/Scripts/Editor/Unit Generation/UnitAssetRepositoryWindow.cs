@@ -2,11 +2,11 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
-using Editor.Util;
+using Tactibru.Editor.Util;
 using NodeSkeletonSystem;
 using Units;
 
-namespace Editor.UnitGeneration
+namespace Tactibru.Editor.UnitGeneration
 {
 	/// <summary>
 	/// Provides utility methods for interacting with the unit asset repository.
