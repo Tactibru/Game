@@ -1357,9 +1357,9 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
 
         //float xOfRatio = 6 * (Screen.width / Screen.height);
         //float xPositionOfTalker = xOfRatio * .10f;
-        Debug.Log(xOfRatio.ToString());
-        Debug.Log(Screen.width.ToString());
-        Debug.Log(Screen.height.ToString());
+        //Debug.Log(xOfRatio.ToString());
+        //Debug.Log(Screen.width.ToString());
+        //Debug.Log(Screen.height.ToString());
         //Debug.Log(xPositionOfTalker);
     }
 
