@@ -159,7 +159,7 @@ public class AIControllerBehavior : MonoBehaviour
 		if (selectedActor.canMove)
 			return;
 
-		State = AIState.WaitingForCombat;
+		State = AIState.DetermineCombatTarget;
 	}
 
 	/// <summary>
