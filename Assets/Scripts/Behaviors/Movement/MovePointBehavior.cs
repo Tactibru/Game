@@ -115,7 +115,8 @@ public class MovePointBehavior : MonoBehaviour
 	/// </summary>
 	/// <param name="actor">Actor associated with this movement attempt.</param>
 	/// <param name="grid">Grid associated with the movement.</param>
-    public void HighlightValidNodes(ActorBehavior actor, GridBehavior grid)
+	/// <param name="range">Maximum distance (in grid squares) to highlight.</param>
+    public void HighlightValidNodes(ActorBehavior actor, GridBehavior grid, int range = -1)
     {
 		int depth = 0;
 
@@ -125,16 +126,21 @@ public class MovePointBehavior : MonoBehaviour
 			return;
 		}
 
-		int maxDistance = 0;
+		//int maxDistance = 0;
 		CombatSquadBehavior csb = actor.GetComponent<CombatSquadBehavior>();
 		if (csb == null)
 			Debug.LogWarning("Attempting to move a unit that does not have a squad associated!");
 
-		maxDistance = (csb == null ? 1 : csb.Squad.Speed);
+		bool skipIgnoreList = false;
+
+		if(range == -1)
+			range = (csb == null ? 1 : csb.Squad.Speed);
+		else
+			skipIgnoreList = true;
 
 		List<MovePointBehavior> moveGraph = new List<MovePointBehavior>();
 
-		actor.currentMovePoint.BuildGraph(maxDistance, depth, grid, ref moveGraph);
+		actor.currentMovePoint.BuildGraph(range, depth, grid, ref moveGraph, skipIgnoreList);
 		moveGraph.RemoveAt(0);
 
 		foreach (MovePointBehavior node in moveGraph)

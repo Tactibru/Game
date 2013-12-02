@@ -36,6 +36,11 @@ public class GridControlBehavior : MonoBehaviour
 		SelectingTarget,
 
 		/// <summary>
+		/// Player is waiting for the combat sequence to complete.
+		/// </summary>
+		AwaitingCombat,
+
+		/// <summary>
 		/// Awaiting the completion of a combat sequence.
 		/// </summary>
 		InCombat,
@@ -66,6 +71,17 @@ public class GridControlBehavior : MonoBehaviour
 	public GridControlState controlState = GridControlState.SelectingUnit;
 
 	/// <summary>
+	/// Accessor for the currently-selected squad.
+	/// </summary>
+	public ActorBehavior SelectedSquad
+	{
+		get
+		{
+			return selectedSquad;
+		}
+	}
+
+	/// <summary>
 	/// Used to store the currently-selected squad.
 	/// </summary>
 	private ActorBehavior selectedSquad = null;
@@ -84,6 +100,11 @@ public class GridControlBehavior : MonoBehaviour
 	/// Stores a reference to the GridBehavior on the grid object.
 	/// </summary>
 	private GridBehavior grid = null;
+
+	/// <summary>
+	/// Stores a list of valid grid squares that the selected squad can attack.
+	/// </summary>
+	private List<MovePointBehavior> validTargets = null;
 
 	/// <summary>
 	/// Captures a reference to the Grid and Game Controller components on the object.
@@ -110,17 +131,21 @@ public class GridControlBehavior : MonoBehaviour
 			updateSelectingUnit();
 			return;
 
+		case GridControlState.SelectingMovement:
+			updateSelectingMovement();
+			return;
+
 		case GridControlState.AwaitingMovement:
 			if(!selectedSquad.canMove)
 				controlState = GridControlState.SelectingTarget;
 			return;
 
-		case GridControlState.SelectingMovement:
-			updateSelectingMovement();
-			return;
-
 		case GridControlState.SelectingTarget:
 			updateSelectingTarget();
+			return;
+
+		case GridControlState.AwaitingCombat:
+			updateAwaitingCombat();
 			return;
 
 		case GridControlState.AwaitingEnemy:
@@ -304,8 +329,14 @@ public class GridControlBehavior : MonoBehaviour
 			selectedSquad.currentMovePoint = startingPoint;
 			selectedSquad.transform.position = startingPoint.transform.position;
 
+			// Hide currently-visible movement nodes.
+			grid.HideMovePoints();
+
 			// Re-highlight valid movement nodes.
 			startingPoint.HighlightValidNodes(selectedSquad, grid);
+
+			// Release the current list of valid targets.
+			validTargets = null;
 
 			// Return to the SelectingMovement state.
 			controlState = GridControlState.SelectingMovement;
@@ -332,6 +363,104 @@ public class GridControlBehavior : MonoBehaviour
 
 			return;
 		}
+
+		if(validTargets == null)
+		{
+			// Highlight grid points in attack range.
+			CombatSquadBehavior combatSquad = selectedSquad.GetComponent<CombatSquadBehavior>();
+			if(combatSquad != null)
+			{
+				int depth = 0;
+				int range = combatSquad.Squad.Range;
+				
+				selectedSquad.currentMovePoint.HighlightValidNodes(selectedSquad, grid, range);
+
+				// Store a list of valid targets.
+				validTargets = new List<MovePointBehavior>();
+				selectedSquad.currentMovePoint.BuildGraph(range, depth, grid, ref validTargets, true);
+			}
+		}
+
+		// Wait for the left mouse button to be pressed.
+		if(Input.GetMouseButtonDown(0))
+		{
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			
+			// Perform raycasting and store a list of all objects that have been selected.
+			List<RaycastHit> hits = new List<RaycastHit>();
+			hits.AddRange(Physics.RaycastAll (ray));
+			
+			// Iterate over the selection list to determine if the player has clicked on a valid movementpoint.
+			foreach(RaycastHit hitInfo in hits.OrderBy (l => l.distance))
+			{
+				// Capture the actor behavior on the hit object.
+				ActorBehavior actor = hitInfo.transform.GetComponent<ActorBehavior>();
+				if(actor == null)
+					continue;
+				
+				// Ensure that the unit has not moved and does not belong to the player.
+				if(actor.theSide == GameControllerBehaviour.UnitSide.enemy)
+				{
+					// Ensure the the enemy's move point is in the list of valid target move points.
+					if(validTargets.Contains (actor.currentMovePoint))
+					{
+						// Capture the combat camera.
+						CombatSystemBehavior combatSystem = GameObject.Find ("Combat Camera").GetComponent<CombatSystemBehavior>();
+						if(combatSystem == null)
+						{
+							Debug.LogError ("Unable to find a valid combat system in scene!");
+							return;
+						}
+
+						// Capture the offensive and defensive combat squads
+						CombatSquadBehavior offensiveSquad = selectedSquad.GetComponent<CombatSquadBehavior>();
+
+						if(!offensiveSquad)
+						{
+							Debug.LogError ("Attempted to enter combat with an invalid offensive squad!");
+							return;
+						}
+
+						CombatSquadBehavior defensiveSquad = actor.GetComponent<CombatSquadBehavior>();
+
+						if(!defensiveSquad)
+						{
+							Debug.LogError ("Attempted to enter combat with an invalid defensive squad!");
+							return;
+						}
+
+						// Hide the target movement points.
+						grid.HideMovePoints();
+
+						// Begin combat!
+						combatSystem.BeginCombat (offensiveSquad, defensiveSquad, grid);
+
+						// Transition to Awaiting Combat state.
+						controlState = GridControlState.AwaitingCombat;
+					}
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// Waits for the combat sequence to complete, then ends the unit's turn.
+	/// </summary>
+	private void updateAwaitingCombat()
+	{
+		if(GridBehavior.inCombat)
+			return;
+		
+		// Decrement the number of moves left for this turn.
+		controller.leftToMoveThis--;
+		
+		// Switch to the SelectingUnits state if the player still has moves left, otherwise end the turn.
+		controlState = (controller.leftToMoveThis > 0 ?
+		                GridControlState.SelectingUnit :
+		                GridControlState.AwaitingEnemy);
+		
+		// Deselect the current squad.
+		deselectSquad();
 	}
 
 	/// <summary>
@@ -339,12 +468,28 @@ public class GridControlBehavior : MonoBehaviour
 	/// </summary>
 	private void deselectSquad()
 	{
-		UnitIdleAnimationBehavior[] idles = selectedSquad.GetComponentsInChildren<UnitIdleAnimationBehavior>();
-		foreach(UnitIdleAnimationBehavior idle in idles)
-			idle.Active = false;
-		
-		selectedSquad = null;
+		if(selectedSquad != null)
+		{
+			UnitIdleAnimationBehavior[] idles = selectedSquad.GetComponentsInChildren<UnitIdleAnimationBehavior>();
+			foreach(UnitIdleAnimationBehavior idle in idles)
+				idle.Active = false;
+			
+			selectedSquad = null;
+		}
+
 		startingPoint = null;
 		grid.HideMovePoints();
+	}
+
+	/// <summary>
+	/// Ends the player's current turn.
+	/// </summary>
+	public void EndTurn()
+	{
+		// Deselect the current squad.
+		deselectSquad();
+
+		// Wait for the enemy's turn.
+		controlState = GridControlState.AwaitingEnemy;
 	}
 }
