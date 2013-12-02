@@ -123,6 +123,16 @@ public class GridBehavior : MonoBehaviour
 				movePoint.renderer.enabled = false;
 	}
 
+	public void HideMovePoints()
+	{
+		foreach(MovePointBehavior movePoint in theMap)
+		{
+			//change visiblilty of nodes. 
+			if(movePoint && movePoint.renderer.enabled == true)
+				movePoint.renderer.enabled = false; 
+		}
+	}
+
     /// <summary>
     /// Run Update.
     ///
@@ -130,6 +140,7 @@ public class GridBehavior : MonoBehaviour
     /// </summary>
     void Update()
     {
+		/*
 		if (!gameController.AllowPlayerControlledEnemies && gameController.currentTurn != GameControllerBehaviour.UnitSide.player)
 			return;
 
@@ -241,6 +252,7 @@ public class GridBehavior : MonoBehaviour
             }
             ableToMoveHere = true; 
 		}
+		*/
 	}
 
     /// <summary>
@@ -314,7 +326,6 @@ public class GridBehavior : MonoBehaviour
     /// 
     /// Alex Reiss
     /// </summary>
-
     public void CreateGrid()
     {
     	for(int _i = (gameObject.transform.childCount - 1); _i >= 0; _i--)
