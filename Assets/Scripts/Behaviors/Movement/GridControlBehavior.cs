@@ -479,6 +479,7 @@ public class GridControlBehavior : MonoBehaviour
 
 		startingPoint = null;
 		grid.HideMovePoints();
+		validTargets = null;
 	}
 
 	/// <summary>
