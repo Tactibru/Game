@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 [AddComponentMenu("Tactibru/Level Components/Game Controller")]
+[RequireComponent(typeof(GridBehavior))]
 public class GameControllerBehaviour : MonoBehaviour 
 {
     public List<ActorBehavior> playerTeam = new List<ActorBehavior>();
@@ -140,11 +141,6 @@ public class GameControllerBehaviour : MonoBehaviour
 
     public void EndTurn()
     {
-		GameObject gridObject = (GameObject)GameObject.FindGameObjectWithTag("Grid");
-		GridBehavior grid = gridObject.GetComponent<GridBehavior>();
-		if (grid != null)
-			grid.disableCurrentActor();
-
         for (int index = 0; index < playerTeam.Count; index++)
             playerTeam[index].actorHasMovedThisTurn = false;
 
@@ -156,6 +152,10 @@ public class GameControllerBehaviour : MonoBehaviour
 
         if (currentTurn == UnitSide.player)
         {
+			GridControlBehavior gridControl = GetComponent<GridControlBehavior>();
+			if (gridControl != null)
+				gridControl.EndTurn();
+
             currentTurn = UnitSide.enemy;
             leftToMoveThis = enemyTeamTotal;
 			controller.whoseTurn.text = "Enemy Turn";
@@ -168,10 +168,9 @@ public class GameControllerBehaviour : MonoBehaviour
 			numberOfTurns++;
 			controller.turnCount.text = "Turn " + numberOfTurns.ToString();
 
-//			if (numberOfTurns % 3 == 0 && SceneConversationBehavior.instance.battleQuips.Length > numberOfTurns / 3 - 1)
-//				Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.battleQuips[numberOfTurns / 3 - 1]);
-			if (SceneConversationBehavior.instance.battleQuips.Length >= numberOfTurns)
-				Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.battleQuips[numberOfTurns - 1]);
+			if(SceneConversationBehavior.instance != null)
+				if (SceneConversationBehavior.instance.battleQuips.Length >= numberOfTurns)
+					Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.battleQuips[numberOfTurns - 1]);
         }
     }
 }
