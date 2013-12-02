@@ -64,25 +64,29 @@ public class AIControllerBehavior : MonoBehaviour
 	{
 		switch (State)
 		{
-			case AIState.WaitingForPlayer:
-				UpdateState_WaitingForPlayer();	
-				break;
+		case AIState.WaitingForPlayer:
+			UpdateState_WaitingForPlayer();	
+			break;
 
-			case AIState.PickingSquad:
-				UpdateState_PickingSquad();
-				break;
+		case AIState.PickingSquad:
+			UpdateState_PickingSquad();
+			break;
 
-			case AIState.DeterminingTarget:
-				UpdateState_DeterminingTarget();
-				break;
+		case AIState.DetermineMovePoint:
+			UpdateState_DeterminingMovePoint();
+			break;
 
-			case AIState.WaitingForMove:
-				UpdateState_WaitingForMove();
-				break;
+		case AIState.WaitingForMove:
+			UpdateState_WaitingForMove();
+			break;
 
-			case AIState.WaitingForCombat:
-				UpdateState_WaitingForCombat();
-				break;
+		case AIState.DetermineCombatTarget:
+			UpdateState_DetermineCombatTarget();
+			break;
+
+		case AIState.WaitingForCombat:
+			UpdateState_WaitingForCombat();
+			break;
 		}
 	}
 
@@ -106,7 +110,7 @@ public class AIControllerBehavior : MonoBehaviour
 			if (!actor.actorHasMovedThisTurn)
 			{
 				selectedActor = actor;
-				State = AIState.DeterminingTarget;
+				State = AIState.DetermineMovePoint;
 
 				setCameraTarget(selectedActor.gameObject);
 
@@ -132,12 +136,9 @@ public class AIControllerBehavior : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Determines whether any targets are in the AI's movement radius, and moves to that unit and attacks.
-	/// If no unit is in range, moves toward the nearest target.
-	/// 
-	/// If (for some reason) the path is invalid, the squad is idled and the AI moves to the next squad.
+	/// Determines the movement point the AI actor should move to.
 	/// </summary>
-	public void UpdateState_DeterminingTarget()
+	public void UpdateState_DeterminingMovePoint()
 	{
 		AIUnitBehavior unitBehavior = selectedActor.GetComponent<AIUnitBehavior>();
 
@@ -146,7 +147,7 @@ public class AIControllerBehavior : MonoBehaviour
 
 		unitBehavior.Grid = grid;
 		unitBehavior.GameController = gameController;
-		State = unitBehavior.DetermineTarget();
+		State = unitBehavior.DetermineMovePoint();
 	}
 
 	/// <summary>
@@ -158,7 +159,22 @@ public class AIControllerBehavior : MonoBehaviour
 		if (selectedActor.canMove)
 			return;
 
-		State = AIState.WaitingForCombat;
+		State = AIState.DetermineCombatTarget;
+	}
+
+	/// <summary>
+	/// Determines the target in attack range the AI should attack.
+	/// </summary>
+	public void UpdateState_DetermineCombatTarget()
+	{
+		AIUnitBehavior unitBehavior = selectedActor.GetComponent<AIUnitBehavior>();
+		
+		if (unitBehavior == null)
+			unitBehavior = selectedActor.gameObject.AddComponent<AIDefensiveBehavior>();
+		
+		unitBehavior.Grid = grid;
+		unitBehavior.GameController = gameController;
+		State = unitBehavior.DetermineCombatTarget();
 	}
 
 	/// <summary>

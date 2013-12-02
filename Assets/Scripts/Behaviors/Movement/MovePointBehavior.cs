@@ -30,14 +30,15 @@ public class MovePointBehavior : MonoBehaviour
 	/// <param name="targetNode">Final node the unit should move to.</param>
 	/// <param name="maxDistance">Maximum distnance the unit can move.</param>
 	/// <param name="grid">Grid that the pathfinding is occurring on.</param>
+	/// <param name="skipIgnoreList">Skips the ignore list when building the initial graph.</param>
 	/// <returns></returns>
-	public List<MovePointBehavior> FindPath(MovePointBehavior targetNode, int maxDistance, GridBehavior grid)
+	public List<MovePointBehavior> FindPath(MovePointBehavior targetNode, int maxDistance, GridBehavior grid, bool skipIgnoreList = false)
 	{
 		// Build the Dijkstra's Graph
 		List<MovePointBehavior> graph = new List<MovePointBehavior>();
 		List<MovePointBehavior> tGraph = new List<MovePointBehavior>();
 		
-		BuildGraph(maxDistance, 0, grid, ref graph);
+		BuildGraph(maxDistance, 0, grid, ref graph, skipIgnoreList);
 
 		if (!graph.Contains(targetNode))
 			return null;
@@ -64,7 +65,7 @@ public class MovePointBehavior : MonoBehaviour
 			{
 				MovePointBehavior _node = tGraph[_i];
 
-				if (grid.ignoreList.Contains(_node))
+				if (grid.ignoreList.Contains(_node) && !skipIgnoreList)
 					continue;
 
 				if (distance[_node] < distance[node])
@@ -83,7 +84,7 @@ public class MovePointBehavior : MonoBehaviour
 
 			foreach (MovePointBehavior neighbor in node.neighborList)
 			{
-				if (neighbor == null || grid.ignoreList.Contains(neighbor) || !graph.Contains(neighbor))
+				if (neighbor == null || (!skipIgnoreList && grid.ignoreList.Contains(neighbor)) || !graph.Contains(neighbor))
 					continue;
 
 				int alt = distance[node] + 1;
