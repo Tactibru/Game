@@ -19,14 +19,19 @@ public enum AIState
 	PickingSquad,
 
 	/// <summary>
-	/// AI Controller is determining the target unit or grid node.
+	/// AI Controller is determining the target movement point.
 	/// </summary>
-	DeterminingTarget,
+	DetermineMovePoint,
 
 	/// <summary>
 	/// AI Controller is waiting for its unit to complete its movement.
 	/// </summary>
 	WaitingForMove,
+
+	/// <summary>
+	/// AI Controller is determining the combat target.
+	/// </summary>
+	DetermineCombatTarget,
 
 	/// <summary>
 	/// AI Controller is waiting for a combat sequence to complete.
