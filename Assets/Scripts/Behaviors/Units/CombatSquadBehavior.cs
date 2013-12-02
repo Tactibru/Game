@@ -109,7 +109,7 @@ public class CombatSquadBehavior : MonoBehaviour {
 		children.AddRange(GetComponentsInChildren<MonoBehaviour>());
 		for(int _i = (children.Count - 1); _i >= 0; _i--)
 		{
-			if(children[_i].gameObject == gameObject)
+			if(children[_i] == null || children[_i].gameObject == gameObject)
 				continue;
 				
 			DestroyImmediate(children[_i].gameObject);
