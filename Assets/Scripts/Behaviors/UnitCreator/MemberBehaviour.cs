@@ -38,6 +38,7 @@ public class MemberBehaviour : MonoBehaviour
     /// </summary>
 
     public bool inUnit = false;
+    public int size = 0;
 
     /// <summary>
     /// Defined by the state maching in the start function, will help with ensuring the position are oppucied.
@@ -61,18 +62,22 @@ public class MemberBehaviour : MonoBehaviour
             case SizeOfMember.OneByOne:
                 height = 1;
                 width = 1;
+                size = 1;
                 break;
             case SizeOfMember.OneByTwo:
                 height = 2;
                 width = 1;
+                size = 2;
                 break;
             case SizeOfMember.TwoByOne:
                 height = 1;
                 width = 2;
+                size = 2;
                 break;
             case SizeOfMember.TwoByTwo:
                 height = 2;
                 width = 2;
+                size = 4;
                 break;
         }
 	}
