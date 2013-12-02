@@ -107,6 +107,21 @@ public class GridControlBehavior : MonoBehaviour
 	private List<MovePointBehavior> validTargets = null;
 
 	/// <summary>
+	/// Tracks the current "side" for input, in case "AllowPlayerControlledEnemies" is enabled.
+	/// </summary>
+	private GameControllerBehaviour.UnitSide inputSide = GameControllerBehaviour.UnitSide.player;
+
+	private GameControllerBehaviour.UnitSide enemySide
+	{
+		get
+		{
+			return (inputSide == GameControllerBehaviour.UnitSide.player ?
+			        GameControllerBehaviour.UnitSide.enemy :
+			        GameControllerBehaviour.UnitSide.player);
+		}
+	}
+
+	/// <summary>
 	/// Captures a reference to the Grid and Game Controller components on the object.
 	/// </summary>
 	public void Start()
@@ -125,6 +140,13 @@ public class GridControlBehavior : MonoBehaviour
 	/// </summary>
 	public void Update()
 	{
+		if(controller.AllowPlayerControlledEnemies && controlState == GridControlState.AwaitingEnemy)
+		{
+			controlState = GridControlState.SelectingUnit;
+			inputSide = enemySide;
+			return;
+		}
+
 		switch(controlState)
 		{
 		case GridControlState.SelectingUnit:
@@ -186,7 +208,7 @@ public class GridControlBehavior : MonoBehaviour
 					continue;
 
 				// Ensure that the unit has not moved and belongs to the player.
-				if(!actor.actorHasMovedThisTurn && actor.theSide == GameControllerBehaviour.UnitSide.player)
+				if(!actor.actorHasMovedThisTurn && actor.theSide == inputSide)
 				{
 					// Mark the actor as selected.
 					selectedSquad = actor;
@@ -399,7 +421,7 @@ public class GridControlBehavior : MonoBehaviour
 					continue;
 				
 				// Ensure that the unit has not moved and does not belong to the player.
-				if(actor.theSide == GameControllerBehaviour.UnitSide.enemy)
+				if(actor.theSide == enemySide)
 				{
 					// Ensure the the enemy's move point is in the list of valid target move points.
 					if(validTargets.Contains (actor.currentMovePoint))
