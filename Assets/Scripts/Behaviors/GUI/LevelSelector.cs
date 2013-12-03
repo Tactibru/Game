@@ -201,11 +201,11 @@ public class LevelSelector : ButtonManagerBehavior
 				"level03",
 				"level04",
 				"level05",
-				/*"level06",
+				"level06",
 				"level07",
 				"level08",
 				"level09",
-				"level10",
+				/*"level10",
 				"level11",*/
 			};
 		}

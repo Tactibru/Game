@@ -29,31 +29,29 @@ public class NodeSkeletonBehavior : MonoBehaviour
 			Debug.LogWarning("Warning: Attempted to attach a null prefab to a NodeSkeletonBehavior.");
 			return false;
 		}
-
+		
 		// Verify that the skeleton structure is set.
 		if (SkeletonStructure == null)
 		{
 			Debug.LogWarning("Warning: Attempted to attach a node to a NodeSkeletonBehavior with no skeleton structure defined!");
 			return false;
 		}
-
+		
 		// Check for the node name.
 		if (!SkeletonStructure.ContainsNode(nodeName))
 		{
 			Debug.LogWarning("Warning: Attempted to retrieve a node (" + nodeName + ") that does not exist!");
 			return false;
 		}
-
+		
 		// Retrieve the node, then get its location.
 		NSSNode node = SkeletonStructure.GetNode(nodeName);
-
+		
 		// Instantiate the object, then set its local position, scale and rotation.
 		GameObject subObject = (GameObject)Instantiate(prefab, Vector3.zero, Quaternion.identity);
 		subObject.transform.parent = transform;
 		subObject.transform.localPosition = node.Offset;
 		subObject.transform.localRotation = Quaternion.identity;
-		//subObject.transform.localScale = Vector3.one;
-		//subObject.transform.localRotation = Quaternion.identity;
 
 		return true;
 	}

@@ -99,7 +99,7 @@ public class CombatSquadBehavior : MonoBehaviour {
 		if (actor == null)
 			return;
 
-		bool flippedHorizontally = (actor == null ? false : actor.theSide == GameControllerBehaviour.UnitSide.player);
+		bool flipHorizontally = (actor == null ? false : actor.theSide == GameControllerBehaviour.UnitSide.player);
 		
 		// Hide any mesh renderer on this object.
 		gameObject.renderer.enabled = false;
@@ -109,7 +109,7 @@ public class CombatSquadBehavior : MonoBehaviour {
 		children.AddRange(GetComponentsInChildren<MonoBehaviour>());
 		for(int _i = (children.Count - 1); _i >= 0; _i--)
 		{
-			if(children[_i].gameObject == gameObject)
+			if(children[_i] == null || children[_i].gameObject == gameObject)
 				continue;
 				
 			DestroyImmediate(children[_i].gameObject);
@@ -131,7 +131,7 @@ public class CombatSquadBehavior : MonoBehaviour {
 		
 		foreach(UnitData data in squad.Units)
 		{
-			float x = -0.1f + (0.2f * (1 - data.Position.Row)) + (data.Position.Column % 2 == 0 ? 0.05f : 0.0f);
+			float x = (flipHorizontally ? (-0.1f + (0.2f * (1 - data.Position.Row))) : 0.1f - (0.2f * (1 - data.Position.Row))) + (data.Position.Column % 2 == 0 ? 0.05f : 0.0f);
 			float z = 0.25f - (0.1f * data.Position.Column);
 			float y = 0.5f;
 
@@ -144,10 +144,7 @@ public class CombatSquadBehavior : MonoBehaviour {
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
 			{
-				GameObject prefab = null;
-
-				prefab = (GameObject)Resources.Load(string.Format("Prefabs/UnitParts/{0}/{1}", node.Name, (node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name)));
-				prefab = (prefab ?? (GameObject)Resources.Load(string.Format("Prefabs/UnitParts/{0}/001", node.Name)));
+				UnitAssetBehavior prefab = UnitAssetRepository.Instance.getAssetGroupByName(node.Name).getPrefabByName(node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name);
 
 				if (prefab == null)
 				{
@@ -155,13 +152,13 @@ public class CombatSquadBehavior : MonoBehaviour {
 					continue;
 				}
 
-				skele.AttachToNode(node.Name, prefab);
+				skele.AttachToNode(node.Name, prefab.gameObject);
 			}
 
 			skele.transform.parent = transform;
 			
 			Vector3 scale = Vector3.one;
-			if (flippedHorizontally)
+			if (flipHorizontally)
 				scale.x = -1.0f;
 			scale.y = 0.5f;
 			skele.transform.localScale = scale;

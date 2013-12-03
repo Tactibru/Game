@@ -1,4 +1,4 @@
-using Editor.Util;
+using Tactibru.Editor.Util;
 using UnityEditor; 
 using UnityEngine; 
 using System.Collections; 
@@ -8,7 +8,7 @@ using System.Collections;
 /// This class, takes variables from another class that you want to edit. 
 /// </summary>
 /// n
-namespace Editor.Grid
+namespace Tactibru.Editor.Grid
 {
 [CustomEditor(typeof(GridBehavior))]
 public class GridEditor:EditorBase<GridBehavior>

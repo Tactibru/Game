@@ -22,12 +22,23 @@ public class ArmyManagementBehaviour : MonoBehaviour
 
     int numberOfPositions = 10;
     
-	/// <summary>
-	/// Will load and place to seen and edited. NOT DONE.
+	
+
+    public SquadBehaviour currentSquad;
+
+    public MemberTrayBehaviour MemberTray;
+
+    public StatsPanelBehaviour statsPanel;
+
+    public UnitPlacementBehaviour unitHolder;
+
+
+    /// <summary>
+    /// Will load and place to seen and edited. NOT DONE.
     /// 
     /// Alex Reiss
-	/// </summary>
- 
+    /// </summary>
+
 	void Start () 
     {
         loadArmy();
@@ -37,6 +48,9 @@ public class ArmyManagementBehaviour : MonoBehaviour
  
         }
 
+
+       
+		
 	}
 
     /// <summary>
@@ -103,6 +117,34 @@ public class ArmyManagementBehaviour : MonoBehaviour
     
 	void Update () 
     {
-	
+        if (Input.GetMouseButtonUp(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitInfo;
+
+            if (Physics.Raycast(ray, out hitInfo))
+            {
+                if (!currentSquad)
+                {
+                    if (hitInfo.transform.GetComponent<SquadBehaviour>())
+                    {
+                        currentSquad = hitInfo.transform.GetComponent<SquadBehaviour>();
+                        StartEditor(currentSquad);
+                    }
+                }
+            }
+        }
 	}
+
+    void StartEditor(SquadBehaviour theSquad)
+    {
+        for (int index = 0; index < squads.Count; index++)
+        {
+            squads[index].transform.renderer.enabled = false;
+        }
+
+        MemberTray.ShowMemberTray();
+        statsPanel.transform.renderer.enabled = true;
+        unitHolder.ShowUnitHolder();
+    }
 }

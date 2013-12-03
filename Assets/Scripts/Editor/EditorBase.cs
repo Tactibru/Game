@@ -2,7 +2,7 @@
 using System.Collections;
 using UEd = UnityEditor.Editor;
 
-namespace Editor
+namespace Tactibru.Editor
 {
 	/// <summary>
 	/// Serves as a base class for all Inspector-based editors, to work around

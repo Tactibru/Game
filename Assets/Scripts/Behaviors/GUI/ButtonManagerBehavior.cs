@@ -67,6 +67,6 @@ public class ButtonManagerBehavior : MonoBehaviour
 		default:
 			Debug.LogWarning(string.Format("No handler found for {0}!", buttonName));
 			break;
-		}*/	
+		}*/
 	}
 }

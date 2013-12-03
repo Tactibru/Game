@@ -1,10 +1,10 @@
-﻿using Editor.Util;
+﻿using Tactibru.Editor.Util;
 using Units;
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
 
-namespace Editor.Units
+namespace Tactibru.Editor.Units
 {
 	/// <summary>
 	/// Unity editor that allows for the modification of Combat Units.
@@ -64,7 +64,14 @@ namespace Editor.Units
 			{
 				labeledIntField("Health", ref Target.Health);
 				labeledIntField("Strength", ref Target.Strength);
-				labeledIntField("Toughness", ref Target.Toughness);
+
+				GUILayout.BeginHorizontal();
+				{
+					GUILayout.Label ("Toughness");
+					Target.Toughness = EditorGUILayout.IntSlider (Target.Toughness, 0, 100);
+					GUILayout.Label ("%");
+				}
+				GUILayout.EndHorizontal();
 				labeledIntField("Speed", ref Target.Speed);
 				labeledIntField("Range", ref Target.Range);
 			}

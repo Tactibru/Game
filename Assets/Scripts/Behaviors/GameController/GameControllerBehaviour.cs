@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 [AddComponentMenu("Tactibru/Level Components/Game Controller")]
+[RequireComponent(typeof(GridBehavior))]
 public class GameControllerBehaviour : MonoBehaviour 
 {
     public List<ActorBehavior> playerTeam = new List<ActorBehavior>();
@@ -60,6 +61,10 @@ public class GameControllerBehaviour : MonoBehaviour
 		controller = Camera.main.GetComponent<HUDController>();
 		controller.whoseTurn.text = "Players Turn";
 		controller.turnCount.text = "Turn " + numberOfTurns.ToString();
+
+		TalkingEventManagerBehaviour talkingManager = Camera.main.GetComponent<TalkingEventManagerBehaviour> ();
+		if(talkingManager != null)
+			talkingManager.StartTalkingEventChain(SceneConversationBehavior.instance.introConversation);
 	}
 
 	/// <summary>
@@ -123,22 +128,19 @@ public class GameControllerBehaviour : MonoBehaviour
     {
         if (enemyTeamTotal == 0)
         {
+			Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.victoryConversation);
             Application.LoadLevel("PlayerWins");
         }
 
         if (playerTeamTotal == 0)
         {
+			Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.defeatConversation);
             Application.LoadLevel("PlayerLosses");
         }
     }
 
     public void EndTurn()
     {
-		GameObject gridObject = (GameObject)GameObject.FindGameObjectWithTag("Grid");
-		GridBehavior grid = gridObject.GetComponent<GridBehavior>();
-		if (grid != null)
-			grid.disableCurrentActor();
-
         for (int index = 0; index < playerTeam.Count; index++)
             playerTeam[index].actorHasMovedThisTurn = false;
 
@@ -150,6 +152,10 @@ public class GameControllerBehaviour : MonoBehaviour
 
         if (currentTurn == UnitSide.player)
         {
+			GridControlBehavior gridControl = GetComponent<GridControlBehavior>();
+			if (gridControl != null)
+				gridControl.EndTurn();
+
             currentTurn = UnitSide.enemy;
             leftToMoveThis = enemyTeamTotal;
 			controller.whoseTurn.text = "Enemy Turn";
@@ -161,6 +167,10 @@ public class GameControllerBehaviour : MonoBehaviour
 			controller.whoseTurn.text = "Player Turn";
 			numberOfTurns++;
 			controller.turnCount.text = "Turn " + numberOfTurns.ToString();
+
+			if(SceneConversationBehavior.instance != null)
+				if (SceneConversationBehavior.instance.battleQuips.Length >= numberOfTurns)
+					Camera.main.GetComponent<TalkingEventManagerBehaviour>().StartTalkingEventChain(SceneConversationBehavior.instance.battleQuips[numberOfTurns - 1]);
         }
     }
 }

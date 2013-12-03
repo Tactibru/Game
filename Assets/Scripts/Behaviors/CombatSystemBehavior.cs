@@ -148,7 +148,16 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
-							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+						{
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
+							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+                            if (unit.CurrentHealth <= 0)
+                            {
+                                HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.honorPenalty = unit.HonorMod;
+                                HonorSystemBehavior.offensiveHonor++;
+                            }
+						}
 
 						removeDeadUnits();
 					}
@@ -164,7 +173,17 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
-							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+						{
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
+							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+
+                            if (unit.CurrentHealth <= 0)
+                            {
+                                HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.honorPenalty = unit.HonorMod;
+                                HonorSystemBehavior.defensiveHonor++;
+                            }
+						}
 
 						removeDeadUnits();
 					}
@@ -180,7 +199,16 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (defFirstRow.Count() > 0 ? defFirstRow.Count() : defSecondRow.Count());
 						foreach (CombatUnit unit in (defFirstRow.Count() > 0 ? defFirstRow : defSecondRow))
-							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+						{
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
+							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+                            if (unit.CurrentHealth <= 0)
+                            {
+                                HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.honorPenalty = unit.HonorMod;
+                                HonorSystemBehavior.offensiveHonor++;
+                            }
+						}
 
 						removeDeadUnits();
 					}
@@ -196,7 +224,16 @@ public class CombatSystemBehavior : MonoBehaviour
 
 						int damagePerUnit = totalStrength / (offFirstRow.Count() > 0 ? offFirstRow.Count() : offSecondRow.Count());
 						foreach (CombatUnit unit in (offFirstRow.Count() > 0 ? offFirstRow : offSecondRow))
-							unit.CurrentHealth -= Mathf.Max(damagePerUnit - unit.Toughness, 0);
+						{
+							int damageReceived = (unit.Toughness != 0 ? (int)Mathf.Ceil((float)damagePerUnit * (1.0f - (1.0f / (float)unit.Toughness))) : damagePerUnit);
+							unit.CurrentHealth -= Mathf.Max(damageReceived, 0);
+                            if (unit.CurrentHealth <= 0)
+                            {
+                                HonorSystemBehavior.inCombat = true;
+                                HonorSystemBehavior.honorPenalty = unit.HonorMod;
+                                HonorSystemBehavior.defensiveHonor++;
+                            }
+						}
 
 						removeDeadUnits();
 					}
@@ -249,6 +286,7 @@ public class CombatSystemBehavior : MonoBehaviour
 		this.grid = grid;
 
 		GridBehavior.inCombat = true;
+        AudioBehavior.inCombat = true;
 
 		this.offensiveSquad = offensiveSquad;
 		this.defensiveSquad = defensiveSquad;
@@ -306,16 +344,15 @@ public class CombatSystemBehavior : MonoBehaviour
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
 			{
-				GameObject prefab = (GameObject)Resources.Load(string.Format("Prefabs/UnitParts/{0}/{1}", node.Name, (node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name)));
-				prefab = (prefab ?? (GameObject)Resources.Load(string.Format("Prefabs/UnitParts/{0}/001", node.Name)));
-				
+				UnitAssetBehavior prefab = (UnitAssetRepository.Instance.getAssetGroupByName(node.Name).getPrefabByName(node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name));
+
 				if(prefab == null)
 				{
 					Debug.LogWarning(string.Format ("Could not find prefab for 'Prefabs/UnitParts/{0}/001'", node.Name));
 					continue;
 				}
 				
-				skele.AttachToNode(node.Name, prefab);
+				skele.AttachToNode(node.Name, prefab.gameObject);
 			}
 
 			skele.transform.parent = unitBase.transform;
@@ -351,11 +388,18 @@ public class CombatSystemBehavior : MonoBehaviour
 		
 		if(losingSquad != null)
 		{
-			Destroy(losingSquad.gameObject);
-
 			ActorBehavior actor = losingSquad.GetComponent<ActorBehavior>();
 			if (actor != null && grid.ignoreList.Contains(actor.currentMovePoint))
 				grid.ignoreList.Remove(actor.currentMovePoint);
+
+			// Retrieve the game controller to determine which side the losing team was on.
+			GameControllerBehaviour gameController = grid.GetComponent<GameControllerBehaviour>();
+			if(actor.theSide == GameControllerBehaviour.UnitSide.player)
+				gameController.playerTeamTotal--;
+			else
+				gameController.enemyTeamTotal--;
+
+			Destroy(losingSquad.gameObject);
 		}
 
 		foreach (NodeSkeletonBehavior node in unitPrefabs)
@@ -365,6 +409,8 @@ public class CombatSystemBehavior : MonoBehaviour
 		this.defensiveSquad = null;
 
 		GridBehavior.preCombat = false;
+        HonorSystemBehavior.inCombat = true;
 		GridBehavior.inCombat = false;
+        AudioBehavior.inCombat = false;
 	}
 }
