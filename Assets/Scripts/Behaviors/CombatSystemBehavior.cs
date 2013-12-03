@@ -388,11 +388,18 @@ public class CombatSystemBehavior : MonoBehaviour
 		
 		if(losingSquad != null)
 		{
-			Destroy(losingSquad.gameObject);
-
 			ActorBehavior actor = losingSquad.GetComponent<ActorBehavior>();
 			if (actor != null && grid.ignoreList.Contains(actor.currentMovePoint))
 				grid.ignoreList.Remove(actor.currentMovePoint);
+
+			// Retrieve the game controller to determine which side the losing team was on.
+			GameControllerBehaviour gameController = grid.GetComponent<GameControllerBehaviour>();
+			if(actor.theSide == GameControllerBehaviour.UnitSide.player)
+				gameController.playerTeamTotal--;
+			else
+				gameController.enemyTeamTotal--;
+
+			Destroy(losingSquad.gameObject);
 		}
 
 		foreach (NodeSkeletonBehavior node in unitPrefabs)

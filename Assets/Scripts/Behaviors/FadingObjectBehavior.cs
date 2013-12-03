@@ -9,7 +9,7 @@ public class FadingObjectBehavior : MonoBehaviour {
 	/// <summary>
 	/// Stores a reference to the level's grid object.
 	/// </summary>
-	private GridBehavior grid;
+	private GridControlBehavior gridController;
 
 	/// <summary>
 	/// Alpha value for the object whenever it is shaded.
@@ -23,7 +23,7 @@ public class FadingObjectBehavior : MonoBehaviour {
 	{
 		GameObject gridObject = GameObject.FindGameObjectWithTag("Grid");
 		if(gridObject != null)
-			grid = gridObject.GetComponent<GridBehavior>();
+			gridController = gridObject.GetComponent<GridControlBehavior>();
 	}
 
 	/// <summary>
@@ -31,7 +31,7 @@ public class FadingObjectBehavior : MonoBehaviour {
 	/// </summary>
 	public void Update()
 	{
-		if(grid == null)
+		if(gridController == null)
 			return;
 
 		foreach(Renderer renderer in GetComponentsInChildren<MeshRenderer>())
@@ -40,7 +40,7 @@ public class FadingObjectBehavior : MonoBehaviour {
 			renderer.material.shader = shader;
 
 			Color color = renderer.material.color;
-			color.a = (grid.currentActor != null ? fadedAlpha : 1.0f);
+			color.a = (gridController.SelectedSquad != null ? fadedAlpha : 1.0f);
 
 			renderer.material.color = color;
 		}
