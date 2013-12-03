@@ -17,9 +17,10 @@ public class HUDController : ButtonManagerBehavior
 	/// <summary>
 	/// Start this instance.
 	/// </summary>
-	protected override void Start()
+	//protected override void Start()
+	void Start()
 	{
-		base.Start();
+		//base.Start();
 		isEnabled = false;
 		// Commented out until we have art assests
 		//ToggleMenuGroup();

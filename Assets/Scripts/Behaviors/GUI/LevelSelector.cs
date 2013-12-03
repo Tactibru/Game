@@ -62,7 +62,7 @@ public class LevelSelector : ButtonManagerBehavior
 	
 	public Object gameLevelTest;
 	
-	
+	/*
 	/// <summary>
 	/// Start this instance.
 	/// </summary>
@@ -95,6 +95,7 @@ public class LevelSelector : ButtonManagerBehavior
 		gameLevelTest = Resources.LoadAssetAtPath("level03", typeof(Object));
 		Debug.Log (gameLevelTest.ToString());
 	}
+
 
 	/// <summary>
 	/// Activate the button that will be pressed.
@@ -137,6 +138,7 @@ public class LevelSelector : ButtonManagerBehavior
 			break;
 		}
 	}
+	*/
 	
 	
 	/// <summary>
