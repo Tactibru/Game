@@ -9,6 +9,7 @@ using System.Collections;
 [AddComponentMenu("Tactibru/GUI/Texture Changer")]
 public class ChangeTextureBehavior : MonoBehaviour
 {
+	/*
     /// <summary>
     /// Public variable representing the text mesh that will change color depending on the mouse state.
     /// A public boolean variable that is true if the left mouse button has been pressed and false if it has been released.
@@ -66,4 +67,5 @@ public class ChangeTextureBehavior : MonoBehaviour
 	{
 		ButtonManagerBehavior.Instance.ButtonPressed(name);	
 	}
+	*/
 }
