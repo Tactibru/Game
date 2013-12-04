@@ -9,6 +9,7 @@ using System.Collections;
 [AddComponentMenu("Tactibru/GUI/Scenes/Main Menu")]
 public class MainMenu : MonoBehaviour 
 {
+	//Rect Box = new Rect(0.0f,0.0f, 600.0f, 450.0f); 
     private GUIStyle menuTitle;
     private GUIStyle menuGUI;
 
@@ -29,12 +30,7 @@ public class MainMenu : MonoBehaviour
         menuGUI.normal.textColor = Color.white;
         menuGUI.fontSize = 25;
 	}
-	
-	// Update is called once per frame
-	void Update () 
-    {
-	
-	}
+
     /// <summary>
     /// Function that creates a GUI label for the title of the game and creates buttons that loads the different scenes and exit the game. 
     /// </summary>
@@ -42,29 +38,24 @@ public class MainMenu : MonoBehaviour
     {
         GUI.Label(new Rect(Screen.width / 2 - 150, 25, 300, 100), "Tactibru", menuTitle);
 
-//        if (GUI.Button(new Rect(Screen.width / 2 - 150, Screen.height / 4 + 100, 300, 50), "Play", menuGUI))
-//        {
-//            Application.LoadLevel("GameSceneGUITest");
-//        }
-//
-//        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 150, 300, 50), "Mode", menuGUI))
-//        {
-//            Application.LoadLevel("ModeSceneGUITest");
-//        }
-//
-//        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 200, 300, 50), "Settings", menuGUI))
-//        {
-//            Application.LoadLevel("SettingsSceneGUITest");
-//        }
-//
-//        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 250, 300, 50), "Credits", menuGUI))
-//        {
-//            Application.LoadLevel("CreditsSceneGUITest");
-//        }
-//        
-//        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 300, 300, 50), "Exit", menuGUI))
-//        {
-//            Application.Quit();
-//        }
+        if (GUI.Button(new Rect(Screen.width / 2 - 150, Screen.height / 4 + 100, 300, 50), "Play", menuGUI))
+        {
+			Application.LoadLevel("LevelSelectSceneGUITest");
+        }
+
+        /*if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 200, 300, 50), "Settings", menuGUI))
+        {
+            Application.LoadLevel("SettingsSceneGUITest");
+        }
+
+        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 250, 300, 50), "Credits", menuGUI))
+        {
+            Application.LoadLevel("CreditsSceneGUITest");
+        }*/
+        
+        if (GUI.Button(new Rect(Screen.width / 2 - 150, (Screen.height / 4) + 200, 300, 50), "Exit", menuGUI))
+        {
+            Application.Quit();
+        }
     }
 }

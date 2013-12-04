@@ -13,6 +13,7 @@ ConsolePro/
 *.pidb
 *.userprefs
 *.suo
+*.DS_Store
 
 Assets/Editor Default Resources/VIZIO Skins.meta
 Assets/VIZIO/System.meta
