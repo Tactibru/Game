@@ -82,7 +82,7 @@ namespace Units
 			{
 				return prefabs[idx];
 			}
-			catch(System.IndexOutOfRangeException ex)
+			catch(System.IndexOutOfRangeException)
 			{
 				return getRandomPrefab();
 			}
