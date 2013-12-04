@@ -89,6 +89,11 @@ namespace Units
 		/// Unit's adjustment to the player's starting honor.
 		/// </summary>
 		public int HonorMod = 0;
+
+		/// <summary>
+		/// Stores the asset being used when the asset is overridden.
+		/// </summary>
+		public int BodyOverride = 0;
 		
 		/// <summary>
 		/// Amount of space occupied by the unit.

@@ -303,7 +303,7 @@ public class CombatSystemBehavior : MonoBehaviour
 		int unitCount = offensiveSquad.Squad.Units.Count + defensiveSquad.Squad.Units.Count;
 		unitPrefabs = new List<NodeSkeletonBehavior>(unitCount);
 
-		createUnits(offensiveSquad.Squad.Units, true, 0.0f);
+		createUnits (offensiveSquad.Squad.Units, true, 0.0f);
 		createUnits (defensiveSquad.Squad.Units, false, 1.0f);
 
 		currentAttacker = CurrentAttacker.OffensiveFront;
@@ -353,7 +353,12 @@ public class CombatSystemBehavior : MonoBehaviour
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
 			{
-				UnitAssetBehavior prefab = (UnitAssetRepository.Instance.getAssetGroupByName(node.Name).getPrefabByName(node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name));
+				UnitAssetBehavior prefab;
+				if(node.Name == "Body" && (unitBehavior.unit.BodyOverride != 0))
+					prefab = UnitAssetRepository.Instance.getAssetGroupByName("Body").getPrefabByIndex(unitBehavior.unit.BodyOverride);
+				else
+					prefab = (UnitAssetRepository.Instance.getAssetGroupByName(node.Name).getPrefabByName(node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name));
+				
 
 				if(prefab == null)
 				{

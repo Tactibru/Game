@@ -2,7 +2,7 @@
 using Units;
 using UnityEngine;
 using UnityEditor;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace Tactibru.Editor.Units
 {
@@ -32,12 +32,20 @@ namespace Tactibru.Editor.Units
 		/// Whether or not the Stats category should be shown.
 		/// </summary>
 		private bool showStatsCategory = true;
+
+		private List<string> unitBodies;
 		
 		/// <summary>
 		/// Implements the GUI displayed in the inspector, so that items can be entered by value.
 		/// </summary>
 		public override void OnInspectorGUI()
 		{
+			if(unitBodies == null)
+			{
+				unitBodies = new List<string>();
+				unitBodies.AddRange(UnitAssetRepository.Instance.getAssetGroupByName("Body").getPrefabNames());
+			}
+
 			// [General] -> General, non-stat data for the Unit.
 			showGeneralCategory = EditorGUILayout.Foldout(showGeneralCategory, "General");
 			
@@ -74,6 +82,19 @@ namespace Tactibru.Editor.Units
 				GUILayout.EndHorizontal();
 				labeledIntField("Speed", ref Target.Speed);
 				labeledIntField("Range", ref Target.Range);
+
+				GUILayout.BeginVertical();
+				{
+					GUILayout.Label ("Body Override");
+					if(GUILayout.Button ("Refresh"))
+					{
+						unitBodies = new List<string>();
+						unitBodies.AddRange(UnitAssetRepository.Instance.getAssetGroupByName("Body").getPrefabNames());
+					}
+
+					Target.BodyOverride = EditorGUILayout.Popup(Target.BodyOverride, unitBodies.ToArray());
+				}
+				GUILayout.EndVertical();
 			}
 
 			// Set the target as dirty if the GUI values have changed.
