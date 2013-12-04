@@ -29,7 +29,9 @@ namespace Units
 			Katana,
 			Shuriken,
 			Spear,
-			Staff
+			Staff,
+			Bow,
+			Horse
 		}
 
 		/// <summary>

@@ -59,9 +59,8 @@ public class GameControllerBehaviour : MonoBehaviour
         gUIStyle.normal.textColor = Color.white;
 		
 		controller = Camera.main.GetComponent<HUDController>();
-		
-			controller.whoseTurn.text = "Players Turn";
-			controller.turnCount.text = "Turn " + numberOfTurns.ToString ();
+		controller.whoseTurn.text = "Players Turn";
+		controller.turnCount.text = "Turn " + numberOfTurns.ToString ();
 		
 
 		TalkingEventManagerBehaviour talkingManager = Camera.main.GetComponent<TalkingEventManagerBehaviour> ();
