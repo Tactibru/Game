@@ -19,3 +19,7 @@ Assets/VIZIO/System.meta
 Assets/ConsolePro.meta
 test_Data
 Thumbs.db
+
+# Plastic SCM Files/Directories
+.plastic/
+ignore.conf
