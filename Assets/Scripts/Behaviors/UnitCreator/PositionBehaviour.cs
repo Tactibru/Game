@@ -12,7 +12,7 @@ public class PositionBehaviour : MonoBehaviour
     /// <summary>
     /// 0 is unoccupied, if anything else, the n it is the unique ID of the occupant.
     /// </summary>
-    public int currentOccupant = 0;
+    public int currentOccupant = -1;
     public int rank = 0;
 	
     /// <summary>

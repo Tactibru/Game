@@ -12,6 +12,7 @@ public class SquadBehaviour : MonoBehaviour
     /// </summary>
 
     public int[] memberPositions = new int[10];
+    public int members = 0;
 
 	// Use this for initialization
 	void Start () 
