@@ -24,11 +24,14 @@ public class MiniMapGridBehaviour : MonoBehaviour
 
     public int miniMapWidth;
     public int miniMapLength;
+
+	private GameObject minimapBG;
  
     char[] abc = new char[30] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd'};
 
     void Start()
     {
+		minimapBG = GameObject.Find ("MiniMapBG");
         theMiniMap = new MiniMapPointBehaviour[theGrid.theMapLength * theGrid.theMapWidth];
         gameController = GameObject.FindGameObjectWithTag("Grid").GetComponent<GameControllerBehaviour>();
 
@@ -52,6 +55,7 @@ public class MiniMapGridBehaviour : MonoBehaviour
                 newMiniMapPoint.transform.parent = transform;
                 newMiniMapPoint.name = abc[z].ToString() + x.ToString();
                 newMiniMapPoint.transform.localPosition = new Vector3(currentXPosition, currentYPosition, -0.01f);
+				newMiniMapPoint.renderer.enabled = true;
                 currentXPosition = (xPositionOffset + z + 1) * 0.1f + 0.05f;
                 theMiniMap[z + (x * miniMapWidth)] = newMiniMapPoint;
             }
@@ -74,7 +78,7 @@ public class MiniMapGridBehaviour : MonoBehaviour
             newMiniMapPlayer = (MiniMapActorBehavior)Instantiate(miniMapPlayer, new Vector3(0, 0.0f, 0.5f), Quaternion.identity);
             newMiniMapPlayer.transform.parent = transform;
             newMiniMapPlayer.transform.localPosition = new Vector3(0.0f, 0.0f, 0.1f);
-
+			newMiniMapPlayer.renderer.enabled = true;
             playerSquadList.Add(newMiniMapPlayer);
         }
 
@@ -84,6 +88,7 @@ public class MiniMapGridBehaviour : MonoBehaviour
             newMiniMapEnemy = (MiniMapActorBehavior)Instantiate(miniMapEnemy, new Vector3(0, 0.0f, 0.5f), Quaternion.identity);
             newMiniMapEnemy.transform.parent = transform;
             newMiniMapEnemy.transform.localPosition = new Vector3(0.0f, 0.0f, 0.1f);
+			newMiniMapEnemy.renderer.enabled = true;
 
             enemySquadList.Add(newMiniMapEnemy);
         }
@@ -94,6 +99,7 @@ public class MiniMapGridBehaviour : MonoBehaviour
             newMiniMapNuetral = (MiniMapActorBehavior)Instantiate(miniMapNeutral, new Vector3(0, 0.0f, 0.5f), Quaternion.identity);
             newMiniMapNuetral.transform.parent = transform;
             newMiniMapNuetral.transform.localPosition = new Vector3(0.0f, 0.0f, 0.1f);
+			newMiniMapNuetral.renderer.enabled = true;
 
             neutralSquadList.Add(newMiniMapNuetral);
         }
@@ -106,8 +112,6 @@ public class MiniMapGridBehaviour : MonoBehaviour
         {
             playerSquadList[i].currentPosition = null;
             playerSquadList[i].transform.localPosition = new Vector3(0.0f, 0.0f, 0.1f);
-
-
         }
 
         for (int i = 0; i < gameController.playerTeam.Count; i++)
@@ -137,5 +141,35 @@ public class MiniMapGridBehaviour : MonoBehaviour
     void Update()
     {
         UpdateMiniMap();
+
+		if(minimapBG != null && Input.GetMouseButtonDown (0))
+		{
+			Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit[] hits = Physics.RaycastAll (cameraRay, 2.0f);
+
+			foreach(RaycastHit hitInfo in hits)
+			{
+				if(hitInfo.transform.gameObject == minimapBG)
+				{
+					Vector3 clickOffset = hitInfo.point - minimapBG.transform.position;
+					float width = minimapBG.transform.localScale.x;
+					float height = minimapBG.transform.localScale.y;
+
+					clickOffset.x += width / 2.0f;
+					clickOffset.y += height / 2.0f;
+
+					// Normalize the clickOffset
+					clickOffset.x /= width;
+					clickOffset.y /= height;
+
+					// Tell the camera to quick-jump.
+					CameraBehavior cameraBehavior = Camera.main.GetComponent<CameraBehavior>();
+					if(cameraBehavior != null)
+					{
+						cameraBehavior.quickJump(clickOffset);
+					}
+				}
+			}
+		}
     }
 }
