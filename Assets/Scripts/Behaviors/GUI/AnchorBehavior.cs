@@ -43,11 +43,6 @@ public class AnchorBehavior : MonoBehaviour
 		RepositionAnchor();
 	}
 	
-	void Update()
-	{
-		RepositionAnchor();
-	}
-	
 	/// <summary>
 	/// Funnctions that repositions the anchor based the postion chosen from the enum, through the screen to world point function.
 	/// </summary>
@@ -58,34 +53,39 @@ public class AnchorBehavior : MonoBehaviour
 			return;
 		if (!hudCamera)
 			hudCamera = transform.parent.camera;
-		switch (anchorPosition) 
+
+		float aspectRatio = (float)Screen.width / (float)Screen.height;
+		float height = hudCamera.orthographicSize;
+		float width = height * aspectRatio;
+
+		switch (anchorPosition)
 		{
 		case AnchorPosition.TopLeft:
-			transform.position = hudCamera.ScreenToWorldPoint(new Vector3(0, Screen.height, 0));
+			transform.localPosition = (Vector3.left * width) + (Vector3.up * height);
 			break;
 		case AnchorPosition.Top:
-			transform.position = hudCamera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height, 0));
+			transform.localPosition = (Vector3.up * height);
 			break;
 		case AnchorPosition.TopRight:
-			transform.position = hudCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+			transform.localPosition = (Vector3.right * width) + (Vector3.up * height);
 			break;
 		case AnchorPosition.Left:
-			transform.position = hudCamera.ScreenToWorldPoint(new Vector3(0, Screen.height / 2, 0));
+			transform.localPosition = (Vector3.left * width);
 			break;
 		case AnchorPosition.Center:
-			transform.position = hudCamera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+			transform.localPosition = Vector3.zero;
 			break;
 		case AnchorPosition.Right:
-			transform.position = hudCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height / 2, 0));
+			transform.localPosition = (Vector3.right * width);
 			break;
 		case AnchorPosition.BottomLeft:
-			transform.position = hudCamera.ScreenToWorldPoint(new Vector3(0, 0, 0));
+			transform.localPosition = (Vector3.left * width) + (Vector3.down * height);
 			break;
 		case AnchorPosition.Bottom:
-			transform.position = hudCamera.ScreenToWorldPoint(new Vector3(Screen.width / 2, 0, 0));
+			transform.localPosition = (Vector3.down * height);
 			break;
 		case AnchorPosition.BottomRight:
-			transform.position = hudCamera.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0));
+			transform.localPosition = (Vector3.right * width) + (Vector3.down * height);
 			break;			
 		default:
 			break;		
@@ -94,6 +94,5 @@ public class AnchorBehavior : MonoBehaviour
 		name = "Anchor - " + anchorPosition.ToString();
 		// Then set old postion to the new position.
 		oldPosition = anchorPosition;
-		
 	}
 }
