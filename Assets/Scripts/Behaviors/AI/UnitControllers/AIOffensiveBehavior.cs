@@ -25,6 +25,8 @@ public class AIOffensiveBehavior : AIUnitBehavior
 	/// <returns>AI state the controller should enter after determining the target.</returns>
 	public override AIState DetermineMovePoint()
 	{
+		targetActor = null;
+
 		MovePointBehavior movePoint = Actor.currentMovePoint;
 
 		// Get a list of spaces that are within attack range (movement + range).
@@ -105,6 +107,9 @@ public class AIOffensiveBehavior : AIUnitBehavior
 		}
 		else
 		{
+			targetActor = null;
+			distanceToTarget = float.PositiveInfinity;
+
 			// No target was found, so determine the closest target to move towards.
 			foreach(ActorBehavior playerSquad in gameController.playerTeam)
 			{
