@@ -7,9 +7,7 @@ public class HUDController : ButtonManagerBehavior
 	GameObject menuGroup;
 	bool isEnabled;
 	GameControllerBehaviour gameController;
-	[System.NonSerialized]
 	public TextMesh turnCount;
-	[System.NonSerialized]
 	public TextMesh whoseTurn;
 
 	public GUIStyle style;
@@ -26,8 +24,6 @@ public class HUDController : ButtonManagerBehavior
 		//ToggleMenuGroup();
 		gameController = GameObject.FindGameObjectWithTag("Grid").GetComponent<GameControllerBehaviour>();
 		menuGroup = GameObject.Find("Menu Group HUD").gameObject;
-		turnCount = GameObject.Find("turnCountText").GetComponent<TextMesh>();
-		whoseTurn = GameObject.Find("whoseTurnText").GetComponent<TextMesh>();
 	}
 
 	void OnGUI()
