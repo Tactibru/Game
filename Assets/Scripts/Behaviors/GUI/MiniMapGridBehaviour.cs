@@ -24,11 +24,14 @@ public class MiniMapGridBehaviour : MonoBehaviour
 
     public int miniMapWidth;
     public int miniMapLength;
+
+	private GameObject minimapBG;
  
     char[] abc = new char[30] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd'};
 
     void Start()
     {
+		minimapBG = GameObject.Find ("MiniMapBG");
         theMiniMap = new MiniMapPointBehaviour[theGrid.theMapLength * theGrid.theMapWidth];
         gameController = GameObject.FindGameObjectWithTag("Grid").GetComponent<GameControllerBehaviour>();
 
@@ -109,8 +112,6 @@ public class MiniMapGridBehaviour : MonoBehaviour
         {
             playerSquadList[i].currentPosition = null;
             playerSquadList[i].transform.localPosition = new Vector3(0.0f, 0.0f, 0.1f);
-
-
         }
 
         for (int i = 0; i < gameController.playerTeam.Count; i++)
@@ -140,5 +141,19 @@ public class MiniMapGridBehaviour : MonoBehaviour
     void Update()
     {
         UpdateMiniMap();
+
+		if(minimapBG != null && Input.GetMouseButtonDown (0))
+		{
+			Ray cameraRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit[] hits = Physics.RaycastAll (cameraRay, 2.0f);
+
+			foreach(RaycastHit hitInfo in hits)
+			{
+				if(hitInfo.transform.gameObject == minimapBG)
+				{
+					Debug.Log (hitInfo.point);
+				}
+			}
+		}
     }
 }

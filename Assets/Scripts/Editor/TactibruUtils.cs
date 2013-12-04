@@ -36,6 +36,9 @@ namespace Tactibru.Editor
 		{
 			GameObject mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 
+			CameraBehavior cameraBehavior = mainCamera.GetComponent<CameraBehavior>();
+			float cameraSpeed = cameraBehavior.MovementRate;
+
 			// Destroy the camera in preparation for adding the new one.
 			GameObject.DestroyImmediate(mainCamera);
 
@@ -44,6 +47,9 @@ namespace Tactibru.Editor
 				"Assets/Prefabs/Main Camera.prefab", typeof(GameObject)));
 
 			newCamera.transform.name = "Main Camera";
+
+			cameraBehavior = newCamera.GetComponent<CameraBehavior>();
+			cameraBehavior.MovementRate = cameraSpeed;
 
 			// Update the main camera property of the combat camera.
 			CombatSystemBehavior combatSystem = (CombatSystemBehavior)GameObject.Find("Combat Camera").GetComponent<CombatSystemBehavior>();
