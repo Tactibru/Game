@@ -151,7 +151,23 @@ public class MiniMapGridBehaviour : MonoBehaviour
 			{
 				if(hitInfo.transform.gameObject == minimapBG)
 				{
-					Debug.Log (hitInfo.point);
+					Vector3 clickOffset = hitInfo.point - minimapBG.transform.position;
+					float width = minimapBG.transform.localScale.x;
+					float height = minimapBG.transform.localScale.y;
+
+					clickOffset.x += width / 2.0f;
+					clickOffset.y += height / 2.0f;
+
+					// Normalize the clickOffset
+					clickOffset.x /= width;
+					clickOffset.y /= height;
+
+					// Tell the camera to quick-jump.
+					CameraBehavior cameraBehavior = Camera.main.GetComponent<CameraBehavior>();
+					if(cameraBehavior != null)
+					{
+						cameraBehavior.quickJump(clickOffset);
+					}
 				}
 			}
 		}

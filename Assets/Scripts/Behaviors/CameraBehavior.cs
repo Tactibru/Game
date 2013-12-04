@@ -38,6 +38,20 @@ public class CameraBehavior : MonoBehaviour
 	public GameObject trackingObject = null;
 
 	/// <summary>
+	/// Allows the camera to quickly jump to a given (normalized) position within its bounds.
+	/// </summary>
+	public void quickJump(Vector3 normalizedPosition)
+	{
+		Vector3 newPosition = Vector3.zero;
+
+		newPosition.x = (maximumPosition.x - minimumPosition.x) * normalizedPosition.x;
+		newPosition.y = transform.position.y;
+		newPosition.z = ((maximumPosition.z - minimumPosition.z) * normalizedPosition.y) - 2.5f;
+
+		transform.position = minimumPosition + newPosition;
+	}
+
+	/// <summary>
 	/// Iterates over all scene objects with the appropriate Screen Bounds tag, and determines the minimum and maximum coordinates.
 	/// </summary>
 	public void Start()
