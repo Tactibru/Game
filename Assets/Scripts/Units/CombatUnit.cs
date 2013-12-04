@@ -31,7 +31,8 @@ namespace Units
 			Spear,
 			Staff,
 			Bow,
-			Horse
+			Horse,
+			None
 		}
 
 		/// <summary>

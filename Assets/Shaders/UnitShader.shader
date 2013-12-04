@@ -18,13 +18,15 @@
 		}
 		
 		Cull Off
-		ZWrite On
 		ZTest Less
 		ColorMask RGBA
 		Blend SrcAlpha OneMinusSrcAlpha
 		Lighting Off
 		
 		Pass {
+			ZWrite Off
+			Blend SrcAlpha OneMinusSrcAlpha
+		
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -62,12 +64,16 @@
 			half4 frag(FragIn input) : COLOR {
 				half4 fragColor = tex2D(_MainTex, input.texCoord.xy);
 				
+				float alpha = fragColor.a;
+				
 				if(float3_equal(fragColor.rgb, _TargetBaseColor.rgb))
 					fragColor.rgb = _BaseColor.rgb;
 				else if(float3_equal(fragColor.rgb, _TargetShadeColor.rgb))
 					fragColor.rgb = (_BaseColor.rgb - float3(0.25f, 0.25f, 0.25f));
 				else if(float3_equal(fragColor.rgb, _TargetHighlightColor.rgb))
 					fragColor.rgb = (_BaseColor.rgb + float3(0.25f, 0.25f, 0.25f));
+				
+				fragColor.a = alpha;
 				
 				return fragColor;
 			}
