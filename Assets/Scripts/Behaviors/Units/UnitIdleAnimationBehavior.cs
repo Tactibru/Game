@@ -40,11 +40,6 @@ public class UnitIdleAnimationBehavior : MonoBehaviour
 	private float initialY = 0.0f;
 
 	/// <summary>
-	/// Direction the animation is bobbing in.
-	/// </summary>
-	private float bobDirection = 1.0f;
-
-	/// <summary>
 	/// Initializes the initialY value to the Y coordinate of the game object.
 	/// </summary>
 	public void Start()

@@ -143,7 +143,11 @@ public class CombatSquadBehavior : MonoBehaviour {
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)
 			{
-				UnitAssetBehavior prefab = UnitAssetRepository.Instance.getAssetGroupByName(node.Name).getPrefabByName(node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name);
+				UnitAssetBehavior prefab;
+				if(node.Name == "Body" && (data.Unit.BodyOverride != 0))
+					prefab = UnitAssetRepository.Instance.getAssetGroupByName("Body").getPrefabByIndex(data.Unit.BodyOverride);
+				else
+					prefab = (UnitAssetRepository.Instance.getAssetGroupByName(node.Name).getPrefabByName(node.Name == "Weapon" ? data.Unit.Weapon.ToString() : data.Unit.Name));
 
 				if (prefab == null)
 				{

@@ -64,5 +64,43 @@ namespace Units
 
 			return assets.First ();
 		}
+
+		/// <summary>
+		/// Retrieves a prefab from the list of prefabs in the group, matching a specific name.
+		/// </summary>
+		/// <returns>The prefab by name.</returns>
+		/// <param name="idx">Prefab index.</param>
+		public UnitAssetBehavior getPrefabByIndex(int idx)
+		{
+			if(prefabs.Count == 0)
+			{
+				Debug.LogError ("Attempted to retrieve a prefab from an empty asset group!");
+				return null;
+			}
+			
+			try
+			{
+				return prefabs[idx];
+			}
+			catch(System.IndexOutOfRangeException ex)
+			{
+				return getRandomPrefab();
+			}
+		}
+
+		/// <summary>
+		/// Retrieves a list of all prefab names.
+		/// </summary>
+		/// <returns>The prefab names.</returns>
+		public IEnumerable<string> getPrefabNames()
+		{
+			if(prefabs.Count == 0)
+			{
+				Debug.LogError ("Attempted to retrieve a prefab from an empty asset group!");
+				return null;
+			}
+
+			return from prefab in prefabs select prefab.Name;
+		}
 	}
 }
