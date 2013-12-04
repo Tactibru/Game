@@ -75,22 +75,31 @@ public class AIOffensiveBehavior : AIUnitBehavior
 			if(excess > 0)
 				pathList.RemoveRange (pathList.Count - excess, excess);
 
-			MovePointBehavior targetPoint = pathList[pathList.Count - 1];
-
-			// Determine the fastest path to the target point.
-			pathList = movePoint.FindPath (targetPoint, moveDistance, grid);
-
-			if(pathList != null)
+			if(pathList.Count > 0)
 			{
-				Actor.pathList = pathList;
-				Actor.canMove = true;
+				MovePointBehavior targetPoint = pathList[pathList.Count - 1];
+				
+				// Determine the fastest path to the target point.
+				pathList = movePoint.FindPath (targetPoint, moveDistance, grid);
 
-				grid.ignoreList.Remove (movePoint);
-
-				grid.ignoreList.Add (targetPoint);
-
+				if(pathList != null)
+				{
+					Actor.pathList = pathList;
+					Actor.canMove = true;
+					
+					grid.ignoreList.Remove (movePoint);
+					
+					grid.ignoreList.Add (targetPoint);
+					
+					Actor.actorHasMovedThisTurn = true;
+					
+					return AIState.WaitingForMove;
+				}
+			}
+			else
+			{
 				Actor.actorHasMovedThisTurn = true;
-
+				
 				return AIState.WaitingForMove;
 			}
 		}

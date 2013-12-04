@@ -138,7 +138,6 @@ public class CombatSquadBehavior : MonoBehaviour {
 			NodeSkeletonBehavior skele = (NodeSkeletonBehavior)Instantiate(unitSkeleton);
 			UnitIdleAnimationBehavior idle = skele.gameObject.AddComponent<UnitIdleAnimationBehavior>();
 			idle.bobDistance = 0.1f;
-			idle.bobSpeed = 0.2f;
 			idle.Active = false;
 
 			// Load body parts for the unit.
