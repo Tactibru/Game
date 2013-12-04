@@ -98,7 +98,14 @@ public class CombatSystemBehavior : MonoBehaviour
 	/// </summary>
 	private GridBehavior grid;
 
-	// Use this for initialization
+	/// <summary>
+	/// Range at which this battle is coming.
+	/// </summary>
+	private int combatRange = 1;
+
+	/// <summary>
+	/// Disables the combat camera and enables the main camera.
+	/// </summary>
 	void Start () 
 	{
 		mainCamera.enabled = true;
@@ -126,10 +133,10 @@ public class CombatSystemBehavior : MonoBehaviour
 		hackTimeImpl = 0.0f;
 
 		// Perform combat logic.
-		IEnumerable<CombatUnit> offFirstRow = offensiveSquad.Squad.Units.Where(l => l.Position.Row == 0).Select(l => l.Unit);
-		IEnumerable<CombatUnit> offSecondRow = offensiveSquad.Squad.Units.Where(l => l.Position.Row == 1).Select(l => l.Unit);
-		IEnumerable<CombatUnit> defFirstRow = defensiveSquad.Squad.Units.Where(l => l.Position.Row == 0).Select(l => l.Unit);
-		IEnumerable<CombatUnit> defSecondRow = defensiveSquad.Squad.Units.Where(l => l.Position.Row == 1).Select(l => l.Unit);
+		IEnumerable<CombatUnit> offFirstRow = offensiveSquad.Squad.Units.Where(l => l.Position.Row == 0 && l.Unit.Range <= combatRange).Select(l => l.Unit);
+		IEnumerable<CombatUnit> offSecondRow = offensiveSquad.Squad.Units.Where(l => l.Position.Row == 1 && l.Unit.Range <= combatRange).Select(l => l.Unit);
+		IEnumerable<CombatUnit> defFirstRow = defensiveSquad.Squad.Units.Where(l => l.Position.Row == 0 && l.Unit.Range <= combatRange).Select(l => l.Unit);
+		IEnumerable<CombatUnit> defSecondRow = defensiveSquad.Squad.Units.Where(l => l.Position.Row == 1 && l.Unit.Range <= combatRange).Select(l => l.Unit);
 
 		// Ensure there is actually somebody remaining!
 		if (offensiveSquad.Squad.Units.Count == 0)
@@ -282,6 +289,8 @@ public class CombatSystemBehavior : MonoBehaviour
 			Debug.LogError("Combat was started with either the offensive or defense squad being null!");
 			return;
 		}
+
+		combatRange = (int)Mathf.Ceil(Vector3.Distance(offensiveSquad.transform.position, defensiveSquad.transform.position));
 
 		this.grid = grid;
 
