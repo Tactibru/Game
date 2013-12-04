@@ -9,6 +9,8 @@ using System.Collections;
 [AddComponentMenu("Tactibru/GUI/Button Manager")]
 public class ButtonManagerBehavior : MonoBehaviour
 {
+	/*
+
 	/// <summary>
 	/// Creates one instance of the button manager
 	/// 
@@ -67,6 +69,8 @@ public class ButtonManagerBehavior : MonoBehaviour
 		default:
 			Debug.LogWarning(string.Format("No handler found for {0}!", buttonName));
 			break;
-		}*/	
+		}
 	}
+
+	*/
 }
