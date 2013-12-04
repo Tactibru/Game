@@ -18,6 +18,7 @@ public class UnitPlacementBehaviour : MonoBehaviour
 
     float offSetInX = 0.5f;
     float offSetInY = 0.5f;
+    public SquadBehaviour theSquadBeingEdited;
    
     public PositionBehaviour[] thePositions;
 
@@ -41,16 +42,15 @@ public class UnitPlacementBehaviour : MonoBehaviour
 
         for (int index = 0; index < thePositions.Length; index++)
         {
-            Debug.Log(index.ToString());
+            //Debug.Log(index.ToString());
             if (thePositions[index].currentOccupant == -1)
             {
-                Vector3 origin = new Vector3(thePositions[index].transform.position.x, thePositions[index].transform.position.y, thePositions[index].transform.position.z + 0.5f);
-                Ray ray = new Ray(origin, new Vector3(0.0f, 0.0f, -1.0f));
+                Vector3 origin = new Vector3(thePositions[index].transform.position.x, thePositions[index].transform.position.y, thePositions[index].transform.position.z -0.8f);
+                Ray ray = new Ray(origin, new Vector3(0.0f, 0.0f, 1.0f));
 
                 List<RaycastHit> hits = new List<RaycastHit>();
                 hits.AddRange(Physics.RaycastAll(ray));
 
-                Debug.Log(index.ToString());
                 foreach (RaycastHit hitInfo in hits.OrderBy(l => l.distance))
                 {
                     if (hitInfo.transform.GetComponent<MemberBehaviour>() == theMemberToLookFor)
@@ -81,7 +81,8 @@ public class UnitPlacementBehaviour : MonoBehaviour
                     theMemberToLookFor.transform.position = new Vector3(positionsCovered[0].transform.position.x + offSetInX, positionsCovered[0].transform.position.y + offSetInY, positionsCovered[0].transform.position.z);
                     break;
             }
-            
+            theSquadBeingEdited.members++;
+            theMemberToLookFor.inUnit = true;
 
             for (int index = 0; index < positionsCovered.Count; index++)
             {
@@ -93,12 +94,13 @@ public class UnitPlacementBehaviour : MonoBehaviour
 
     public void UpdateTheTray()
     {
+        int goodMembers = 0;
         for (int index = 0; index < thePositions.Length; index++)
         {
             if (thePositions[index].currentOccupant != -1)
             {
-                Vector3 origin = new Vector3(thePositions[index].transform.position.x, thePositions[index].transform.position.y, thePositions[index].transform.position.z + 0.5f);
-                Ray ray = new Ray(origin, new Vector3(0.0f, 0.0f, -1.0f));
+                Vector3 origin = new Vector3(thePositions[index].transform.position.x, thePositions[index].transform.position.y, thePositions[index].transform.position.z - 0.8f);
+                Ray ray = new Ray(origin, new Vector3(0.0f, 0.0f, 1.0f));
 
                 List<RaycastHit> hits = new List<RaycastHit>();
                 hits.AddRange(Physics.RaycastAll(ray));
@@ -109,6 +111,7 @@ public class UnitPlacementBehaviour : MonoBehaviour
                     if (hitInfo.transform.GetComponent<MemberBehaviour>().uniqueID == thePositions[index].currentOccupant)
                     {
                         isGood = true;
+                        goodMembers++;
                     }
                     else if (hitInfo.transform.GetComponent<MemberBehaviour>().uniqueID != thePositions[index].currentOccupant)
                     {
@@ -120,12 +123,14 @@ public class UnitPlacementBehaviour : MonoBehaviour
                 {
                     thePositions[index].currentOccupant = -1;
                 }
+                theSquadBeingEdited.members = goodMembers;
             }
         }
     }
 
-    public void ShowUnitHolder()
+    public void ShowUnitHolder(SquadBehaviour theSquadToEdit)
     {
+        theSquadBeingEdited = theSquadToEdit;
         for (int index = 0; index < thePositions.Length; index++)
         {
             thePositions[index].transform.renderer.enabled = true;
