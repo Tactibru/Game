@@ -1,10 +1,10 @@
-﻿using Editor.Util;
+﻿using Tactibru.Editor.Util;
 using Units;
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
 
-namespace Editor.Units
+namespace Tactibru.Editor.Units
 {
 	/// <summary>
 	/// Unity editor that allows for the modification of Combat Units.

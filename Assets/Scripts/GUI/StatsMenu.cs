@@ -5,6 +5,8 @@ using System.Linq;
 
 public class StatsMenu : ButtonManagerBehavior
 {
+	/*
+
     public List<EntryBehavior> entries;
     public Dictionary<string, int> myDictionary;
 
@@ -42,4 +44,6 @@ public class StatsMenu : ButtonManagerBehavior
             entries[index].Set(labels[index], values[index]);
         }
     }
+
+	*/
 }

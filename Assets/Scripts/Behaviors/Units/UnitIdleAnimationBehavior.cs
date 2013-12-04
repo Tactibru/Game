@@ -12,7 +12,7 @@ public class UnitIdleAnimationBehavior : MonoBehaviour
 	/// <summary>
 	/// Distance (in meters) the game object will move.
 	/// </summary>
-	public float bobDistance = 0.02f;
+	public float bobDistance = 0.04f;
 
 	/// <summary>
 	/// Whether or not the idle bob animation should be active.
@@ -35,11 +35,6 @@ public class UnitIdleAnimationBehavior : MonoBehaviour
 	public bool belowInitial = false;
 
 	/// <summary>
-	/// Speed at which the bobbing animation runs.
-	/// </summary>
-	public float bobSpeed = 0.1f;
-
-	/// <summary>
 	/// Stores the initial position of the object.
 	/// </summary>
 	private float initialY = 0.0f;
@@ -60,17 +55,15 @@ public class UnitIdleAnimationBehavior : MonoBehaviour
 	/// <summary>
 	/// Performs the animated bobbing.
 	/// </summary>
-	public void Update()
+	public void FixedUpdate()
 	{
 		if (!Active)
 			return;
-
-		float moveDistance = bobDirection * Time.deltaTime * bobSpeed;
-		gameObject.transform.Translate(Vector3.up * moveDistance);
-
-		float y = gameObject.transform.position.y;
 		
-		if ((y >= (initialY + bobDistance)) || (y <= (initialY - bobDistance)) || (!belowInitial && (y <= initialY)))
-			bobDirection *= -1;
+		Vector3 pos = gameObject.transform.position;
+		pos.y = initialY + (Mathf.Sin (2.0f * Time.time) * bobDistance);
+		
+		gameObject.transform.position = pos;
 	}
 }
+

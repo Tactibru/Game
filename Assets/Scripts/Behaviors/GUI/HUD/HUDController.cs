@@ -7,24 +7,95 @@ public class HUDController : ButtonManagerBehavior
 	GameObject menuGroup;
 	bool isEnabled;
 	GameControllerBehaviour gameController;
-	[System.NonSerialized]
 	public TextMesh turnCount;
-	[System.NonSerialized]
 	public TextMesh whoseTurn;
+
+	public GUIStyle style;
+
 	/// <summary>
 	/// Start this instance.
 	/// </summary>
-	protected override void Start()
+	//protected override void Start()
+	void Start()
 	{
-		base.Start();
+		//base.Start();
 		isEnabled = false;
-		ToggleMenuGroup();
+		// Commented out until we have art assests
+		//ToggleMenuGroup();
 		gameController = GameObject.FindGameObjectWithTag("Grid").GetComponent<GameControllerBehaviour>();
 		menuGroup = GameObject.Find("Menu Group HUD").gameObject;
-		turnCount = GameObject.Find("turnCountText").GetComponent<TextMesh>();
-		whoseTurn = GameObject.Find("whoseTurnText").GetComponent<TextMesh>();
 	}
-	
+
+	void OnGUI()
+	{
+		// Display for Whose turn it is and what the turn count is
+		GUI.Box(new Rect(Screen.width * 0.0f, Screen.height * 0.85f, 190, 100), ("Turn: " + WhoseTurn() + "\n" + "Turn #: " + TurnCount()), style);
+
+		// Button for Menu
+		if(GUI.Button(new Rect(Screen.width * 0f, Screen.height * 0f,100,30), "Menu"))
+		{
+			if(isEnabled)
+				isEnabled = false;
+			else
+				isEnabled = true;
+		}
+
+		// Toggle Menu Group
+		if(isEnabled)
+		{
+			// Menu Group
+			GUI.BeginGroup(new Rect(Screen.width * 0f, Screen.height * 0.05f, 100, 250));
+
+			// Save button
+			if(GUI.Button(new Rect(0, 10,90,30), "Save"))
+			{
+				Debug.Log ("Save Button, not implemented.");
+			}
+
+			// Load button
+			if(GUI.Button(new Rect(0, 50,90,30), "Load"))
+			{
+				Debug.Log ("Load Button, not implemented.");
+			}
+
+			// Exit button
+			if(GUI.Button(new Rect(0, 90,90,30), "Exit"))
+			{
+				Application.LoadLevel("MainMenuGUITest");
+			}
+
+			// End Main Menu Group
+			GUI.EndGroup();
+		}
+
+		if(GUI.Button(new Rect(Screen.width * 0f, Screen.height * 0.75f, 100, 50), "End Turn"))
+		{
+			if (gameController.AllowPlayerControlledEnemies || gameController.currentTurn == GameControllerBehaviour.UnitSide.player)
+				gameController.EndTurn();
+		}
+
+
+	}
+
+	/// <summary>
+	/// Whose turn is it right now?
+	/// </summary>
+	/// <returns>The string of who's turn it is.</returns>
+	public string WhoseTurn()
+	{
+		return gameController.currentTurn.ToString();
+	}
+
+	/// <summary>
+	/// How many turns have passed?
+	/// </summary>
+	/// <returns>Returns the number of turns as a string</returns>
+	public string TurnCount()
+	{
+		return gameController.numberOfTurns.ToString();
+	}
+
+	/*
 	public override void ButtonPressed(string buttonName)
 	{
 		switch(buttonName)
@@ -43,9 +114,12 @@ public class HUDController : ButtonManagerBehavior
 			break;
 		}
 	}
+	*/
 	
-	
-	
+	/// <summary>
+	/// Turns the MeshRenderer on and off for items in the menuGroup.
+	/// </summary>
+	/*
 	void ToggleMenuGroup()
 	{
 		if(menuGroup != null)
@@ -62,15 +136,11 @@ public class HUDController : ButtonManagerBehavior
 			menuGroup.transform.GetChild(2).GetChild(0).GetComponent<MeshRenderer>().enabled = isEnabled;
 		}
 		
+		// Flip isEnabled bool
 		if(isEnabled)
 			isEnabled = false;
 		else
 			isEnabled = true;
-
-		
-		
 	}
-	
-	
-	
+	*/
 }

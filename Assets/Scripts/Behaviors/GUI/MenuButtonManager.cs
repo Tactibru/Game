@@ -8,6 +8,8 @@ using System.Collections;
 [AddComponentMenu("Tactibru/GUI/Main Menu/Menu Button Manager")]
 public class MenuButtonManager : ButtonManagerBehavior 
 {
+	/*
+
 	public override void ButtonPressed(string buttonName)
 	{
 		switch (buttonName) 
@@ -26,4 +28,6 @@ public class MenuButtonManager : ButtonManagerBehavior
 			break;
 		}	
 	}
+
+	*/
 }

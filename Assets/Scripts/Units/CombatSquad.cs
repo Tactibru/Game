@@ -38,6 +38,11 @@ namespace Units
 		/// Caches the unit's size, to prevent unnecessary iteration.
 		/// </summary>
 		private int cachedSize = 0;
+
+		/// <summary>
+		/// Caches the unit's range, to prevent unnecessary iteration.
+		/// </summary>
+		private int cachedRange = 0;
 		
 		/// <summary>
 		/// Retrieves the speed of the squad, either through the cache or by recalculating if dirty.
@@ -77,6 +82,25 @@ namespace Units
 				}
 
 				return cachedSize;
+			}
+		}
+
+		/// <summary>
+		/// Retrieves the range of the squad, either through the cache or by recalculating if dirty.
+		/// </summary>
+		public int Range
+		{
+			get
+			{
+				if(!IsDirty || cachedRange <= 0)
+				{
+					cachedRange = 0;
+
+					foreach(UnitData unitData in Units)
+						cachedRange = Mathf.Max (cachedRange, unitData.Unit.Range);
+				}
+
+				return cachedRange;
 			}
 		}
 
