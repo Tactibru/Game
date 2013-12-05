@@ -4,7 +4,7 @@ using System.Collections;
 [AddComponentMenu("Tactibru/GUI/HUD Controller")]
 public class HUDController : ButtonManagerBehavior
 {
-	GameObject menuGroup;
+	//GameObject menuGroup;
 	bool isEnabled;
 	GameControllerBehaviour gameController;
 	public TextMesh turnCount;
@@ -23,7 +23,7 @@ public class HUDController : ButtonManagerBehavior
 		// Commented out until we have art assests
 		//ToggleMenuGroup();
 		gameController = GameObject.FindGameObjectWithTag("Grid").GetComponent<GameControllerBehaviour>();
-		menuGroup = GameObject.Find("Menu Group HUD").gameObject;
+		//menuGroup = GameObject.Find("Menu Group HUD").gameObject;
 	}
 
 	void OnGUI()

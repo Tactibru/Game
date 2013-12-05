@@ -18,13 +18,11 @@ public class TempLevelSelect : MonoBehaviour
 	};
 
 	private float centerX;
-	private float centerY;
 	private int menuOffset = 0;
 
 	public void Update()
 	{
 		centerX = Screen.width / 2.0f;
-		centerY = Screen.width / 2.0f;
 	}
 
 	public void OnGUI()
