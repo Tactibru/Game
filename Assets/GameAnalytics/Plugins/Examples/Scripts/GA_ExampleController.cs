@@ -12,11 +12,11 @@ public class GA_ExampleController : MonoBehaviour
 		targetVelocity *= Speed;
 		
 		// Apply a force that attempts to reach our target velocity
-		Vector3 velocity = rigidbody.velocity;
+		Vector3 velocity = GetComponent<Rigidbody>().velocity;
 		Vector3 velocityChange = (targetVelocity - velocity);
 		velocityChange.x = Mathf.Clamp(velocityChange.x, -MaxVelocityChange, MaxVelocityChange);
 		velocityChange.y = 0;
 		velocityChange.z = 0;
-		rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+		GetComponent<Rigidbody>().AddForce(velocityChange, ForceMode.VelocityChange);
 	}
 }

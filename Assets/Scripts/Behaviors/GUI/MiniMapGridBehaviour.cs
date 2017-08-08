@@ -55,7 +55,7 @@ public class MiniMapGridBehaviour : MonoBehaviour
                 newMiniMapPoint.transform.parent = transform;
                 newMiniMapPoint.name = abc[z].ToString() + x.ToString();
                 newMiniMapPoint.transform.localPosition = new Vector3(currentXPosition, currentYPosition, -0.01f);
-				newMiniMapPoint.renderer.enabled = true;
+				newMiniMapPoint.GetComponent<Renderer>().enabled = true;
                 currentXPosition = (xPositionOffset + z + 1) * 0.1f + 0.05f;
                 theMiniMap[z + (x * miniMapWidth)] = newMiniMapPoint;
             }
@@ -78,7 +78,7 @@ public class MiniMapGridBehaviour : MonoBehaviour
             newMiniMapPlayer = (MiniMapActorBehavior)Instantiate(miniMapPlayer, new Vector3(0, 0.0f, 0.5f), Quaternion.identity);
             newMiniMapPlayer.transform.parent = transform;
             newMiniMapPlayer.transform.localPosition = new Vector3(0.0f, 0.0f, 0.1f);
-			newMiniMapPlayer.renderer.enabled = true;
+			newMiniMapPlayer.GetComponent<Renderer>().enabled = true;
             playerSquadList.Add(newMiniMapPlayer);
         }
 
@@ -88,7 +88,7 @@ public class MiniMapGridBehaviour : MonoBehaviour
             newMiniMapEnemy = (MiniMapActorBehavior)Instantiate(miniMapEnemy, new Vector3(0, 0.0f, 0.5f), Quaternion.identity);
             newMiniMapEnemy.transform.parent = transform;
             newMiniMapEnemy.transform.localPosition = new Vector3(0.0f, 0.0f, 0.1f);
-			newMiniMapEnemy.renderer.enabled = true;
+			newMiniMapEnemy.GetComponent<Renderer>().enabled = true;
 
             enemySquadList.Add(newMiniMapEnemy);
         }
@@ -99,7 +99,7 @@ public class MiniMapGridBehaviour : MonoBehaviour
             newMiniMapNuetral = (MiniMapActorBehavior)Instantiate(miniMapNeutral, new Vector3(0, 0.0f, 0.5f), Quaternion.identity);
             newMiniMapNuetral.transform.parent = transform;
             newMiniMapNuetral.transform.localPosition = new Vector3(0.0f, 0.0f, 0.1f);
-			newMiniMapNuetral.renderer.enabled = true;
+			newMiniMapNuetral.GetComponent<Renderer>().enabled = true;
 
             neutralSquadList.Add(newMiniMapNuetral);
         }

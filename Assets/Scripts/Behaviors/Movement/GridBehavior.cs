@@ -107,8 +107,8 @@ public class GridBehavior : MonoBehaviour
 		foreach(MovePointBehavior movePoint in theMap)
 		{
 			//change visiblilty of nodes. 
-			if(movePoint && movePoint.renderer.enabled == true)
-				movePoint.renderer.enabled = false; 
+			if(movePoint && movePoint.GetComponent<Renderer>().enabled == true)
+				movePoint.GetComponent<Renderer>().enabled = false; 
 		}
 	}
 

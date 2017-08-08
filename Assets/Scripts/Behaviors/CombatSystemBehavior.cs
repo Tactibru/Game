@@ -348,7 +348,7 @@ public class CombatSystemBehavior : MonoBehaviour
 				unitBehavior.SetFont(font);
 
 			if(fontMaterial != null)
-				unitBehavior.renderer.material = fontMaterial;
+				unitBehavior.GetComponent<Renderer>().material = fontMaterial;
 
 			// Load body parts for the unit.
 			foreach (NSSNode node in skele.SkeletonStructure.Nodes)

@@ -5,7 +5,7 @@ public class GA_ExampleFloor : MonoBehaviour
 {
 	void Start ()
 	{
-		renderer.material.color = Color.red;
+		GetComponent<Renderer>().material.color = Color.red;
 	}
 	
 	void OnCollisionEnter(Collision collision)

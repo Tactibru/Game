@@ -87,7 +87,7 @@ public class CombatSquadBehavior : MonoBehaviour {
 		if (actor == null)
 			return;
 
-		selNode.renderer.material.color = (actor.actorHasMovedThisTurn ? Color.gray : baseColor);
+		selNode.GetComponent<Renderer>().material.color = (actor.actorHasMovedThisTurn ? Color.gray : baseColor);
 	}
 	/// <summary>
 	/// Updates the overworld visuals for the squad.
@@ -102,7 +102,7 @@ public class CombatSquadBehavior : MonoBehaviour {
 		bool flipHorizontally = (actor == null ? false : actor.theSide == GameControllerBehaviour.UnitSide.player);
 		
 		// Hide any mesh renderer on this object.
-		gameObject.renderer.enabled = false;
+		gameObject.GetComponent<Renderer>().enabled = false;
 		
 		// Clear the squad's sub units.
 		List<MonoBehaviour> children = new List<MonoBehaviour>();

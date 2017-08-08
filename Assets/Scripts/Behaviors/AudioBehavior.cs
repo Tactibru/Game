@@ -71,18 +71,18 @@ public class AudioBehavior : MonoBehaviour
     {
         if (isMusic == true && isCombatMusic == true)
         {
-            audio.clip = combatMusic[Random.Range(0, combatMusic.Count)];
-            audio.loop = true;
-            audio.Play();
+            GetComponent<AudioSource>().clip = combatMusic[Random.Range(0, combatMusic.Count)];
+            GetComponent<AudioSource>().loop = true;
+            GetComponent<AudioSource>().Play();
             isCombatMusic = false;
             isGameMusic = true;
         }
 
         if (hasPlayedAudio == false && !isMusic)
         {
-            audio.clip = combatAudio[1];
-            audio.loop = true;
-            audio.Play();
+            GetComponent<AudioSource>().clip = combatAudio[1];
+            GetComponent<AudioSource>().loop = true;
+            GetComponent<AudioSource>().Play();
             hasPlayedAudio = true;
         }
     }
@@ -91,18 +91,18 @@ public class AudioBehavior : MonoBehaviour
     {
         if (isMusic == true && isGameMusic == true)
         {
-            audio.clip = gameMusic[Random.Range(0, gameMusic.Count)];
-            audio.loop = true;
-            audio.Play();
+            GetComponent<AudioSource>().clip = gameMusic[Random.Range(0, gameMusic.Count)];
+            GetComponent<AudioSource>().loop = true;
+            GetComponent<AudioSource>().Play();
             isGameMusic = false;
             isCombatMusic = true;
         }
 
         if (isMoving == true && !isMusic && !hasPlayedAudio)
         {
-            audio.clip = movementAudio[0];
-            audio.loop = true;
-            audio.Play();
+            GetComponent<AudioSource>().clip = movementAudio[0];
+            GetComponent<AudioSource>().loop = true;
+            GetComponent<AudioSource>().Play();
             hasPlayedAudio = true;
         }
 
@@ -113,7 +113,7 @@ public class AudioBehavior : MonoBehaviour
         
         if (!inCombat && !isMusic)
         {
-            audio.loop = false;
+            GetComponent<AudioSource>().loop = false;
         }
     }
 

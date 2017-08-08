@@ -277,7 +277,7 @@ public class GridControlBehavior : MonoBehaviour
 			{
 				// Retrieve the movepoint behavior from the hit target.
 				MovePointBehavior movePoint = hitInfo.transform.GetComponent<MovePointBehavior>();
-				if(movePoint == null || !movePoint.renderer.enabled)
+				if(movePoint == null || !movePoint.GetComponent<Renderer>().enabled)
 					continue;
 
 				// Retrieve the combat squad behavior from the currently-selected squad.

@@ -118,7 +118,7 @@ public class GA_ExampleHighScore : MonoBehaviour
 			ball.name = "Ball";
 			
 			transform.position = _startingPosition;
-			rigidbody.velocity = Vector3.zero;
+			GetComponent<Rigidbody>().velocity = Vector3.zero;
 		}
 		
 		if (!genderComboBoxControl.IsShowingList())

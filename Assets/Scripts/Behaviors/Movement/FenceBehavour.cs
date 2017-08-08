@@ -14,7 +14,7 @@ public class FenceBehavour : MonoBehaviour
 	
 	void Start () 
     {
-        transform.renderer.enabled = false;
+        transform.GetComponent<Renderer>().enabled = false;
 	}
 	
 	

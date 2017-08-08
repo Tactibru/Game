@@ -6,7 +6,7 @@ public class TrayBackGroundBehaviour : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
     {
-        transform.renderer.enabled = false;
+        transform.GetComponent<Renderer>().enabled = false;
 	}
 	
 	

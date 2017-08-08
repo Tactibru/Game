@@ -55,7 +55,7 @@ public class MemberBehaviour : MonoBehaviour
 
 	void Start () 
     {
-        renderer.enabled = false;
+        GetComponent<Renderer>().enabled = false;
 
         switch (theSizeOfMember)
         {
