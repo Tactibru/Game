@@ -1406,8 +1406,8 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
                 //Debug.Log("Hi");
                 if (currentTalkingEventChain[currentTalkingEvent].selectedPanel == Panels.UpperLeft)
                 {
-                    textBox[1].transform.renderer.enabled = true;
-                    talkers[2].transform.renderer.enabled = true;
+                    textBox[1].transform.GetComponent<Renderer>().enabled = true;
+                    talkers[2].transform.GetComponent<Renderer>().enabled = true;
                     activePanels = true;
                     currentPanel = Panels.UpperLeft;
                     textBox[1].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText, currentTalkingEventChain[currentTalkingEvent].name);
@@ -1415,8 +1415,8 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
                 }
                 else if (currentTalkingEventChain[currentTalkingEvent].selectedPanel == Panels.UpperRight)
                 {
-                    textBox[1].transform.renderer.enabled = true;
-                    talkers[3].transform.renderer.enabled = true;
+                    textBox[1].transform.GetComponent<Renderer>().enabled = true;
+                    talkers[3].transform.GetComponent<Renderer>().enabled = true;
                     activePanels = true;
                     currentPanel = Panels.UpperRight;
                     textBox[1].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText, currentTalkingEventChain[currentTalkingEvent].name);
@@ -1425,8 +1425,8 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
                 else if (currentTalkingEventChain[currentTalkingEvent].selectedPanel == Panels.LowerLeft)
                 {
                     
-                    textBox[0].transform.renderer.enabled = true;
-                    talkers[0].transform.renderer.enabled = true;
+                    textBox[0].transform.GetComponent<Renderer>().enabled = true;
+                    talkers[0].transform.GetComponent<Renderer>().enabled = true;
                     activePanels = true;
                     currentPanel = Panels.LowerLeft;
                     textBox[0].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText, currentTalkingEventChain[currentTalkingEvent].name);
@@ -1434,8 +1434,8 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
                 }
                 else if (currentTalkingEventChain[currentTalkingEvent].selectedPanel == Panels.LowerRight)
                 {
-                    textBox[0].transform.renderer.enabled = true;
-                    talkers[1].transform.renderer.enabled = true;
+                    textBox[0].transform.GetComponent<Renderer>().enabled = true;
+                    talkers[1].transform.GetComponent<Renderer>().enabled = true;
                     activePanels = true;
                     currentPanel = Panels.LowerRight;
                     textBox[0].startTalkingEvent(currentTalkingEventChain[currentTalkingEvent].normalText, currentTalkingEventChain[currentTalkingEvent].annoyText, currentTalkingEventChain[currentTalkingEvent].name);
@@ -1448,26 +1448,26 @@ public class TalkingEventManagerBehaviour : MonoBehaviour
                 switch (currentPanel)
                 {
                     case Panels.LowerLeft:
-                        textBox[0].transform.renderer.enabled = false;
-                        talkers[0].transform.renderer.enabled = false;
+                        textBox[0].transform.GetComponent<Renderer>().enabled = false;
+                        talkers[0].transform.GetComponent<Renderer>().enabled = false;
                         activePanels = false;
                         currentPanel = Panels.None;
                         break;
                     case Panels.LowerRight:
-                        textBox[0].transform.renderer.enabled = false;
-                        talkers[1].transform.renderer.enabled = false;
+                        textBox[0].transform.GetComponent<Renderer>().enabled = false;
+                        talkers[1].transform.GetComponent<Renderer>().enabled = false;
                         activePanels = false;
                         currentPanel = Panels.None;
                         break;
                     case Panels.UpperRight:
-                        textBox[1].transform.renderer.enabled = false;
-                        talkers[3].transform.renderer.enabled = false;
+                        textBox[1].transform.GetComponent<Renderer>().enabled = false;
+                        talkers[3].transform.GetComponent<Renderer>().enabled = false;
                         activePanels = false;
                         currentPanel = Panels.None;
                         break;
                     case Panels.UpperLeft:
-                        textBox[1].transform.renderer.enabled = false;
-                        talkers[2].transform.renderer.enabled = false;
+                        textBox[1].transform.GetComponent<Renderer>().enabled = false;
+                        talkers[2].transform.GetComponent<Renderer>().enabled = false;
                         activePanels = false;
                         currentPanel = Panels.None;
                         break;

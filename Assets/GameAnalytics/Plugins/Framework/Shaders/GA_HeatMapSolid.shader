@@ -1,3 +1,6 @@
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+
 Shader "Custom/GA_HeatMapSolid"
 {
 	Properties
@@ -48,7 +51,7 @@ Shader "Custom/GA_HeatMapSolid"
 			 
 			v2f vert(appdata_full v)
 			{
-				v.vertex = mul(_Object2World, v.vertex);
+				v.vertex = mul(unity_ObjectToWorld, v.vertex);
 				v.normal = normalize(_WorldSpaceCameraPos - v.vertex);
 				float3 up = float3(0,1,0);
 				float3 side = normalize(cross(v.normal, up));
@@ -69,7 +72,7 @@ Shader "Custom/GA_HeatMapSolid"
 				if(size > 0.0 && size < 1.0)
 				{
 					v.vertex.xyz = v.vertex.xyz  + (v.texcoord.x * side + v.texcoord.y * up) * max(size * _MaxRadius, 0.1) * 3; 
-					v.vertex =  mul(_World2Object, v.vertex); 
+					v.vertex =  mul(unity_WorldToObject, v.vertex); 
 				}
 				
 				v2f o;

@@ -82,7 +82,7 @@ public class CameraBehavior : MonoBehaviour
 	/// </summary>
 	public void Update()
 	{
-		if (Camera.current != null && Camera.current != this.camera)
+		if (Camera.current != null && Camera.current != this.GetComponent<Camera>())
 			return;
 
 		// Perform tracking if the camera is set to track an object.

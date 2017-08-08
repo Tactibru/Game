@@ -9,14 +9,14 @@ public class GA_ExampleTarget : MonoBehaviour
 	
 	void Start ()
 	{
-		renderer.material.color = Color.yellow;
+		GetComponent<Renderer>().material.color = Color.yellow;
 	}
 	
 	void Update ()
 	{
 		if (!_hit)
 		{
-			rigidbody.AddTorque(Vector3.forward * SpinSpeed);
+			GetComponent<Rigidbody>().AddTorque(Vector3.forward * SpinSpeed);
 		}
 	}
 	
@@ -33,11 +33,11 @@ public class GA_ExampleTarget : MonoBehaviour
 	IEnumerator FlashColor(float duration)
 	{
 		_hit = true;
-		renderer.material.color = Color.green;
+		GetComponent<Renderer>().material.color = Color.green;
 		
 		yield return new WaitForSeconds(duration);
 		
 		_hit = false;
-		renderer.material.color = Color.yellow;
+		GetComponent<Renderer>().material.color = Color.yellow;
 	}
 }

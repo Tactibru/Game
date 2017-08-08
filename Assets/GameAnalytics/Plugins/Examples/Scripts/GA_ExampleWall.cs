@@ -5,6 +5,6 @@ public class GA_ExampleWall : MonoBehaviour
 {
 	void Start ()
 	{
-		renderer.material.color = Color.gray;
+		GetComponent<Renderer>().material.color = Color.gray;
 	}
 }

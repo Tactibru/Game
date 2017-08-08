@@ -133,7 +133,7 @@ public class UnitPlacementBehaviour : MonoBehaviour
         theSquadBeingEdited = theSquadToEdit;
         for (int index = 0; index < thePositions.Length; index++)
         {
-            thePositions[index].transform.renderer.enabled = true;
+            thePositions[index].transform.GetComponent<Renderer>().enabled = true;
         }
     }
 }

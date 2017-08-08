@@ -81,7 +81,7 @@ public class AnimatedSpriteBehavior : MonoBehaviour
 		frameSize = new Vector2(1.0f / FrameCount, 1.0f);
 		flippedFrameSize = new Vector2(-(1.0f / FrameCount), 1.0f);
 
-		gameObject.renderer.sharedMaterial.SetTextureScale("_MainTex", (IsFlipped ? flippedFrameSize : frameSize));
+		gameObject.GetComponent<Renderer>().sharedMaterial.SetTextureScale("_MainTex", (IsFlipped ? flippedFrameSize : frameSize));
 	}
 
 	/// <summary>
@@ -99,11 +99,11 @@ public class AnimatedSpriteBehavior : MonoBehaviour
 			if (currentFrame >= FrameCount)
 				currentFrame = 0;
 
-			gameObject.renderer.sharedMaterial.SetTextureOffset("_MainTex", frameOffsets[currentFrame]);
+			gameObject.GetComponent<Renderer>().sharedMaterial.SetTextureOffset("_MainTex", frameOffsets[currentFrame]);
 		}
 
 		if (lastFlipState != IsFlipped) {
-			gameObject.renderer.sharedMaterial.SetTextureScale("_MainTex", (IsFlipped ? flippedFrameSize : frameSize));
+			gameObject.GetComponent<Renderer>().sharedMaterial.SetTextureScale("_MainTex", (IsFlipped ? flippedFrameSize : frameSize));
 			lastFlipState = IsFlipped;
 		}
 	}

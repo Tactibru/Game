@@ -143,12 +143,12 @@ public class MemberTrayBehaviour : MonoBehaviour
     public void ShowMemberTray()
     {
         //transform.renderer.enabled = true;
-        theBackGround.transform.renderer.enabled = true;
+        theBackGround.transform.GetComponent<Renderer>().enabled = true;
         //isActive = true;
 
         for (int index = 0; index < members.Count; index++)
         {
-            members[index].transform.renderer.enabled = true;
+            members[index].transform.GetComponent<Renderer>().enabled = true;
         }
     }
 

@@ -21,7 +21,7 @@ public class MovePointBehavior : MonoBehaviour
 	/// </summary>
 	public void Start()
 	{
-		renderer.enabled = false;
+		GetComponent<Renderer>().enabled = false;
 	}
 
 	/// <summary>
@@ -145,7 +145,7 @@ public class MovePointBehavior : MonoBehaviour
 		moveGraph.RemoveAt(0);
 
 		foreach (MovePointBehavior node in moveGraph)
-			node.renderer.enabled = true;
+			node.GetComponent<Renderer>().enabled = true;
     }
 
 	/// <summary>

@@ -253,11 +253,11 @@ public class ArmyManagementBehaviour : MonoBehaviour
     {
         for (int index = 0; index < squads.Count; index++)
         {
-            squads[index].transform.renderer.enabled = false;
+            squads[index].transform.GetComponent<Renderer>().enabled = false;
         }
 
         MemberTray.ShowMemberTray();
-        statsPanel.transform.renderer.enabled = true;
+        statsPanel.transform.GetComponent<Renderer>().enabled = true;
         unitHolder.ShowUnitHolder(theSquad);
     }
 }

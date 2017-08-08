@@ -121,7 +121,7 @@ public class TypeWriterBoxBehaviour : MonoBehaviour
 	void Start () 
     {
         talkingManager = Camera.main.transform.GetComponent<TalkingEventManagerBehaviour>();
-        transform.renderer.enabled = false;
+        transform.GetComponent<Renderer>().enabled = false;
 	}
 	
 	/// <summary>

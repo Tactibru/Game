@@ -52,7 +52,7 @@ public class AnchorBehavior : MonoBehaviour
 		if (oldPosition == anchorPosition)
 			return;
 		if (!hudCamera)
-			hudCamera = transform.parent.camera;
+			hudCamera = transform.parent.GetComponent<Camera>();
 
 		float aspectRatio = (float)Screen.width / (float)Screen.height;
 		float height = hudCamera.orthographicSize;

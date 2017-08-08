@@ -23,7 +23,7 @@ public class PositionBehaviour : MonoBehaviour
    
 	void Start () 
     {
-        renderer.enabled = false;
+        GetComponent<Renderer>().enabled = false;
 	}
 
     public void SetMemberPosition(MemberBehaviour memberToBeAdded)
